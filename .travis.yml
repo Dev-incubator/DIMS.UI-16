@@ -1,0 +1,48 @@
+language: node_js
+node_js:
+  - stable
+  - lts/*
+os:
+  - linux
+# rebuild the node_modules directory only if the .lock file changes
+#cache:
+#  npm: false
+#  directories:
+#    - node_modules
+
+branches:
+  - main
+  - master
+  - dev
+
+notifications:
+  email:
+    recipients:
+      - hincubator@gmail.com
+    on_success: change
+    on_failure: always
+
+jobs:
+  include:
+    - stage: install dependeincies
+      install: npm i
+      skip_cleanup: true
+    - stage: test
+      script: npm run test:coverage:ci:codecov
+      skip_cleanup: true
+    - stage: release
+      before_deploy:
+        - npm i netlify-cli -g
+        - npm run build
+      deploy:
+        provider: script
+        edge: true
+        skip_cleanup: true
+        script:
+          - netlify deploy --prod --dir=build
+        on:
+          branch: main
+      after_success:
+        - bash <(curl -s https://codecov.io/bash)
+        - npx semantic-release
+

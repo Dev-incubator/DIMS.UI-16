@@ -1,0 +1,146 @@
+{
+  "name": "dims-cra",
+  "version": "2.0.0",
+  "description": "DIMS template bootstrapped with CRA app",
+  "main": "src/index.jsx",
+  "keywords": [
+    "template",
+    "cra",
+    "create-react-app"
+  ],
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "test:watch": "yarn test --watchAll",
+    "test:ci": "set CI=true && yarn run test",
+    "test:coverage": "yarn test --coverage",
+    "test:coverage:ci": "set CI=true && yarn test:coverage",
+    "test:coverage:ci:codecov": "yarn test:coverage:ci && codecov",
+    "lint": "eslint \"src/**/*.+(js|jsx)\"",
+    "lint:fix": "eslint --fix \"src/**/*.+(js|jsx)\"",
+    "clean": "rm -rf node_modules coverage build",
+    "clean:coverage": "rm -rf coverage",
+    "cm": "cz",
+    "prepare": "husky install",
+    "preversion": "yarn install --frozen-lockfile && yarn lint && yarn test:ci",
+    "postpublish": "git push && git push --tags"
+  },
+  "eslintConfig": {
+    "plugins": [
+      "react",
+      "prettier"
+    ],
+    "extends": [
+      "react-app",
+      "airbnb",
+      "plugin:prettier/recommended",
+      "prettier"
+    ],
+    "rules": {
+      "prettier/prettier": [
+        "warn",
+        {
+          "endOfLine": "auto"
+        }
+      ],
+      "react/state-in-constructor": 0,
+      "react/jsx-props-no-spreading": "off",
+      "import/prefer-default-export": "off",
+      "react/jsx-uses-react": "off",
+      "react/react-in-jsx-scope": "off",
+      "no-console": "off",
+      "no-use-before-define": 0,
+      "no-param-reassign": 1,
+      "curly": "error",
+      "newline-before-return": "warn",
+      "no-shadow": "warn",
+      "react/function-component-definition": [
+        2,
+        {
+          "namedComponents": [
+            "function-declaration",
+            "arrow-function"
+          ],
+          "unnamedComponents": "arrow-function"
+        }
+      ]
+    }
+  },
+  "eslintIgnore": [
+    "node_modules",
+    "build/*"
+  ],
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}",
+      "!<rootDir>/src/index.jsx",
+      "!<rootDir>/src/reportWebVitals.js",
+      "!<rootDir>/src/shared/**/*.{js,jsx}"
+    ],
+    "testMatch": [
+      "**/src/**/*.test.+(js|jsx)"
+    ]
+  },
+  "dependencies": {
+    "@testing-library/jest-dom": "5.16.1",
+    "@testing-library/react": "12.1.2",
+    "@testing-library/user-event": "13.5.0",
+    "eslint": "8.8.0",
+    "node-sass": "7.0.1",
+    "prop-types": "15.8.1",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-icons": "4.3.1",
+    "react-router-dom": "5.3.0",
+    "react-scripts": "5.0.0",
+    "react-spinners": "0.11.0",
+    "web-vitals": "2.1.4"
+  },
+  "devDependencies": {
+    "codecov": "3.8.3",
+    "commitizen": "4.2.4",
+    "cz-conventional-changelog": "3.3.0",
+    "eslint-config-airbnb": "19.0.4",
+    "eslint-config-prettier": "8.3.0",
+    "eslint-plugin-prettier": "4.0.0",
+    "husky": "7.0.4",
+    "lint-staged": "12.3.3",
+    "prettier": "2.5.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Dev-incubator/DIMS-cra.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Dev-incubator/DIMS-cra/issues"
+  },
+  "release": {
+    "branches": "main"
+  },
+  "author": {
+    "name": "Maxim Shchutsky",
+    "email": "maximuzz@yandex.ru"
+  },
+  "license": "MIT",
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  },
+  "volta": {
+    "node": "16.13.2"
+  }
+}
