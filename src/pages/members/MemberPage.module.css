@@ -1,0 +1,21 @@
+.pageTitle {
+    font-family: Roboto, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 2rem;
+    line-height: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.tableTitle {
+    height: 2.5rem;
+    font-weight: 500;
+}
+
+.header {
+    margin: 1rem auto;
+    width: 50.6rem;
+    display: flex;
+    justify-content: space-between;
+}

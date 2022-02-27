@@ -1,0 +1,30 @@
+.progress td {
+    height: 3.6rem;
+}
+
+.progress th:nth-child(1) {
+    width: 3.2rem;
+}
+
+.progress th:nth-child(2) {
+    width: 19rem;
+}
+
+.progress th:nth-child(3) {
+    width: 21.9rem;
+}
+
+.progress th:nth-child(4) {
+    width: 6.5rem;
+}
+
+
+.progress td:nth-child(2) {
+    padding-left: 0.8rem;
+    text-align: left;
+}
+
+.progress td:nth-child(3) {
+    padding-left: 0.8rem;
+    text-align: left;
+}
