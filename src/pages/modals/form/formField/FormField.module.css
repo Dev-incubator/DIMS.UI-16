@@ -1,0 +1,34 @@
+.formField{
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.fieldName{
+    letter-spacing: 2px;
+    font-size: 0.95rem;
+}
+
+.input{
+    width: 17.5rem;
+    height: 1.9rem;
+    border-radius: 4px;
+    padding-left: 0.8rem;
+    background-color: transparent;
+    border: 1px solid #CCCCCC;
+    font-family: Ubuntu,sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 0.9rem;
+    line-height: 0.9rem;
+    display: flex;
+    outline: none;
+    align-items: center;
+}
+.input:focus{
+    border-color: var(--primary);
+}
+.input::placeholder{
+    font-size: 0.75rem;
+}

@@ -2,13 +2,12 @@ import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore/lite';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyAlvmZCS5rpIVaUOx26DyOysa5HVCgGgl4',
-  authDomain: 'dims-project-d92a2.firebaseapp.com',
-  databaseURL: 'https://dims-project-d92a2-default-rtdb.firebaseio.com',
-  projectId: 'dims-project-d92a2',
-  storageBucket: 'dims-project-d92a2.appspot.com',
-  messagingSenderId: '898730382887',
-  appId: '1:898730382887:web:6c6db80ee1328ea9fee002',
+  apiKey: 'AIzaSyBCZSLu1jpNpkA4N7nn9d91mJ4LFYBFslo',
+  authDomain: 'dims-project-f351c.firebaseapp.com',
+  projectId: 'dims-project-f351c',
+  storageBucket: 'dims-project-f351c.appspot.com',
+  messagingSenderId: '398255262613',
+  appId: '1:398255262613:web:bce6190b0d95cd788dc49c',
 };
 
 const app = initializeApp(firebaseConfig);

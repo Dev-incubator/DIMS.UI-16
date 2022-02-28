@@ -1,18 +1,19 @@
 import PropTypes from 'prop-types';
 import styles from './DeleteModal.module.css';
+import modalStyles from '../Modals.module.css';
 import { Button } from '../../../components/Buttons/Button/Button';
 import { BUTTON_COLORS, BUTTON_VALUES } from '../../../scripts/libraries';
 import { BackButton } from '../../../components/Buttons/backButton/BackButton';
 
-export function DeleteModal({ removeHandler, cancelHandler }) {
+export function DeleteModal({ target, removeHandler, cancelHandler }) {
   return (
-    <div className={styles.popup}>
-      <div className={styles.popup__content}>
-        <div className={styles.title}>Delete member</div>
+    <div className={modalStyles.popup}>
+      <div className={`${modalStyles.popupContent} ${styles.content}`}>
+        <div className={styles.title}>Delete {target}</div>
         <div className={styles.text}>
           Are you sure you want <br />
           to delete the current <br />
-          member ?
+          {target} ?
         </div>
         <div className={styles.buttonGroup}>
           <Button color={BUTTON_COLORS.red} onClick={removeHandler}>
@@ -26,6 +27,7 @@ export function DeleteModal({ removeHandler, cancelHandler }) {
 }
 
 DeleteModal.propTypes = {
+  target: PropTypes.string.isRequired,
   removeHandler: PropTypes.func.isRequired,
   cancelHandler: PropTypes.func.isRequired,
 };

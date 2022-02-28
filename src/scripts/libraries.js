@@ -16,4 +16,19 @@ export const BUTTON_VALUES = {
   active: 'Active',
   success: 'Success',
   fail: 'Fail',
+  save: 'Save',
+};
+
+export const MODAL_VALUES = {
+  name: 'Name',
+  description: 'Description',
+  startDate: 'Start date',
+  deadline: 'Deadline',
+  members: 'Members',
+};
+
+export const MODAL_TITLES = {
+  read: 'Task details',
+  edit: 'Edit task',
+  create: 'Create new task',
 };

@@ -1,9 +1,10 @@
 import { PureComponent } from 'react';
-import { getAllTasks } from '../../scripts/api-service';
+import { getAllTasks, getAllUsers } from '../../scripts/api-service';
 import { PageHeader } from '../helpers/PageHeader';
 import { TableHeader } from '../helpers/TableHeader';
 import styles from './Tasks.module.css';
 import { TaskRow } from './taskRow/TaskRow';
+import { TaskModal } from '../modals/createModals/taskModal/TaskModal';
 
 const tableTitles = ['#', 'Task name', 'Description', 'Start date', 'Deadline', 'Action'];
 
@@ -12,6 +13,8 @@ export class Tasks extends PureComponent {
     super(props);
     this.state = {
       tasks: [],
+      modalMode: false,
+      users: [],
     };
   }
 
@@ -21,15 +24,20 @@ export class Tasks extends PureComponent {
 
   getData = async () => {
     const tasks = await getAllTasks();
-    this.setState((prevState) => ({ ...prevState, tasks }));
+    const users = await getAllUsers();
+    this.setState((prevState) => ({ ...prevState, tasks, users }));
+  };
+
+  changeModalMode = () => {
+    this.setState((prevState) => ({ modalMode: !prevState.modalMode }));
   };
 
   render() {
-    const { tasks } = this.state;
+    const { tasks, modalMode, users } = this.state;
 
     return (
       <div>
-        <PageHeader text='Tasks' isBackButton={false} />
+        <PageHeader text='Tasks' isBackButton={false} onClick={this.changeModalMode} />
         <table className={styles.tasks}>
           <TableHeader titles={tableTitles} />
           <tbody>
@@ -41,10 +49,12 @@ export class Tasks extends PureComponent {
                 deadline={task.deadline}
                 startDate={task.startDate}
                 number={index + 1}
+                changeEditMode={this.changeEditMode}
               />
             ))}
           </tbody>
         </table>
+        {modalMode && <TaskModal users={users} mode='create' />}
       </div>
     );
   }

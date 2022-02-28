@@ -1,11 +1,9 @@
 import { PureComponent } from 'react';
-import { collection, getDocs } from 'firebase/firestore/lite';
 import styles from './Members.module.css';
 import { MemberInfoRow } from './memberInfoRow/MemberInfoRow';
-import { db } from '../../scripts/firebase-config';
 import { TableHeader } from '../helpers/TableHeader';
 import { DeleteModal } from '../modals/deleteModal/DeleteModal';
-import { deleteUser } from '../../scripts/api-service';
+import { deleteUser, getAllUsers } from '../../scripts/api-service';
 import { PageHeader } from '../helpers/PageHeader';
 
 const memberTableTitles = ['#', 'Full name', 'Direction', 'Education', 'Start', 'Age', 'Action'];
@@ -19,7 +17,6 @@ export class Members extends PureComponent {
       actionUserId: null,
     };
     this.isComponentMounted = false;
-    this.userCollectionRef = collection(db, 'users');
   }
 
   componentDidMount() {
@@ -36,9 +33,8 @@ export class Members extends PureComponent {
   }
 
   getData = async () => {
-    const data = await getDocs(this.userCollectionRef);
+    const users = await getAllUsers();
     if (this.isComponentMounted) {
-      const users = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
       this.setState({ users });
     }
   };
@@ -49,12 +45,12 @@ export class Members extends PureComponent {
 
   removeUser = async () => {
     const { actionUserId } = this.state;
-    await deleteUser(actionUserId);
     this.disableDeleteMode();
+    await deleteUser(actionUserId);
   };
 
   disableDeleteMode = () => {
-    this.setState({ deleteMode: false });
+    this.setState({ deleteMode: false, actionUserId: null });
   };
 
   render() {
@@ -81,7 +77,9 @@ export class Members extends PureComponent {
             ))}
           </tbody>
         </table>
-        {deleteMode && <DeleteModal removeHandler={this.removeUser} cancelHandler={this.disableDeleteMode} />}
+        {deleteMode && (
+          <DeleteModal target='member' removeHandler={this.removeUser} cancelHandler={this.disableDeleteMode} />
+        )}
       </div>
     );
   }
