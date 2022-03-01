@@ -28,7 +28,7 @@ export class UserTasks extends PureComponent {
   render() {
     const { tasks, name } = this.state;
     if (!name) {
-      return <div>Loading...</div>;
+      return <div className={styles.loading}>Loading...</div>;
     }
 
     return (

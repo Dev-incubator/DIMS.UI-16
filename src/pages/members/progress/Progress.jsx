@@ -28,7 +28,7 @@ export class Progress extends PureComponent {
   render() {
     const { progress, userName } = this.state;
     if (!progress || !userName) {
-      return <div>Loading...</div>;
+      return <div className={styles.loading}>Loading...</div>;
     }
     const pageTitle = `${userName}'s progress`;
 

@@ -32,3 +32,9 @@ export const MODAL_TITLES = {
   edit: 'Edit task',
   create: 'Create new task',
 };
+
+export const MODAL_MODES = {
+  read: 'read',
+  edit: 'edit',
+  create: 'create',
+};

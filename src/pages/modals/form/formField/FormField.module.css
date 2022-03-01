@@ -1,23 +1,23 @@
 .formField{
-    margin-top: 1rem;
+    margin-top: 0.8rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
 .fieldName{
-    letter-spacing: 2px;
+    letter-spacing: 1.5px;
     font-size: 0.95rem;
 }
 
 .input{
+    box-sizing: border-box;
     width: 17.5rem;
-    height: 1.9rem;
+    height: 2rem;
     border-radius: 4px;
-    padding-left: 0.8rem;
+    padding-left: 0.5rem;
     background-color: transparent;
-    border: 1px solid #CCCCCC;
-    font-family: Ubuntu,sans-serif;
+    border: 1px solid var(--borderColor);
     font-style: normal;
     font-weight: normal;
     font-size: 0.9rem;
@@ -30,5 +30,8 @@
     border-color: var(--primary);
 }
 .input::placeholder{
-    font-size: 0.75rem;
+    font-size: 0.9rem;
+}
+.date::placeholder{
+    opacity: 1;
 }

@@ -1,13 +1,14 @@
 import { useEffect } from 'react';
-import { NavLink, Route, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import { appTitle } from '../config';
-import classes from './App.module.css';
 import './App.css';
+import styles from './App.module.css';
 import { Members } from '../pages/members/Members';
 import { Progress } from '../pages/members/progress/Progress';
 import { UserTasks } from '../pages/members/userTasks/UserTasks';
 import { Tracks } from '../pages/members/tracks/Tracks';
 import { Tasks } from '../pages/tasks/Tasks';
+import { Header } from './header/Header';
 
 export const App = () => {
   useEffect(() => {
@@ -15,11 +16,8 @@ export const App = () => {
   }, []);
 
   return (
-    <div className={classes.App}>
-      <header className={classes.links}>
-        <NavLink to='/users'>Members</NavLink>
-        <NavLink to='/tasks'>Tasks</NavLink>
-      </header>
+    <div>
+      <Header />
       <Switch>
         <Route path='/users' exact component={Members} />
         <Route path='/tasks' exact component={Tasks} />
@@ -27,6 +25,9 @@ export const App = () => {
         <Route path='/tasks/:id' component={UserTasks} />
         <Route path='/track/:userId/:taskId' component={Tracks} />
       </Switch>
+      <footer>
+        <span className={styles.copyright}>© Dev Incubator</span>
+      </footer>
     </div>
   );
 };

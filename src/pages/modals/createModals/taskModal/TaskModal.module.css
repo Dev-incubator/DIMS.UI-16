@@ -1,9 +1,40 @@
 .content {
+    box-sizing: border-box;
     width: 28.7rem;
-    height: 28.7rem;
-    padding: 2rem 1.4rem;
+    height: 30rem;
+    padding: 1.7rem 1.4rem;
 }
 
 .form {
     margin-top: 2rem;
+}
+
+.usersList{
+    margin-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.fieldName{
+    letter-spacing: 1.5px;
+    font-size: 0.95rem;
+}
+
+
+.layer{
+    box-sizing: border-box;
+    width: 17.5rem;
+    height: 8rem;
+    overflow-y: auto;
+    padding: 0.5rem;
+    border: 1px solid var(--borderColor);
+    border-radius: 5px;
+    opacity: 0.9;
+}
+
+.buttonGroup{
+    margin-top: 1.4rem;
+    display: flex;
+    justify-content: center;
+    column-gap: 0.4rem;
 }

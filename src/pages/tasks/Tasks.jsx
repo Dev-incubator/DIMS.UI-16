@@ -5,6 +5,7 @@ import { TableHeader } from '../helpers/TableHeader';
 import styles from './Tasks.module.css';
 import { TaskRow } from './taskRow/TaskRow';
 import { TaskModal } from '../modals/createModals/taskModal/TaskModal';
+import { MODAL_MODES } from '../../scripts/libraries';
 
 const tableTitles = ['#', 'Task name', 'Description', 'Start date', 'Deadline', 'Action'];
 
@@ -13,8 +14,9 @@ export class Tasks extends PureComponent {
     super(props);
     this.state = {
       tasks: [],
-      modalMode: false,
+      modalMode: null,
       users: [],
+      actionTaskId: null,
     };
   }
 
@@ -28,33 +30,50 @@ export class Tasks extends PureComponent {
     this.setState((prevState) => ({ ...prevState, tasks, users }));
   };
 
-  changeModalMode = () => {
-    this.setState((prevState) => ({ modalMode: !prevState.modalMode }));
+  setCreateModalMode = () => {
+    this.setState({ modalMode: MODAL_MODES.create });
+  };
+
+  setReadModalMode = (taskId) => {
+    this.setState({ modalMode: MODAL_MODES.read, actionTaskId: taskId });
+  };
+
+  setEditModalMode = (taskId) => {
+    this.setState({ modalMode: MODAL_MODES.edit, actionTaskId: taskId });
+  };
+
+  disableModalMode = () => {
+    this.setState({ modalMode: null, actionTaskId: null });
   };
 
   render() {
-    const { tasks, modalMode, users } = this.state;
+    const { tasks, modalMode, users, actionTaskId } = this.state;
+    const actionTask = tasks.find((task) => task.id === actionTaskId);
 
     return (
       <div>
-        <PageHeader text='Tasks' isBackButton={false} onClick={this.changeModalMode} />
+        <PageHeader text='Tasks' isBackButton={false} onClick={this.setCreateModalMode} />
         <table className={styles.tasks}>
           <TableHeader titles={tableTitles} />
           <tbody>
             {tasks.map((task, index) => (
               <TaskRow
                 key={task.id}
+                id={task.id}
                 title={task.title}
                 description={task.description}
                 deadline={task.deadline}
                 startDate={task.startDate}
                 number={index + 1}
-                changeEditMode={this.changeEditMode}
+                setEditMode={this.setEditModalMode}
+                setReadMode={this.setReadModalMode}
               />
             ))}
           </tbody>
         </table>
-        {modalMode && <TaskModal users={users} mode='create' />}
+        {modalMode && (
+          <TaskModal task={actionTask} users={users} mode={modalMode} disableModalMode={this.disableModalMode} />
+        )}
       </div>
     );
   }
