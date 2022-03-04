@@ -19,13 +19,13 @@ export class Members extends PureComponent {
     this.isComponentMounted = false;
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.isComponentMounted = true;
-    this.getData();
+    await this.getData();
   }
 
-  componentDidUpdate() {
-    this.getData();
+  async componentDidUpdate() {
+    await this.getData();
   }
 
   componentWillUnmount() {

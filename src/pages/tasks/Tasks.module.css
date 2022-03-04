@@ -42,14 +42,22 @@
     text-align: left;
 }
 
-.taskTitle{
-    outline:none;
+.taskTitle {
+    outline: none;
     border: none;
     background-color: transparent;
     font-size: 0.93rem;
     text-align: left;
     color: var(--primary);
 }
-.taskTitle:hover{
+
+.taskTitle:hover {
     cursor: pointer;
+}
+
+.popupContent {
+    box-sizing: border-box;
+    width: 28.7rem;
+    height: 30rem;
+    padding: 1.7rem 1.4rem;
 }

@@ -1,4 +1,4 @@
-import { collection, doc, getDoc, getDocs, deleteDoc, updateDoc } from 'firebase/firestore/lite';
+import { collection, doc, getDoc, getDocs, deleteDoc, updateDoc, addDoc } from 'firebase/firestore/lite';
 import { db } from './firebase-config';
 
 const usersCollectionRef = collection(db, 'users');
@@ -9,6 +9,10 @@ export async function getUserById(userId) {
   const snapshot = await getDoc(doc(db, 'users', userId));
 
   return { ...snapshot.data(), userId: snapshot.id };
+}
+
+export async function addTask(task) {
+  await addDoc(tasksCollectionRef, task);
 }
 
 export async function getAllTasks() {

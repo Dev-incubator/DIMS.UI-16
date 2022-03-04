@@ -38,3 +38,15 @@ export const MODAL_MODES = {
   edit: 'edit',
   create: 'create',
 };
+
+export const INPUT_TYPES = {
+  text: 'text',
+  date: 'date',
+};
+
+export const INPUT_NAMES = {
+  deadline: 'deadline',
+  startDate: 'startDate',
+  description: 'description',
+  title: 'title',
+};

@@ -1,11 +1,13 @@
 import { PureComponent } from 'react';
-import { getAllTasks, getAllUsers } from '../../scripts/api-service';
+import { addTask, getAllTasks, getAllUsers } from '../../scripts/api-service';
 import { PageHeader } from '../helpers/PageHeader';
 import { TableHeader } from '../helpers/TableHeader';
 import styles from './Tasks.module.css';
 import { TaskRow } from './taskRow/TaskRow';
-import { TaskModal } from '../modals/createModals/taskModal/TaskModal';
 import { MODAL_MODES } from '../../scripts/libraries';
+import { ReadTaskModal } from '../modals/taskModals/ReadTaskModal';
+import { CreateTaskModal } from '../modals/taskModals/CreateTaskModal';
+import { EditTaskModal } from '../modals/taskModals/EditTaskModal';
 
 const tableTitles = ['#', 'Task name', 'Description', 'Start date', 'Deadline', 'Action'];
 
@@ -18,16 +20,33 @@ export class Tasks extends PureComponent {
       users: [],
       actionTaskId: null,
     };
+    this.isComponentMounted = false;
   }
 
-  componentDidMount() {
-    this.getData();
+  async componentDidMount() {
+    this.isComponentMounted = true;
+    await this.getData();
+  }
+
+  async componentDidUpdate() {
+    await this.getData();
+  }
+
+  componentWillUnmount() {
+    this.isComponentMounted = false;
   }
 
   getData = async () => {
     const tasks = await getAllTasks();
     const users = await getAllUsers();
-    this.setState((prevState) => ({ ...prevState, tasks, users }));
+    if (this.isComponentMounted) {
+      this.setState((prevState) => ({ ...prevState, tasks, users }));
+    }
+  };
+
+  addTask = async (task) => {
+    await addTask(task);
+    this.disableModalMode();
   };
 
   setCreateModalMode = () => {
@@ -71,8 +90,19 @@ export class Tasks extends PureComponent {
             ))}
           </tbody>
         </table>
-        {modalMode && (
-          <TaskModal task={actionTask} users={users} mode={modalMode} disableModalMode={this.disableModalMode} />
+        {modalMode === MODAL_MODES.read && (
+          <ReadTaskModal task={actionTask} users={users} disableModalMode={this.disableModalMode} />
+        )}
+        {modalMode === MODAL_MODES.create && (
+          <CreateTaskModal addTask={this.addTask} users={users} disableModalMode={this.disableModalMode} />
+        )}
+        {modalMode === MODAL_MODES.edit && (
+          <EditTaskModal
+            task={actionTask}
+            disableModalMode={this.disableModalMode}
+            updateTask={() => console.log('updating...')}
+            users={users}
+          />
         )}
       </div>
     );

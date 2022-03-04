@@ -1,3 +1,7 @@
 export function changeDateFormat(date) {
-  return date.split('.').reverse().join('-');
+  if (date.includes('.')) {
+    return date.split('.').reverse().join('-');
+  }
+
+  return date.split('-').reverse().join('.');
 }

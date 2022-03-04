@@ -2,12 +2,12 @@ import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore/lite';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyBCZSLu1jpNpkA4N7nn9d91mJ4LFYBFslo',
-  authDomain: 'dims-project-f351c.firebaseapp.com',
-  projectId: 'dims-project-f351c',
-  storageBucket: 'dims-project-f351c.appspot.com',
-  messagingSenderId: '398255262613',
-  appId: '1:398255262613:web:bce6190b0d95cd788dc49c',
+  apiKey: 'AIzaSyB9JLpdgN3tmsOV_-bAWb4wW0FuAtrKSQA',
+  authDomain: 'dims-cra.firebaseapp.com',
+  projectId: 'dims-cra',
+  storageBucket: 'dims-cra.appspot.com',
+  messagingSenderId: '279941140536',
+  appId: '1:279941140536:web:de569940c09fe9097bd6cd',
 };
 
 const app = initializeApp(firebaseConfig);
