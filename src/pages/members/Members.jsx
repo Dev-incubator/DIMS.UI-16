@@ -22,13 +22,17 @@ export class Members extends PureComponent {
     this.userCollectionRef = collection(db, 'users');
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.isComponentMounted = true;
-    this.getData();
+    const users = await this.getData();
+    this.setState({ users });
   }
 
-  componentDidUpdate() {
-    this.getData();
+  async componentDidUpdate() {
+    const users = await this.getData();
+    if (this.isComponentMounted) {
+      this.setState({ users });
+    }
   }
 
   componentWillUnmount() {
@@ -37,10 +41,8 @@ export class Members extends PureComponent {
 
   getData = async () => {
     const data = await getDocs(this.userCollectionRef);
-    if (this.isComponentMounted) {
-      const users = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-      this.setState({ users });
-    }
+
+    return data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
   };
 
   enableDeleteMode = (id) => {
