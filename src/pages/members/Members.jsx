@@ -19,25 +19,22 @@ export class Members extends PureComponent {
     this.isComponentMounted = false;
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.isComponentMounted = true;
-    this.getData();
+    const users = await getAllUsers();
+    this.setState({ users });
   }
 
-  componentDidUpdate() {
-    this.getData();
+  async componentDidUpdate() {
+    const users = await getAllUsers();
+    if (this.isComponentMounted) {
+      this.setState({ users });
+    }
   }
 
   componentWillUnmount() {
     this.isComponentMounted = false;
   }
-
-  getData = async () => {
-    const users = await getAllUsers();
-    if (this.isComponentMounted) {
-      this.setState({ users });
-    }
-  };
 
   enableDeleteMode = (id) => {
     this.setState({ deleteMode: true, actionUserId: id });

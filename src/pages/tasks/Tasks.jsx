@@ -20,8 +20,8 @@ export class Tasks extends PureComponent {
     };
   }
 
-  componentDidMount() {
-    this.getData();
+  async componentDidMount() {
+    await this.getData();
   }
 
   getData = async () => {

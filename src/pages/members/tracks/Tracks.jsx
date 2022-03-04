@@ -22,26 +22,28 @@ export class Tracks extends PureComponent {
     this.isComponentMounted = false;
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.isComponentMounted = true;
-    this.getData();
+    const tracks = await this.getData();
+    this.setState((prevState) => ({ ...prevState, tracks }));
   }
 
-  componentDidUpdate() {
-    this.getData();
+  async componentDidUpdate() {
+    const tracks = await this.getData();
+    if (this.isComponentMounted) {
+      this.setState((prevState) => ({ ...prevState, tracks }));
+    }
   }
 
   componentWillUnmount() {
     this.isComponentMounted = false;
   }
 
-  getData = async () => {
+  getData = () => {
     const { match } = this.props;
     const { userId, taskId } = match.params;
-    const tracks = await getTaskTrack(userId, taskId);
-    if (this.isComponentMounted) {
-      this.setState((prevState) => ({ ...prevState, tracks }));
-    }
+
+    return getTaskTrack(userId, taskId);
   };
 
   enableDeleteMode = (id) => {
