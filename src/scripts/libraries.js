@@ -17,3 +17,9 @@ export const BUTTON_VALUES = {
   success: 'Success',
   fail: 'Fail',
 };
+
+export const TASK_STATUS = {
+  fail: 'Fail',
+  success: 'Success',
+  active: 'Active',
+};
