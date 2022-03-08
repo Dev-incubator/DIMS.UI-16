@@ -1,11 +1,9 @@
 import { PureComponent } from 'react';
-import { collection, getDocs } from 'firebase/firestore/lite';
 import styles from './Members.module.css';
 import { MemberInfoRow } from './memberInfoRow/MemberInfoRow';
-import { db } from '../../scripts/firebase-config';
 import { TableHeader } from '../helpers/TableHeader';
 import { DeleteModal } from '../modals/deleteModal/DeleteModal';
-import { deleteUser } from '../../scripts/api-service';
+import { deleteUser, getAllUsers } from '../../scripts/api-service';
 import { PageHeader } from '../helpers/PageHeader';
 
 const memberTableTitles = ['#', 'Full name', 'Direction', 'Education', 'Start', 'Age', 'Action'];
@@ -19,20 +17,15 @@ export class Members extends PureComponent {
       actionUserId: null,
     };
     this.isComponentMounted = false;
-    this.userCollectionRef = collection(db, 'users');
   }
 
   async componentDidMount() {
     this.isComponentMounted = true;
-    const users = await this.getData();
-    this.setState({ users });
+    await this.getData();
   }
 
   async componentDidUpdate() {
-    const users = await this.getData();
-    if (this.isComponentMounted) {
-      this.setState({ users });
-    }
+    await this.getData();
   }
 
   componentWillUnmount() {
@@ -40,9 +33,10 @@ export class Members extends PureComponent {
   }
 
   getData = async () => {
-    const data = await getDocs(this.userCollectionRef);
-
-    return data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+    const users = await getAllUsers();
+    if (this.isComponentMounted) {
+      this.setState((prevState) => ({ ...prevState, users }));
+    }
   };
 
   enableDeleteMode = (id) => {

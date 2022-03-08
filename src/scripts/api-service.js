@@ -1,6 +1,7 @@
 import { collection, doc, getDoc, getDocs, deleteDoc } from 'firebase/firestore/lite';
 import { db } from './firebase-config';
 
+const userCollectionRef = collection(db, 'users');
 const tasksCollectionRef = collection(db, 'tasks');
 const tracksCollectionRef = collection(db, 'tracks');
 
@@ -12,6 +13,12 @@ export async function getUserById(userId) {
 
 export async function getAllTasks() {
   const data = await getDocs(tasksCollectionRef);
+
+  return data.docs.map((document) => ({ ...document.data(), id: document.id }));
+}
+
+export async function getAllUsers() {
+  const data = await getDocs(userCollectionRef);
 
   return data.docs.map((document) => ({ ...document.data(), id: document.id }));
 }
