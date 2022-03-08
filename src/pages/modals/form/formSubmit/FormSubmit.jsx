@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import styles from './FormSubmit.module.css';
 import { Button } from '../../../../components/Buttons/Button/Button';
 import { BUTTON_VALUES } from '../../../../scripts/libraries';
-import { BackButton } from '../../../../components/Buttons/backButton/BackButton';
 
 export function FormSubmit({ disableModalMode, onSubmit, submitButtonColor, readOnly, submitButtonValue }) {
   return (
@@ -12,7 +11,9 @@ export function FormSubmit({ disableModalMode, onSubmit, submitButtonColor, read
           {submitButtonValue}
         </Button>
       )}
-      <BackButton onClick={disableModalMode}>{BUTTON_VALUES.backToList}</BackButton>
+      <Button onClick={disableModalMode} isBackButton>
+        {BUTTON_VALUES.backToList}
+      </Button>
     </div>
   );
 }

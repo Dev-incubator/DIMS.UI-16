@@ -10,6 +10,9 @@ export function Header() {
       <NavLink to='/tasks' activeClassName={styles.active}>
         Tasks
       </NavLink>
+      <NavLink to='/login' activeClassName={styles.active}>
+        Log In
+      </NavLink>
     </header>
   );
 }

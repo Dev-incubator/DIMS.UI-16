@@ -55,6 +55,8 @@ export const INPUT_NAMES = {
   title: 'title',
   date: 'date',
   note: 'note',
+  email: 'email',
+  password: 'password',
 };
 
 export const TASK_STATUS = {

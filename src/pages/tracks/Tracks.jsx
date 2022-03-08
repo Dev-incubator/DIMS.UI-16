@@ -12,15 +12,17 @@ import { TrackModal } from '../modals/trackModals/TrackModal';
 
 const tableTitles = ['#', 'Task', 'Note', 'Date', 'Action'];
 
+const initTracksState = {
+  taskName: '',
+  tracks: [],
+  modalMode: null,
+  actionTrackId: null,
+};
+
 export class Tracks extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = {
-      taskName: '',
-      tracks: [],
-      modalMode: null,
-      actionTrackId: null,
-    };
+    this.state = initTracksState;
     this.isComponentMounted = false;
   }
 
@@ -30,7 +32,7 @@ export class Tracks extends PureComponent {
   }
 
   async componentDidUpdate(prevProps, prevState) {
-    if (!deepEqual(prevState, this.state)) {
+    if (!deepEqual(prevState, this.state) && !deepEqual(prevState, initTracksState)) {
       await this.getData();
     }
   }

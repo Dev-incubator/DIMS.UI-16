@@ -9,6 +9,7 @@ import { UserTasks } from '../pages/userTasks/UserTasks';
 import { Tracks } from '../pages/tracks/Tracks';
 import { Tasks } from '../pages/tasks/Tasks';
 import { Header } from './header/Header';
+import { LogIn } from '../pages/logIn/LogIn';
 
 export const App = () => {
   useEffect(() => {
@@ -20,6 +21,7 @@ export const App = () => {
       <Header />
       <main>
         <Switch>
+          <Route path='/login' exact component={LogIn} />
           <Route path='/users' exact component={Members} />
           <Route path='/tasks' exact component={Tasks} />
           <Route path='/progress/:id' component={Progress} />

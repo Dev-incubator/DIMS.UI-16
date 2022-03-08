@@ -4,6 +4,7 @@
     background-color: var(--primary);
     display: flex;
     column-gap: 2rem;
+    z-index: 1;
     align-items: center;
     justify-content: center;
 }

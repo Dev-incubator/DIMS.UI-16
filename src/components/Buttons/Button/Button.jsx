@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import noop from '../../../shared/noop';
 import styles from './Button.module.css';
 
-export const Button = ({ children, onClick, color, readOnly, ...restProps }) => {
+export const Button = ({ children, onClick, color, readOnly, isBackButton, ...restProps }) => {
   const style = {
     backgroundColor: `var(--${color})`,
   };
@@ -11,7 +11,7 @@ export const Button = ({ children, onClick, color, readOnly, ...restProps }) => 
     <button
       type='button'
       style={style}
-      className={`${styles.button} ${readOnly ? styles.disabledButton : ''}`}
+      className={`${isBackButton ? styles.buttonBack : styles.button} ${readOnly && styles.disabledButton}`}
       onClick={onClick}
       disabled={readOnly}
       {...restProps}
@@ -26,10 +26,12 @@ Button.propTypes = {
   children: PropTypes.node,
   color: PropTypes.string,
   readOnly: PropTypes.bool,
+  isBackButton: PropTypes.bool,
 };
 Button.defaultProps = {
   onClick: noop,
   children: null,
   color: 'secondary',
+  isBackButton: false,
   readOnly: false,
 };
