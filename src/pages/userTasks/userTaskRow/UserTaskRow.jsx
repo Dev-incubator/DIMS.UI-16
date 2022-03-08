@@ -5,16 +5,10 @@ import { BUTTON_COLORS, BUTTON_VALUES, TASK_STATUS } from '../../../scripts/libr
 import styles from '../UserTasks.module.css';
 
 export function UserTaskRow({ userId, number, title, startDate, status, deadline, taskId, updateTaskStatus }) {
-  let buttonColor = BUTTON_COLORS.blue;
-  let buttonValue = BUTTON_VALUES.active;
-  let disabledFailButton = false;
-  if (status === TASK_STATUS.active) {
-    buttonColor = BUTTON_COLORS.green;
-    buttonValue = BUTTON_VALUES.success;
-  }
-  if (status === TASK_STATUS.fail) {
-    disabledFailButton = true;
-  }
+  const buttonColor = status === TASK_STATUS.active ? BUTTON_COLORS.green : BUTTON_COLORS.blue;
+  const buttonValue = status === TASK_STATUS.active ? BUTTON_VALUES.success : BUTTON_VALUES.active;
+  const disabledFailButton = status === TASK_STATUS.fail;
+
   const updateTaskStatusHandler = ({ target: { name } }) => {
     updateTaskStatus(taskId, userId, name);
   };
