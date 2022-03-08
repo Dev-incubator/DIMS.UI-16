@@ -1,0 +1,33 @@
+.tracks td {
+    height: 3.6rem;
+}
+
+.tracks th:nth-child(1) {
+    width: 3.2rem;
+}
+
+.tracks th:nth-child(2) {
+    width: 14.5rem;
+}
+
+.tracks th:nth-child(3) {
+    width: 15.7rem;
+}
+
+.tracks th:nth-child(4) {
+    width: 6.5rem;
+}
+
+.tracks th:nth-child(5) {
+    width: 10.7rem;
+}
+
+.tracks td:nth-child(2) {
+    padding-left: 0.8rem;
+    text-align: left;
+}
+
+.tracks td:nth-child(3) {
+    padding-left: 0.8rem;
+    text-align: left;
+}

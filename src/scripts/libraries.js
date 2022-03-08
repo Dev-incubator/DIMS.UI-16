@@ -1,0 +1,25 @@
+export const BUTTON_COLORS = {
+  blue: 'primary',
+  orange: 'warning',
+  red: 'error',
+  gray: 'secondary',
+  green: 'success',
+};
+
+export const BUTTON_VALUES = {
+  create: 'Create',
+  tasks: 'Tasks',
+  progress: 'Progress',
+  edit: 'Edit',
+  delete: 'Delete',
+  backToList: 'Back To List',
+  active: 'Active',
+  success: 'Success',
+  fail: 'Fail',
+};
+
+export const TASK_STATUS = {
+  fail: 'Fail',
+  success: 'Success',
+  active: 'Active',
+};

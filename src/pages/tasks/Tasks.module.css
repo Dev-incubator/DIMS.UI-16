@@ -1,0 +1,43 @@
+.buttonGroup {
+    display: flex;
+    justify-content: center;
+    column-gap: 0.4rem;
+}
+
+.tasks td {
+    height: 3.6rem;
+}
+
+.tasks th:nth-child(1) {
+    width: 3.2rem;
+}
+
+.tasks th:nth-child(2) {
+    width: 11.3rem;
+}
+
+.tasks th:nth-child(3) {
+    width: 12.4rem;
+}
+
+.tasks th:nth-child(4) {
+    width: 6.5rem;
+}
+
+.tasks th:nth-child(5) {
+    width: 6.5rem;
+}
+
+.tasks th:nth-child(6) {
+    width: 10.7rem;
+}
+
+.tasks td:nth-child(2) {
+    padding-left: 0.6rem;
+    text-align: left;
+}
+
+.tasks td:nth-child(3) {
+    padding-left: 0.6rem;
+    text-align: left;
+}

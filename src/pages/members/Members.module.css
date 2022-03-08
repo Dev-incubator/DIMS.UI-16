@@ -1,0 +1,35 @@
+.createButton {
+    margin: 0 0.6rem -0.3rem 0;
+}
+
+.members td {
+    height: 5rem;
+}
+
+.members th:nth-child(1) {
+    min-width: 3.2rem;
+}
+
+.members th:nth-child(2) {
+    min-width: 12.5rem;
+}
+
+.members th:nth-child(3) {
+    min-width: 6.5rem;
+}
+
+.members th:nth-child(4) {
+    min-width: 7.5rem;
+}
+
+.members th:nth-child(5) {
+    min-width: 6.5rem;
+}
+
+.members th:nth-child(6) {
+    min-width: 4.4rem;
+}
+
+.members th:nth-child(7) {
+    width: 10rem;
+}
