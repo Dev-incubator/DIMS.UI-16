@@ -1,32 +1,32 @@
 import PropTypes from 'prop-types';
 import styles from './DeleteModal.module.css';
-import modalStyles from '../Modals.module.css';
-import { Button } from '../../../components/Buttons/Button/Button';
 import { BUTTON_COLORS, BUTTON_VALUES } from '../../../scripts/libraries';
-import { BackButton } from '../../../components/Buttons/backButton/BackButton';
+import { Modal } from '../../../components/Modal/Modal';
+import { FormSubmit } from '../form/formSubmit/FormSubmit';
 
-export function DeleteModal({ target, removeHandler, cancelHandler }) {
+export function DeleteModal({ target, removeHandler, cancelHandler, active }) {
   return (
-    <div className={modalStyles.popup}>
-      <div className={`${modalStyles.popupContent} ${styles.content}`}>
+    <Modal disableModalMode={cancelHandler} active={active}>
+      <div>
         <div className={styles.title}>Delete {target}</div>
         <div className={styles.text}>
           Are you sure you want <br />
           to delete the current <br />
           {target} ?
         </div>
-        <div className={styles.buttonGroup}>
-          <Button color={BUTTON_COLORS.red} onClick={removeHandler}>
-            {BUTTON_VALUES.delete}
-          </Button>
-          <BackButton onClick={cancelHandler}>{BUTTON_VALUES.backToList}</BackButton>
-        </div>
+        <FormSubmit
+          submitButtonColor={BUTTON_COLORS.red}
+          onSubmit={removeHandler}
+          disableModalMode={cancelHandler}
+          submitButtonValue={BUTTON_VALUES.delete}
+        />
       </div>
-    </div>
+    </Modal>
   );
 }
 
 DeleteModal.propTypes = {
+  active: PropTypes.bool.isRequired,
   target: PropTypes.string.isRequired,
   removeHandler: PropTypes.func.isRequired,
   cancelHandler: PropTypes.func.isRequired,

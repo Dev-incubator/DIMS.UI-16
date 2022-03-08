@@ -1,0 +1,6 @@
+.buttonGroup {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: center;
+    column-gap: 0.3rem;
+}

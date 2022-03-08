@@ -8,11 +8,15 @@ const tracksCollectionRef = collection(db, 'tracks');
 export async function getUserById(userId) {
   const snapshot = await getDoc(doc(db, 'users', userId));
 
-  return { ...snapshot.data(), userId: snapshot.id };
+  return { ...snapshot.data(), id: snapshot.id };
 }
 
 export async function addTask(task) {
   await addDoc(tasksCollectionRef, task);
+}
+
+export async function addTrack(track) {
+  await addDoc(tracksCollectionRef, track);
 }
 
 export async function getAllTasks() {
@@ -57,7 +61,7 @@ export async function getUserTasksById(userId) {
 export async function getTaskById(taskId) {
   const snapshot = await getDoc(doc(db, 'tasks', taskId));
 
-  return { ...snapshot.data(), taskId: snapshot.id };
+  return { ...snapshot.data(), id: snapshot.id };
 }
 
 export async function getTaskTrack(userId, taskId) {
@@ -92,7 +96,24 @@ export async function deleteTrack(id) {
   await deleteDoc(trackDoc);
 }
 
+export async function deleteTask(taskId) {
+  const taskDoc = doc(db, 'tasks', taskId);
+  await deleteDoc(taskDoc);
+  const tracks = await getAllTracks();
+
+  tracks.forEach(async (track) => {
+    if (track.taskId === taskId) {
+      await deleteTrack(track.id);
+    }
+  });
+}
+
 export async function updateTask(taskId, updatedFields) {
   const taskDoc = doc(db, 'tasks', taskId);
   await updateDoc(taskDoc, updatedFields);
+}
+
+export async function updateTrack(trackId, updatedFields) {
+  const trackDoc = doc(db, 'tracks', trackId);
+  await updateDoc(trackDoc, updatedFields);
 }

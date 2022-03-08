@@ -25,9 +25,12 @@ export const MODAL_VALUES = {
   startDate: 'Start date',
   deadline: 'Deadline',
   members: 'Members',
+  task: 'Task',
+  date: 'Date',
+  note: 'Note',
 };
 
-export const MODAL_TITLES = {
+export const TASK_MODAL_TITLES = {
   read: 'Task details',
   edit: 'Edit task',
   create: 'Create new task',
@@ -37,6 +40,7 @@ export const MODAL_MODES = {
   read: 'read',
   edit: 'edit',
   create: 'create',
+  delete: 'delete',
 };
 
 export const INPUT_TYPES = {
@@ -49,4 +53,29 @@ export const INPUT_NAMES = {
   startDate: 'startDate',
   description: 'description',
   title: 'title',
+  date: 'date',
+  note: 'note',
+};
+
+export const TASK_STATUS = {
+  active: 'Active',
+  fail: 'Fail',
+  success: 'Success',
+};
+
+export const DELETE_VALUES = {
+  member: 'member',
+  task: 'task',
+  track: 'task track',
+};
+
+export const PAGE_TITLES = {
+  tasks: 'Tasks',
+  members: 'Members',
+  tracks: 'Current task tracks',
+};
+
+export const TRACK_MODAL_TITLES = {
+  edit: 'Edit task track',
+  create: 'Create new task track',
 };

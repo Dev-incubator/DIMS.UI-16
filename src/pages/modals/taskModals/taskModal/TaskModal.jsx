@@ -1,132 +1,154 @@
+import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import modalStyles from '../../Modals.module.css';
+import {
+  getCreateModalState,
+  getEditModalState,
+  getModalTaskData,
+  getReadModalState,
+  getTaskModalErrors,
+  initStartModalState,
+} from '../taskModalHelpers';
+import { deepEqual } from '../../../../scripts/helpers';
+import { BUTTON_COLORS, TASK_MODAL_TITLES } from '../../../../scripts/libraries';
+import { Modal } from '../../../../components/Modal/Modal';
 import styles from './TaskModal.module.css';
-import { FormField } from '../../form/formField/FormField';
-import { BUTTON_COLORS, BUTTON_VALUES, INPUT_NAMES, INPUT_TYPES, MODAL_VALUES } from '../../../../scripts/libraries';
-import { Checkbox } from '../../../../components/Checkbox/Checkbox';
-import { Button } from '../../../../components/Buttons/Button/Button';
-import { BackButton } from '../../../../components/Buttons/backButton/BackButton';
-import noop from '../../../../shared/noop';
+import { TaskModalFields } from '../taskForm/TaskModalFields';
+import { TaskModalUsersList } from '../taskForm/TaskModalUsersList';
+import { FormSubmit } from '../../form/formSubmit/FormSubmit';
 
-export function TaskModal({
-  modalTitle,
-  onChangeInput,
-  title,
-  description,
-  startDate,
-  deadline,
-  users,
-  readOnly,
-  changeCheckboxValue,
-  submitTask,
-  closeModal,
-}) {
-  const onChangeInputValue = (name, value) => {
-    onChangeInput(name, value);
+export class TaskModal extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = initStartModalState;
+  }
+
+  componentDidUpdate(prevProps) {
+    const { active } = this.props;
+    if (!deepEqual(prevProps, this.props) && active) {
+      const { task, readOnly } = this.props;
+      if (readOnly && task) {
+        this.setReadData();
+      } else if (task) {
+        this.setEditData();
+      } else if (active) {
+        this.setCreateData();
+      } else {
+        this.setState(initStartModalState);
+      }
+    }
+  }
+
+  setReadData = () => {
+    const { users, task } = this.props;
+    const data = getReadModalState(task, users);
+    this.setState(data);
   };
 
-  return (
-    <div className={modalStyles.popup}>
-      <div className={`${modalStyles.popupContent} ${styles.content}`}>
-        <div className={modalStyles.title}>{modalTitle}</div>
-        <form className={styles.form}>
-          <FormField
-            onChange={onChangeInputValue}
-            placeholder={MODAL_VALUES.name}
-            inputValue={title}
-            inputName={INPUT_NAMES.title}
-            readOnly={readOnly}
-            fieldName={MODAL_VALUES.name}
-            stylingType={INPUT_TYPES.text}
-          />
-          <FormField
-            fieldName={MODAL_VALUES.description}
-            onChange={onChangeInputValue}
-            inputName={INPUT_NAMES.description}
-            readOnly={readOnly}
-            placeholder={MODAL_VALUES.description}
-            inputValue={description}
-            stylingType={INPUT_TYPES.text}
-          />
-          <FormField
-            fieldName={MODAL_VALUES.startDate}
-            onChange={onChangeInputValue}
-            inputName={INPUT_NAMES.startDate}
-            readOnly={readOnly}
-            inputValue={startDate}
-            stylingType={INPUT_TYPES.date}
-          />
-          <FormField
-            fieldName={MODAL_VALUES.deadline}
-            onChange={onChangeInputValue}
-            readOnly={readOnly}
-            inputName={INPUT_NAMES.deadline}
-            inputValue={deadline}
-            stylingType={INPUT_TYPES.date}
-          />
-          <div className={styles.usersList}>
-            <div className={styles.fieldName}>Members</div>
-            <div className={styles.layer}>
-              {readOnly
-                ? users.map((user) => <div key={user.id}>{user.name}</div>)
-                : users.map((user) => {
-                    const onChangeHandler = (event) => {
-                      changeCheckboxValue(user.id, event.currentTarget.checked);
-                    };
+  setEditData = () => {
+    const { users, task } = this.props;
+    const data = getEditModalState(task, users);
+    this.setState(data);
+  };
 
-                    return (
-                      <Checkbox
-                        key={user.id}
-                        value={user.value}
-                        onChange={onChangeHandler}
-                        text={user.name}
-                        id={user.id}
-                      />
-                    );
-                  })}
-            </div>
-          </div>
-          <div className={styles.buttonGroup}>
-            {!readOnly && (
-              <Button color={BUTTON_COLORS.green} onClick={submitTask}>
-                {BUTTON_VALUES.save}
-              </Button>
-            )}
-            <BackButton onClick={closeModal}>{BUTTON_VALUES.backToList}</BackButton>
-          </div>
+  setCreateData = () => {
+    const { users } = this.props;
+    const data = getCreateModalState(users);
+    this.setState(data);
+  };
+
+  changeUserValue = (userId, value) => {
+    const { usersTask } = this.state;
+    this.resetFieldError('users');
+    const updatedUsersTask = usersTask.map((user) => (user.id === userId ? { ...user, value } : user));
+    this.setState((prevState) => ({ ...prevState, usersTask: updatedUsersTask }));
+  };
+
+  onChangeInputValue = (name, value) => {
+    this.resetFieldError(name);
+    this.setState({ [name]: value });
+  };
+
+  submitTask = () => {
+    const { task, addTask } = this.props;
+    const formErrors = getTaskModalErrors(this.state);
+
+    if (formErrors) {
+      this.setState({ formErrors });
+    } else {
+      const { updateTask } = this.props;
+      const submitTask = getModalTaskData(this.state);
+      if (task) {
+        updateTask(submitTask);
+      } else {
+        addTask(submitTask);
+      }
+    }
+  };
+
+  resetFieldError = (name) => {
+    this.setState((prevState) => ({ ...prevState, formErrors: { ...prevState.formErrors, [name]: '' } }));
+  };
+
+  render() {
+    const { disableModalMode, active } = this.props;
+    const { usersTask, title, description, startDate, deadline, formErrors, readOnly, modalTitle } = this.state;
+
+    return (
+      <Modal disableModalMode={disableModalMode} active={active}>
+        <div className={styles.title}>{modalTitle}</div>
+        <form className={styles.form}>
+          <TaskModalFields
+            title={title}
+            startDate={startDate}
+            onChangeInputValue={this.onChangeInputValue}
+            description={description}
+            deadline={deadline}
+            readOnly={readOnly}
+            formErrors={formErrors}
+          />
+          <TaskModalUsersList
+            usersTask={usersTask}
+            changeUserValue={this.changeUserValue}
+            error={formErrors.users}
+            readOnly={readOnly}
+          />
+          <FormSubmit
+            onSubmit={this.submitTask}
+            readOnly={readOnly}
+            disableModalMode={disableModalMode}
+            submitButtonColor={modalTitle === TASK_MODAL_TITLES.edit ? BUTTON_COLORS.green : BUTTON_COLORS.blue}
+          />
         </form>
-      </div>
-    </div>
-  );
+      </Modal>
+    );
+  }
 }
 
 TaskModal.propTypes = {
-  modalTitle: PropTypes.string.isRequired,
-  onChangeInput: PropTypes.func,
-  title: PropTypes.string,
-  description: PropTypes.string,
-  startDate: PropTypes.string,
-  deadline: PropTypes.string,
+  readOnly: PropTypes.bool.isRequired,
+  active: PropTypes.bool.isRequired,
+  task: PropTypes.shape({
+    title: PropTypes.string,
+    description: PropTypes.string,
+    startDate: PropTypes.string,
+    deadline: PropTypes.string,
+    users: PropTypes.arrayOf(
+      PropTypes.shape({
+        userId: PropTypes.string,
+        status: PropTypes.string,
+      }),
+    ),
+  }),
+  disableModalMode: PropTypes.func.isRequired,
+  addTask: PropTypes.func.isRequired,
+  updateTask: PropTypes.func.isRequired,
   users: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
-      value: PropTypes.bool,
     }),
   ).isRequired,
-  readOnly: PropTypes.bool,
-  changeCheckboxValue: PropTypes.func,
-  submitTask: PropTypes.func,
-  closeModal: PropTypes.func.isRequired,
 };
-
 TaskModal.defaultProps = {
-  onChangeInput: noop,
-  title: '',
-  description: '',
-  startDate: '',
-  deadline: '',
-  readOnly: false,
-  changeCheckboxValue: noop,
-  submitTask: noop,
+  task: null,
 };

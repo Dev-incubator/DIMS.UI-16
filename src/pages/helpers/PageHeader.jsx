@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
-import pageStyles from '../members/MemberPage.module.css';
+import pageStyles from '../Page.module.css';
 import { BUTTON_COLORS, BUTTON_VALUES } from '../../scripts/libraries';
 import { BackButton } from '../../components/Buttons/backButton/BackButton';
 import noop from '../../shared/noop';
@@ -30,6 +30,6 @@ PageHeader.propTypes = {
 };
 
 PageHeader.defaultProps = {
+  isBackButton: false,
   onClick: noop,
-  isBackButton: true,
 };

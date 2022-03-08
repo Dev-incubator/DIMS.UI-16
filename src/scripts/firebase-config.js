@@ -2,12 +2,12 @@ import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore/lite';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyB9JLpdgN3tmsOV_-bAWb4wW0FuAtrKSQA',
-  authDomain: 'dims-cra.firebaseapp.com',
-  projectId: 'dims-cra',
-  storageBucket: 'dims-cra.appspot.com',
-  messagingSenderId: '279941140536',
-  appId: '1:279941140536:web:de569940c09fe9097bd6cd',
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
 };
 
 const app = initializeApp(firebaseConfig);

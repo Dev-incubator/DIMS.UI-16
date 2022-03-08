@@ -1,27 +1,30 @@
-.content {
-    box-sizing: border-box;
-    width: 28.7rem;
-    height: 30rem;
-    padding: 1.7rem 1.4rem;
+.title{
+    font-family: Roboto, sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 2rem;
+    line-height: 1rem;
+    text-align: center;
 }
+
 
 .form {
     margin-top: 2rem;
 }
 
-.usersList{
+.usersList {
     margin-top: 1rem;
     display: flex;
     justify-content: space-between;
 }
 
-.fieldName{
+.fieldName {
     letter-spacing: 1.5px;
     font-size: 0.95rem;
 }
 
 
-.layer{
+.layer {
     box-sizing: border-box;
     width: 17.5rem;
     height: 8rem;
@@ -32,9 +35,8 @@
     opacity: 0.9;
 }
 
-.buttonGroup{
-    margin-top: 1.4rem;
-    display: flex;
-    justify-content: center;
-    column-gap: 0.4rem;
+.errorMessage{
+    margin-top: 0.2rem;
+    color: var(--error);
+    font-size: 0.75rem;
 }

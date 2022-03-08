@@ -1,11 +1,17 @@
-footer{
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    bottom: 1.5rem;
+.App {
+    flex-direction: column;
+    min-height: 100vh;
+    display: flex;
 }
 
-.copyright{
+
+footer {
+    display: flex;
+    justify-content: center;
+    margin: 1rem;
+}
+
+.copyright {
     font-family: Roboto, sans-serif;
     font-weight: 500;
     font-style: normal;

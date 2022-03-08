@@ -2,9 +2,9 @@ import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import styles from './Progress.module.css';
 import { ProgressRow } from './progressRow/ProgressRow';
-import { PageHeader } from '../../helpers/PageHeader';
-import { TableHeader } from '../../helpers/TableHeader';
-import { getUserById, getUserTasksById } from '../../../scripts/api-service';
+import { PageHeader } from '../helpers/PageHeader';
+import { TableHeader } from '../helpers/TableHeader';
+import { getUserById, getUserTasksById } from '../../scripts/api-service';
 
 const tableTitles = ['#', 'Task name', 'Task note', 'Date'];
 
@@ -34,7 +34,7 @@ export class Progress extends PureComponent {
 
     return (
       <div>
-        <PageHeader text={pageTitle} />
+        <PageHeader text={pageTitle} isBackButton />
         <table className={styles.progress}>
           <TableHeader titles={tableTitles} />
           <tbody>
@@ -45,7 +45,6 @@ export class Progress extends PureComponent {
                 date={task.startDate}
                 description={task.description}
                 number={index + 1}
-                userId={task.userId}
                 taskId={task.id}
               />
             ))}

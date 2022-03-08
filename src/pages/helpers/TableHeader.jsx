@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import pageStyles from '../members/MemberPage.module.css';
+import pageStyles from '../Page.module.css';
 
 export function TableHeader({ titles }) {
   return (

@@ -3,12 +3,12 @@ import styles from '../Tasks.module.css';
 import { Button } from '../../../components/Buttons/Button/Button';
 import { BUTTON_COLORS, BUTTON_VALUES } from '../../../scripts/libraries';
 
-export function TaskRow({ number, title, description, startDate, deadline, setEditMode, setReadMode, id }) {
+export function TaskRow({ number, title, description, startDate, deadline, setEditMode, setReadMode, setDeleteMode }) {
   return (
     <tr>
       <td>{number}</td>
       <td>
-        <button type='button' className={styles.taskTitle} onClick={() => setReadMode(id)}>
+        <button type='button' className={styles.taskTitle} onClick={setReadMode}>
           {title}
         </button>
       </td>
@@ -17,10 +17,12 @@ export function TaskRow({ number, title, description, startDate, deadline, setEd
       <td>{deadline}</td>
       <td>
         <div className={styles.buttonGroup}>
-          <Button color={BUTTON_COLORS.orange} onClick={() => setEditMode(id)}>
+          <Button color={BUTTON_COLORS.orange} onClick={setEditMode}>
             {BUTTON_VALUES.edit}
           </Button>
-          <Button color={BUTTON_COLORS.red}>{BUTTON_VALUES.delete}</Button>
+          <Button color={BUTTON_COLORS.red} onClick={setDeleteMode}>
+            {BUTTON_VALUES.delete}
+          </Button>
         </div>
       </td>
     </tr>
@@ -28,7 +30,6 @@ export function TaskRow({ number, title, description, startDate, deadline, setEd
 }
 
 TaskRow.propTypes = {
-  id: PropTypes.string.isRequired,
   number: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
@@ -36,4 +37,5 @@ TaskRow.propTypes = {
   deadline: PropTypes.string.isRequired,
   setEditMode: PropTypes.func.isRequired,
   setReadMode: PropTypes.func.isRequired,
+  setDeleteMode: PropTypes.func.isRequired,
 };

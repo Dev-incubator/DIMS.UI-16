@@ -5,6 +5,8 @@ import { TableHeader } from '../helpers/TableHeader';
 import { DeleteModal } from '../modals/deleteModal/DeleteModal';
 import { deleteUser, getAllUsers } from '../../scripts/api-service';
 import { PageHeader } from '../helpers/PageHeader';
+import { deepEqual } from '../../scripts/helpers';
+import { DELETE_VALUES, PAGE_TITLES } from '../../scripts/libraries';
 
 const memberTableTitles = ['#', 'Full name', 'Direction', 'Education', 'Start', 'Age', 'Action'];
 
@@ -24,8 +26,10 @@ export class Members extends PureComponent {
     await this.getData();
   }
 
-  async componentDidUpdate() {
-    await this.getData();
+  async componentDidUpdate(prevProps, prevState) {
+    if (!deepEqual(prevState, this.state)) {
+      await this.getData();
+    }
   }
 
   componentWillUnmount() {
@@ -35,7 +39,7 @@ export class Members extends PureComponent {
   getData = async () => {
     const users = await getAllUsers();
     if (this.isComponentMounted) {
-      this.setState({ users });
+      this.setState((prevState) => ({ ...prevState, users }));
     }
   };
 
@@ -45,8 +49,8 @@ export class Members extends PureComponent {
 
   removeUser = async () => {
     const { actionUserId } = this.state;
-    this.disableDeleteMode();
     await deleteUser(actionUserId);
+    this.disableDeleteMode();
   };
 
   disableDeleteMode = () => {
@@ -58,28 +62,37 @@ export class Members extends PureComponent {
 
     return (
       <div>
-        <PageHeader text='Members' isBackButton={false} />
+        <PageHeader text={PAGE_TITLES.members} />
         <table className={styles.members}>
           <TableHeader titles={memberTableTitles} />
           <tbody>
-            {users.map((user, index) => (
-              <MemberInfoRow
-                key={user.id}
-                id={user.id}
-                direction={user.direction}
-                name={user.name}
-                number={index + 1}
-                age={user.age}
-                education={user.education}
-                startDate={user.startDate}
-                enableDeleteMode={this.enableDeleteMode}
-              />
-            ))}
+            {users.map((user, index) => {
+              const enableDeleteMode = () => {
+                this.enableDeleteMode(user.id);
+              };
+
+              return (
+                <MemberInfoRow
+                  key={user.id}
+                  id={user.id}
+                  direction={user.direction}
+                  name={user.name}
+                  number={index + 1}
+                  age={user.age}
+                  education={user.education}
+                  startDate={user.startDate}
+                  enableDeleteMode={enableDeleteMode}
+                />
+              );
+            })}
           </tbody>
         </table>
-        {deleteMode && (
-          <DeleteModal target='member' removeHandler={this.removeUser} cancelHandler={this.disableDeleteMode} />
-        )}
+        <DeleteModal
+          target={DELETE_VALUES.member}
+          active={deleteMode}
+          removeHandler={this.removeUser}
+          cancelHandler={this.disableDeleteMode}
+        />
       </div>
     );
   }

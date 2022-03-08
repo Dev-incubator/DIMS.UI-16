@@ -1,13 +1,13 @@
 import { PureComponent } from 'react';
-import { addTask, getAllTasks, getAllUsers } from '../../scripts/api-service';
+import { addTask, deleteTask, deleteTrack, getAllTasks, getAllUsers, updateTask } from '../../scripts/api-service';
 import { PageHeader } from '../helpers/PageHeader';
 import { TableHeader } from '../helpers/TableHeader';
 import styles from './Tasks.module.css';
 import { TaskRow } from './taskRow/TaskRow';
-import { MODAL_MODES } from '../../scripts/libraries';
-import { ReadTaskModal } from '../modals/taskModals/ReadTaskModal';
-import { CreateTaskModal } from '../modals/taskModals/CreateTaskModal';
-import { EditTaskModal } from '../modals/taskModals/EditTaskModal';
+import { DELETE_VALUES, MODAL_MODES, PAGE_TITLES } from '../../scripts/libraries';
+import { deepEqual } from '../../scripts/helpers';
+import { DeleteModal } from '../modals/deleteModal/DeleteModal';
+import { TaskModal } from '../modals/taskModals/taskModal/TaskModal';
 
 const tableTitles = ['#', 'Task name', 'Description', 'Start date', 'Deadline', 'Action'];
 
@@ -16,8 +16,8 @@ export class Tasks extends PureComponent {
     super(props);
     this.state = {
       tasks: [],
-      modalMode: null,
       users: [],
+      modalMode: null,
       actionTaskId: null,
     };
     this.isComponentMounted = false;
@@ -28,8 +28,10 @@ export class Tasks extends PureComponent {
     await this.getData();
   }
 
-  async componentDidUpdate() {
-    await this.getData();
+  async componentDidUpdate(prevProps, prevState) {
+    if (!deepEqual(prevState, this.state)) {
+      await this.getData();
+    }
   }
 
   componentWillUnmount() {
@@ -40,8 +42,24 @@ export class Tasks extends PureComponent {
     const tasks = await getAllTasks();
     const users = await getAllUsers();
     if (this.isComponentMounted) {
-      this.setState((prevState) => ({ ...prevState, tasks, users }));
+      this.setState((prevState) => ({ ...prevState, users, tasks }));
     }
+  };
+
+  updateTask = async (updatedTask) => {
+    const { actionTaskId, tasks } = this.state;
+    const prevTask = tasks.find((task) => task.id === actionTaskId);
+    if (!deepEqual(prevTask, { ...updatedTask, id: actionTaskId })) {
+      const { users } = updatedTask;
+      const prevUsers = prevTask.users;
+      await updateTask(actionTaskId, updatedTask);
+      prevUsers.forEach(async (user) => {
+        if (!users.some((item) => item.userId === user.userId)) {
+          await deleteTrack(user.userId);
+        }
+      });
+    }
+    this.disableModalMode();
   };
 
   addTask = async (task) => {
@@ -49,16 +67,14 @@ export class Tasks extends PureComponent {
     this.disableModalMode();
   };
 
-  setCreateModalMode = () => {
-    this.setState({ modalMode: MODAL_MODES.create });
+  removeTask = async () => {
+    const { actionTaskId } = this.state;
+    await deleteTask(actionTaskId);
+    this.disableModalMode();
   };
 
-  setReadModalMode = (taskId) => {
-    this.setState({ modalMode: MODAL_MODES.read, actionTaskId: taskId });
-  };
-
-  setEditModalMode = (taskId) => {
-    this.setState({ modalMode: MODAL_MODES.edit, actionTaskId: taskId });
+  setModalMode = (modalMode, actionTaskId = null) => {
+    this.setState({ modalMode, actionTaskId });
   };
 
   disableModalMode = () => {
@@ -71,39 +87,53 @@ export class Tasks extends PureComponent {
 
     return (
       <div>
-        <PageHeader text='Tasks' isBackButton={false} onClick={this.setCreateModalMode} />
+        <PageHeader text={PAGE_TITLES.tasks} onClick={() => this.setModalMode(MODAL_MODES.create)} />
         <table className={styles.tasks}>
           <TableHeader titles={tableTitles} />
           <tbody>
-            {tasks.map((task, index) => (
-              <TaskRow
-                key={task.id}
-                id={task.id}
-                title={task.title}
-                description={task.description}
-                deadline={task.deadline}
-                startDate={task.startDate}
-                number={index + 1}
-                setEditMode={this.setEditModalMode}
-                setReadMode={this.setReadModalMode}
-              />
-            ))}
+            {tasks.map((task, index) => {
+              const setEditMode = () => {
+                this.setModalMode(MODAL_MODES.edit, task.id);
+              };
+              const setReadMode = () => {
+                this.setModalMode(MODAL_MODES.read, task.id);
+              };
+              const setDeleteMode = () => {
+                this.setModalMode(MODAL_MODES.delete, task.id);
+              };
+
+              return (
+                <TaskRow
+                  key={task.id}
+                  id={task.id}
+                  title={task.title}
+                  description={task.description}
+                  deadline={task.deadline}
+                  startDate={task.startDate}
+                  number={index + 1}
+                  setEditMode={setEditMode}
+                  setDeleteMode={setDeleteMode}
+                  setReadMode={setReadMode}
+                />
+              );
+            })}
           </tbody>
         </table>
-        {modalMode === MODAL_MODES.read && (
-          <ReadTaskModal task={actionTask} users={users} disableModalMode={this.disableModalMode} />
-        )}
-        {modalMode === MODAL_MODES.create && (
-          <CreateTaskModal addTask={this.addTask} users={users} disableModalMode={this.disableModalMode} />
-        )}
-        {modalMode === MODAL_MODES.edit && (
-          <EditTaskModal
-            task={actionTask}
-            disableModalMode={this.disableModalMode}
-            updateTask={() => console.log('updating...')}
-            users={users}
-          />
-        )}
+        <TaskModal
+          users={users}
+          addTask={this.addTask}
+          task={actionTask}
+          readOnly={modalMode === MODAL_MODES.read}
+          updateTask={this.updateTask}
+          disableModalMode={this.disableModalMode}
+          active={!!modalMode && modalMode !== MODAL_MODES.delete}
+        />
+        <DeleteModal
+          active={modalMode === MODAL_MODES.delete}
+          removeHandler={this.removeTask}
+          cancelHandler={this.disableModalMode}
+          target={DELETE_VALUES.task}
+        />
       </div>
     );
   }

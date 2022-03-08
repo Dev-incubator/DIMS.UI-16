@@ -15,9 +15,18 @@
     border-radius: 0.3rem;
 }
 
+.disabledButton{
+    opacity: 0.7;
+}
+
 .button:hover{
     cursor: pointer;
     transform: scale(1.01);
     transition: 100ms;
+}
+
+.disabledButton:hover{
+    cursor: inherit;
+    transform: scale(1);
 }
 

@@ -1,7 +1,7 @@
 .formField{
     margin-top: 0.8rem;
+    width: 26rem;
     display: flex;
-    align-items: center;
     justify-content: space-between;
 }
 
@@ -26,6 +26,7 @@
     outline: none;
     align-items: center;
 }
+
 .input:focus{
     border-color: var(--primary);
 }
@@ -34,4 +35,10 @@
 }
 .date::placeholder{
     opacity: 1;
+}
+
+.errorMessage{
+    margin-top: 0.2rem;
+    color: var(--error);
+    font-size: 0.75rem;
 }
