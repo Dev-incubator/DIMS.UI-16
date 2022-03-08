@@ -6,7 +6,6 @@ import { Checkbox } from '../../../../components/Checkbox/Checkbox';
 import { BUTTON_COLORS, BUTTON_VALUES, MODAL_MODES, MODAL_TITLES, MODAL_VALUES } from '../../../../scripts/libraries';
 import { FormField, INPUT_TYPES } from '../../form/formField/FormField';
 import { Button } from '../../../../components/Buttons/Button/Button';
-import { BackButton } from '../../../../components/Buttons/backButton/BackButton';
 import { changeDateFormat } from '../../../../scripts/helpers';
 
 export class TaskModal extends PureComponent {
@@ -143,7 +142,9 @@ export class TaskModal extends PureComponent {
                   {BUTTON_VALUES.save}
                 </Button>
               ) : null}
-              <BackButton onClick={disableModalMode}>{BUTTON_VALUES.backToList}</BackButton>
+              <Button onClick={disableModalMode} isBackButton>
+                {BUTTON_VALUES.backToList}
+              </Button>
             </div>
           </form>
         </div>

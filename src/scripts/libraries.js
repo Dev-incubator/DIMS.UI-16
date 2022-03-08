@@ -38,3 +38,9 @@ export const MODAL_MODES = {
   edit: 'edit',
   create: 'create',
 };
+
+export const TASK_STATUS = {
+  fail: 'Fail',
+  success: 'Success',
+  active: 'Active',
+};

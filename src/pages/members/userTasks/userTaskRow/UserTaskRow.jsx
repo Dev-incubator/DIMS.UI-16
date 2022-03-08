@@ -1,16 +1,12 @@
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import { Button } from '../../../../components/Buttons/Button/Button';
-import { BUTTON_COLORS, BUTTON_VALUES } from '../../../../scripts/libraries';
+import { BUTTON_COLORS, BUTTON_VALUES, TASK_STATUS } from '../../../../scripts/libraries';
 import styles from '../UserTasks.module.css';
 
 export function UserTaskRow({ userId, number, title, startDate, status, deadline, taskId }) {
-  let buttonColor = BUTTON_COLORS.blue;
-  let buttonValue = BUTTON_VALUES.active;
-  if (status === 'Active') {
-    buttonColor = BUTTON_COLORS.green;
-    buttonValue = BUTTON_VALUES.success;
-  }
+  const buttonColor = status === TASK_STATUS.active ? BUTTON_COLORS.green : BUTTON_COLORS.blue;
+  const buttonValue = status === TASK_STATUS.active ? BUTTON_VALUES.success : BUTTON_VALUES.active;
 
   return (
     <tr>

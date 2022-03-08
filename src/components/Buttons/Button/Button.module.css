@@ -21,3 +21,15 @@
     transition: 100ms;
 }
 
+
+.buttonBack {
+    font-size: 0.73rem;
+    height: 2rem;
+    width: 5.5rem;
+    border-radius: 0.2rem;
+    background-color: var(--secondary);
+}
+
+.buttonBack:hover {
+    cursor: pointer;
+}
