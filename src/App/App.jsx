@@ -42,6 +42,7 @@ export const App = () => {
           <Switch>
             <Route path='/about' exact component={About} />
             <Route path='/login' exact component={LogIn} />
+            <Route path='/' component={About} />
           </Switch>
         )}
       </main>
