@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
 import { appTitle } from '../config';
 import './App.css';
@@ -42,7 +42,7 @@ export const App = () => {
           <Switch>
             <Route path='/about' exact component={About} />
             <Route path='/login' exact component={LogIn} />
-            <Route path='/' component={About} />
+            <Redirect from='/' to='/login' />
           </Switch>
         )}
       </main>
