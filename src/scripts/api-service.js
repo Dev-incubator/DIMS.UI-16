@@ -1,5 +1,6 @@
 import { collection, doc, getDoc, getDocs, deleteDoc, updateDoc, addDoc } from 'firebase/firestore/lite';
-import { db } from './firebase-config';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth, db } from './firebase-config';
 
 const usersCollectionRef = collection(db, 'users');
 const tasksCollectionRef = collection(db, 'tasks');
@@ -116,4 +117,15 @@ export async function updateTask(taskId, updatedFields) {
 export async function updateTrack(trackId, updatedFields) {
   const trackDoc = doc(db, 'tracks', trackId);
   await updateDoc(trackDoc, updatedFields);
+}
+
+export async function login(email, password, history) {
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+    history.push('users');
+  } catch (error) {
+    return error;
+  }
+
+  return null;
 }

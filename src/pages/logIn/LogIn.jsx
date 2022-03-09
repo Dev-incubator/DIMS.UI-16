@@ -1,7 +1,10 @@
 import { PureComponent } from 'react';
 import { Button, Form } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 import { INPUT_NAMES } from '../../scripts/libraries';
 import styles from './LogIn.module.css';
+import { isObjectFieldsEmpty } from '../../scripts/helpers';
+import { login } from '../../scripts/api-service';
 
 export class LogIn extends PureComponent {
   constructor(props) {
@@ -16,10 +19,11 @@ export class LogIn extends PureComponent {
     };
   }
 
-  submitHandler = (event) => {
+  submitHandler = async (event) => {
     event.preventDefault();
     event.stopPropagation();
-    const { email, password } = this.state;
+    const { history } = this.props;
+    const { email, password, formErrors } = this.state;
     if (password.length < 8) {
       this.setError(INPUT_NAMES.password, 'Password should contains 8 or more symbols');
     } else if (password.length > 24) {
@@ -29,6 +33,12 @@ export class LogIn extends PureComponent {
     const reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
     if (!reg.test(email)) {
       this.setError(INPUT_NAMES.email, 'Please, use correct email');
+    }
+    if (isObjectFieldsEmpty(formErrors)) {
+      const error = await login(email, password, history);
+      if (error) {
+        this.setError(INPUT_NAMES.password, 'Login or password is incorrect');
+      }
     }
   };
 
@@ -82,3 +92,7 @@ export class LogIn extends PureComponent {
     );
   }
 }
+
+LogIn.propTypes = {
+  history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
+};

@@ -1,8 +1,9 @@
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import styles from './Modal.module.css';
 
 export function Modal({ active, disableModalMode, children }) {
-  return (
+  return ReactDOM.createPortal(
     <div
       className={active ? `${styles.modal} ${styles.active}` : styles.modal}
       onClick={() => disableModalMode()}
@@ -15,7 +16,8 @@ export function Modal({ active, disableModalMode, children }) {
       >
         {children}
       </div>
-    </div>
+    </div>,
+    document.getElementById('portal'),
   );
 }
 

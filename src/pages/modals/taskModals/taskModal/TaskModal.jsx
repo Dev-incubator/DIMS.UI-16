@@ -30,10 +30,8 @@ export class TaskModal extends PureComponent {
         this.setReadData();
       } else if (task) {
         this.setEditData();
-      } else if (active) {
-        this.setCreateData();
       } else {
-        this.setState(initStartModalState);
+        this.setCreateData();
       }
     }
   }

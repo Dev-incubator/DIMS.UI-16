@@ -9,6 +9,10 @@
     justify-content: center;
 }
 
+.container{
+    width: 52.2rem;
+}
+
 .header a{
     font-size: 1.1rem;
     color: var(--bgColor);
@@ -21,4 +25,22 @@
 
 a.active{
     color: var(--warning);
+}
+
+.user{
+    display: flex;
+    align-items: center;
+    column-gap: 0.8rem;
+}
+
+.userName{
+    color: var(--gray);
+    font-size: 1rem;
+}
+
+.links{
+    margin-left: 1rem;
+    display: flex;
+    align-items: center;
+    column-gap: 1.5rem;
 }
