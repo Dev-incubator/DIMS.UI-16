@@ -1,14 +1,9 @@
 import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { signOut } from 'firebase/auth';
 import { Container, Nav, Navbar } from 'react-bootstrap';
 import styles from './Header.module.css';
-import { auth } from '../../scripts/firebase-config';
 
-export function Header({ user }) {
-  const logOut = async () => {
-    await signOut(auth);
-  };
+export function Header({ user, logout }) {
   const userName = user && user.email ? user.email.split('@')[0] : '';
 
   return (
@@ -31,7 +26,7 @@ export function Header({ user }) {
             </Nav>
             <Nav className={styles.user}>
               <Navbar.Text>{userName}</Navbar.Text>
-              <NavLink to='/login' onClick={logOut} activeClassName={styles.active}>
+              <NavLink to='/login' onClick={logout} activeClassName={styles.active}>
                 Log out
               </NavLink>
             </Nav>
@@ -56,6 +51,7 @@ export function Header({ user }) {
 }
 
 Header.propTypes = {
+  logout: PropTypes.func.isRequired,
   user: PropTypes.shape({ email: PropTypes.string }),
 };
 Header.defaultProps = {
