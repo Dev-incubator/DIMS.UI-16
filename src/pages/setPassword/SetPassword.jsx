@@ -46,7 +46,6 @@ export class SetPassword extends PureComponent {
       try {
         await updateUser(user.id, { password });
         await updatePassword(auth.currentUser, password);
-        alert('Success password set');
         history.push('/login');
       } catch (error) {
         console.log(error);
