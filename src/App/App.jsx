@@ -52,7 +52,6 @@ export class App extends PureComponent {
 
   render() {
     const { user } = this.state;
-    console.log(auth);
 
     return (
       <div className={styles.App}>
