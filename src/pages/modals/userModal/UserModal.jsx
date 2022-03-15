@@ -55,7 +55,6 @@ export class UserModal extends PureComponent {
   submitUser = () => {
     const { user, createUser, updateUser } = this.props;
     const formErrors = getUserModalErrors(this.state);
-
     if (formErrors) {
       this.setState({ formErrors });
     } else {

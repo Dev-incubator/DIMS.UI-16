@@ -73,6 +73,7 @@ export class Members extends PureComponent {
   };
 
   updateUser = async (user) => {
+    console.log(user);
     const { actionUserId } = this.state;
     await updateUser(actionUserId, user);
     this.disableModalMode();

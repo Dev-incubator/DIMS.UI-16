@@ -44,7 +44,7 @@ export class SetPassword extends PureComponent {
       this.setState({ error: true });
     } else {
       try {
-        await updateUser(user.id, { password });
+        await updateUser(user.id, { password, confirmPassword: password });
         await updatePassword(auth.currentUser, password);
         history.push('/login');
       } catch (error) {
