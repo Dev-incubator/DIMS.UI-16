@@ -19,6 +19,11 @@ export const BUTTON_VALUES = {
   save: 'Save',
 };
 
+export const INPUT_TYPES = {
+  text: 'text',
+  date: 'date',
+};
+
 export const MODAL_VALUES = {
   name: 'Name',
   description: 'Description',

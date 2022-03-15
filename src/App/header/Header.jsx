@@ -1,15 +1,16 @@
 import { NavLink } from 'react-router-dom';
 import styles from './Header.module.css';
 
+const headerValues = ['Users', 'Tasks'];
+
 export function Header() {
   return (
     <header className={styles.header}>
-      <NavLink to='/users' activeClassName={styles.active}>
-        Members
-      </NavLink>
-      <NavLink to='/tasks' activeClassName={styles.active}>
-        Tasks
-      </NavLink>
+      {headerValues.map((item, index) => (
+        <NavLink key={index.toString() + item} to={`/${item.toLowerCase()}`} activeClassName={styles.active}>
+          {item}
+        </NavLink>
+      ))}
     </header>
   );
 }

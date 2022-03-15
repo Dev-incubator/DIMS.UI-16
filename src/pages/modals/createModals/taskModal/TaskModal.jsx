@@ -3,10 +3,17 @@ import PropTypes from 'prop-types';
 import modalStyles from '../../Modals.module.css';
 import styles from './TaskModal.module.css';
 import { Checkbox } from '../../../../components/Checkbox/Checkbox';
-import { BUTTON_COLORS, BUTTON_VALUES, MODAL_MODES, MODAL_TITLES, MODAL_VALUES } from '../../../../scripts/libraries';
-import { FormField, INPUT_TYPES } from '../../form/formField/FormField';
+import {
+  BUTTON_COLORS,
+  BUTTON_VALUES,
+  INPUT_TYPES,
+  MODAL_MODES,
+  MODAL_TITLES,
+  MODAL_VALUES,
+} from '../../../../scripts/libraries';
+import { FormField } from '../../form/formField/FormField';
 import { Button } from '../../../../components/Buttons/Button/Button';
-import { changeDateFormat } from '../../../../scripts/helpers';
+import { changeDateFormat, getUsersTask } from '../../../../scripts/helpers';
 
 export class TaskModal extends PureComponent {
   constructor(props) {
@@ -23,6 +30,7 @@ export class TaskModal extends PureComponent {
   componentDidMount() {
     const { users, mode, task } = this.props;
     if (mode !== MODAL_MODES.create && task) {
+      const usersTask = getUsersTask(users, task);
       this.setState((prevState) => {
         return {
           ...prevState,
@@ -30,11 +38,7 @@ export class TaskModal extends PureComponent {
           description: task.description,
           startDate: changeDateFormat(task.startDate),
           deadline: changeDateFormat(task.deadline),
-          usersTask: users.map((user) => ({
-            id: user.id,
-            value: task.users.some((item) => item.userId === user.id),
-            name: user.name,
-          })),
+          usersTask,
         };
       });
     } else {
@@ -49,20 +53,8 @@ export class TaskModal extends PureComponent {
     this.setState((prevState) => ({ ...prevState, usersTask: updatedUsersTask }));
   };
 
-  onChangeTitleValue = (value) => {
-    this.setState({ title: value });
-  };
-
-  onChangeDescriptionValue = (value) => {
-    this.setState({ description: value });
-  };
-
-  onChangeStartDateValue = (value) => {
-    this.setState({ startDate: value });
-  };
-
-  onChangeDeadlineValue = (value) => {
-    this.setState({ deadline: value });
+  onChangeInputValue = (name, value) => {
+    this.setState({ [name]: value });
   };
 
   render() {
@@ -76,39 +68,36 @@ export class TaskModal extends PureComponent {
           <div className={modalStyles.title}>{MODAL_TITLES[mode]}</div>
           <form className={styles.form}>
             <FormField
-              onChange={this.onChangeTitleValue}
+              onChange={this.onChangeInputValue}
               placeholder={MODAL_VALUES.name}
-              value={title}
+              inputValue={title}
               readOnly={readOnly}
-              required
               fieldName={MODAL_VALUES.name}
-              type={INPUT_TYPES.text}
+              stylingType={INPUT_TYPES.text}
             />
             <FormField
               fieldName={MODAL_VALUES.description}
-              onChange={this.onChangeDescriptionValue}
+              onChange={this.onChangeInputValue}
               readOnly={readOnly}
               placeholder={MODAL_VALUES.description}
-              value={description}
-              type={INPUT_TYPES.text}
+              inputValue={description}
+              stylingType={INPUT_TYPES.text}
             />
             <FormField
               fieldName={MODAL_VALUES.startDate}
-              onChange={this.onChangeStartDateValue}
+              onChange={this.onChangeInputValue}
               readOnly={readOnly}
-              required
               placeholder={MODAL_VALUES.startDate}
-              value={startDate}
-              type={INPUT_TYPES.date}
+              inputValue={startDate}
+              stylingType={INPUT_TYPES.date}
             />
             <FormField
               fieldName={MODAL_VALUES.deadline}
-              onChange={this.onChangeDeadlineValue}
+              onChange={this.onChangeInputValue}
               readOnly={readOnly}
-              required
               placeholder={MODAL_VALUES.deadline}
-              value={deadline}
-              type={INPUT_TYPES.date}
+              inputValue={deadline}
+              stylingType={INPUT_TYPES.date}
             />
             <div className={styles.usersList}>
               <div className={styles.fieldName}>Members</div>

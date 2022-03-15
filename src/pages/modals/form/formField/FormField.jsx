@@ -1,66 +1,45 @@
 import PropTypes from 'prop-types';
-import { PureComponent } from 'react';
 import styles from './FormField.module.css';
+import noop from '../../../../shared/noop';
 
-export const INPUT_TYPES = {
-  text: 'text',
-  date: 'date',
-};
-
-export class FormField extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      type: INPUT_TYPES.text,
-      style: null,
-    };
-  }
-
-  componentDidMount() {
-    const { type } = this.props;
-    if (type === INPUT_TYPES.date) {
-      this.setState({ style: INPUT_TYPES.date });
-    }
-  }
-
-  setType = (value) => {
-    const { type } = this.props;
-    if (type === INPUT_TYPES.date) {
-      this.setState({ type: value });
-    }
+export function FormField({ onChange, placeholder, inputValue, fieldName, readOnly, stylingType, inputName, error }) {
+  const onChangeHandler = ({ target: { name, value } }) => {
+    onChange(name, value);
   };
 
-  render() {
-    const { onChange, placeholder, value, fieldName, readOnly, required } = this.props;
-    const { type, style } = this.state;
-
-    return (
-      <div className={styles.formField}>
-        <div className={styles.fieldName}>{fieldName}</div>
+  return (
+    <div className={styles.formField}>
+      <div className={styles.fieldName}>{fieldName}</div>
+      <div>
         <input
-          type={type}
-          required={required}
+          type={stylingType}
           disabled={readOnly}
-          className={`${styles.input} ${styles[style]}`}
+          name={inputName}
+          className={styles.input}
           placeholder={placeholder}
-          onFocus={() => this.setType(INPUT_TYPES.date)}
-          value={value}
-          onChange={(event) => onChange(event.currentTarget.value)}
+          value={inputValue}
+          onChange={onChangeHandler}
         />
+        {error && <div className={styles.errorMessage}>{error}</div>}
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 FormField.propTypes = {
-  onChange: PropTypes.func.isRequired,
-  value: PropTypes.string.isRequired,
-  placeholder: PropTypes.string.isRequired,
+  error: PropTypes.string,
+  onChange: PropTypes.func,
+  inputValue: PropTypes.string.isRequired,
+  placeholder: PropTypes.string,
   fieldName: PropTypes.string.isRequired,
-  readOnly: PropTypes.bool.isRequired,
-  type: PropTypes.string.isRequired,
-  required: PropTypes.bool,
+  readOnly: PropTypes.bool,
+  stylingType: PropTypes.string.isRequired,
+  inputName: PropTypes.string,
 };
 FormField.defaultProps = {
-  required: false,
+  error: '',
+  inputName: '',
+  placeholder: '',
+  readOnly: false,
+  onChange: noop,
 };

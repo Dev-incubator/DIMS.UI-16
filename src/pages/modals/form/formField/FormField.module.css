@@ -35,3 +35,7 @@
 .date::placeholder{
     opacity: 1;
 }
+
+.errorMessage{
+    color: var(--error);
+}
