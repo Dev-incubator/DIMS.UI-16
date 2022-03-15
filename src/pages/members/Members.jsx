@@ -1,12 +1,16 @@
 import { PureComponent } from 'react';
+import { createUserWithEmailAndPassword, sendPasswordResetEmail, signOut, deleteUser } from 'firebase/auth';
 import styles from './Members.module.css';
 import { MemberInfoRow } from './memberInfoRow/MemberInfoRow';
 import { TableHeader } from '../helpers/TableHeader';
 import { DeleteModal } from '../modals/deleteModal/DeleteModal';
-import { deleteUser, getAllUsers } from '../../scripts/api-service';
+import { createUser, removeUser, getAllUsers, login, getUserById, updateUser } from '../../scripts/api-service';
 import { PageHeader } from '../helpers/PageHeader';
-import { deepEqual } from '../../scripts/helpers';
-import { DELETE_VALUES, PAGE_TITLES } from '../../scripts/libraries';
+import { deepEqual, getAge } from '../../scripts/helpers';
+import { DELETE_VALUES, MODAL_MODES, PAGE_TITLES } from '../../scripts/libraries';
+import { UserModal } from '../modals/userModal/UserModal';
+import { auth } from '../../scripts/firebase-config';
+import { cryptId } from '../../scripts/crypt';
 
 const memberTableTitles = ['#', 'Full name', 'Direction', 'Education', 'Start', 'Age', 'Action'];
 
@@ -15,7 +19,7 @@ export class Members extends PureComponent {
     super(props);
     this.state = {
       users: [],
-      deleteMode: false,
+      modalMode: null,
       actionUserId: null,
     };
     this.isComponentMounted = false;
@@ -43,32 +47,72 @@ export class Members extends PureComponent {
     }
   };
 
-  enableDeleteMode = (id) => {
-    this.setState({ deleteMode: true, actionUserId: id });
+  setModalMode = (modalMode, actionUserId = null) => {
+    this.setState({ modalMode, actionUserId });
+  };
+
+  disableModalMode = () => {
+    this.setState({ modalMode: null, actionUserId: null });
+  };
+
+  createUser = async (user) => {
+    try {
+      const { email, password } = await getUserById(auth.currentUser.uid);
+      const newUser = await createUserWithEmailAndPassword(auth, user.email, user.password);
+      await login(user.email, user.password);
+      await sendPasswordResetEmail(auth, user.email, {
+        url: `http://localhost/?uid=${cryptId(newUser.user.uid)}`,
+      });
+      await signOut(auth);
+      await login(email, password);
+      await createUser(newUser.user.uid, user);
+    } catch (error) {
+      console.log(error.message);
+    }
+    this.disableModalMode();
+  };
+
+  updateUser = async (user) => {
+    const { actionUserId } = this.state;
+    await updateUser(actionUserId, user);
+    this.disableModalMode();
   };
 
   removeUser = async () => {
-    const { actionUserId } = this.state;
-    await deleteUser(actionUserId);
-    this.disableDeleteMode();
-  };
-
-  disableDeleteMode = () => {
-    this.setState({ deleteMode: false, actionUserId: null });
+    const { actionUserId, users } = this.state;
+    const { email, password } = users.find((item) => item.id === actionUserId);
+    try {
+      const currentUser = await getUserById(auth.currentUser.uid);
+      await login(email, password);
+      await deleteUser(auth.currentUser);
+      await signOut(auth);
+      await login(currentUser.email, currentUser.password);
+      await removeUser(actionUserId);
+    } catch (error) {
+      console.log(error);
+    }
+    this.disableModalMode();
   };
 
   render() {
-    const { users, deleteMode } = this.state;
+    const { users, modalMode, actionUserId } = this.state;
+    const actionUser = users.find((item) => item.id === actionUserId);
 
     return (
       <div>
-        <PageHeader text={PAGE_TITLES.members} />
+        <PageHeader text={PAGE_TITLES.members} onClick={() => this.setModalMode(MODAL_MODES.create)} />
         <table className={styles.members}>
           <TableHeader titles={memberTableTitles} />
           <tbody>
             {users.map((user, index) => {
-              const enableDeleteMode = () => {
-                this.enableDeleteMode(user.id);
+              const setDeleteMode = () => {
+                this.setModalMode(MODAL_MODES.delete, user.id);
+              };
+              const setEditMode = () => {
+                this.setModalMode(MODAL_MODES.edit, user.id);
+              };
+              const setReadMode = () => {
+                this.setModalMode(MODAL_MODES.read, user.id);
               };
 
               return (
@@ -77,11 +121,14 @@ export class Members extends PureComponent {
                   id={user.id}
                   direction={user.direction}
                   name={user.name}
+                  surname={user.surname}
                   number={index + 1}
-                  age={user.age}
+                  age={getAge(user.birthDate)}
                   education={user.education}
                   startDate={user.startDate}
-                  enableDeleteMode={enableDeleteMode}
+                  setEditMode={setEditMode}
+                  setReadMode={setReadMode}
+                  setDeleteMode={setDeleteMode}
                 />
               );
             })}
@@ -89,9 +136,17 @@ export class Members extends PureComponent {
         </table>
         <DeleteModal
           target={DELETE_VALUES.member}
-          active={deleteMode}
+          active={modalMode === MODAL_MODES.delete}
           removeHandler={this.removeUser}
-          cancelHandler={this.disableDeleteMode}
+          cancelHandler={this.disableModalMode}
+        />
+        <UserModal
+          updateUser={this.updateUser}
+          createUser={this.createUser}
+          user={actionUser}
+          disableModalMode={this.disableModalMode}
+          readOnly={modalMode === MODAL_MODES.read}
+          active={!!modalMode && modalMode !== MODAL_MODES.delete}
         />
       </div>
     );

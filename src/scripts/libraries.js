@@ -28,12 +28,32 @@ export const MODAL_VALUES = {
   task: 'Task',
   date: 'Date',
   note: 'Note',
+  surname: 'Last name',
+  email: 'Email',
+  direction: 'Direction',
+  sex: 'Sex',
+  role: 'Role',
+  education: 'Education',
+  address: 'Address',
+  phone: 'Mobile phone',
+  averageScore: 'University average score',
+  mathScore: 'Math score',
+  skype: 'Skype',
+  password: 'Password',
+  confirmPassword: 'Confirm Password',
+  birthDate: 'Date of birth',
 };
 
 export const TASK_MODAL_TITLES = {
   read: 'Task details',
   edit: 'Edit task',
   create: 'Create new task',
+};
+
+export const USER_MODAL_TITLES = {
+  read: 'Member details',
+  edit: 'Edit member',
+  create: 'Create member',
 };
 
 export const MODAL_MODES = {
@@ -46,6 +66,7 @@ export const MODAL_MODES = {
 export const INPUT_TYPES = {
   text: 'text',
   date: 'date',
+  password: 'password',
 };
 
 export const INPUT_NAMES = {
@@ -57,6 +78,19 @@ export const INPUT_NAMES = {
   note: 'note',
   email: 'email',
   password: 'password',
+  name: 'name',
+  surname: 'surname',
+  sex: 'sex',
+  role: 'role',
+  phone: 'phone',
+  skype: 'skype',
+  averageScore: 'averageScore',
+  mathScore: 'mathScore',
+  confirmPassword: 'confirmPassword',
+  direction: 'direction',
+  birthDate: 'birthDate',
+  address: 'address',
+  education: 'education',
 };
 
 export const TASK_STATUS = {

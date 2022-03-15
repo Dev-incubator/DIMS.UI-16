@@ -1,4 +1,4 @@
-import { collection, doc, getDoc, getDocs, deleteDoc, updateDoc, addDoc } from 'firebase/firestore/lite';
+import { collection, doc, getDoc, getDocs, deleteDoc, updateDoc, addDoc, setDoc } from 'firebase/firestore/lite';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from './firebase-config';
 
@@ -10,6 +10,10 @@ export async function getUserById(userId) {
   const snapshot = await getDoc(doc(db, 'users', userId));
 
   return { ...snapshot.data(), id: snapshot.id };
+}
+
+export async function createUser(id, user) {
+  await setDoc(doc(db, 'users', id), user);
 }
 
 export async function addTask(task) {
@@ -29,7 +33,9 @@ export async function getAllTasks() {
 export async function getAllUsers() {
   const data = await getDocs(usersCollectionRef);
 
-  return data.docs.map((document) => ({ ...document.data(), id: document.id }));
+  return data.docs
+    .map((document) => ({ ...document.data(), id: document.id }))
+    .filter((user) => user.id !== auth.currentUser.uid);
 }
 
 export async function getAllTracks() {
@@ -74,7 +80,7 @@ export async function getTaskTrack(userId, taskId) {
     .map((track) => ({ ...track, taskTitle: task.title }));
 }
 
-export async function deleteUser(userId) {
+export async function removeUser(userId) {
   const userDoc = doc(db, 'users', userId);
   await deleteDoc(userDoc);
   const allTracks = await getAllTracks();
@@ -111,12 +117,17 @@ export async function deleteTask(taskId) {
 
 export async function updateTask(taskId, updatedFields) {
   const taskDoc = doc(db, 'tasks', taskId);
-  await updateDoc(taskDoc, updatedFields);
+  await updateDoc(taskDoc, { ...updatedFields });
 }
 
 export async function updateTrack(trackId, updatedFields) {
   const trackDoc = doc(db, 'tracks', trackId);
-  await updateDoc(trackDoc, updatedFields);
+  await updateDoc(trackDoc, { ...updatedFields });
+}
+
+export async function updateUser(userId, updatedFields) {
+  const userDoc = doc(db, 'users', userId);
+  await updateDoc(userDoc, { ...updatedFields });
 }
 
 export async function login(email, password) {

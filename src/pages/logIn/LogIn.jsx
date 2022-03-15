@@ -91,7 +91,6 @@ export class LogIn extends PureComponent {
             />
             <Form.Control.Feedback type='invalid'>{formErrors.password}</Form.Control.Feedback>
           </Form.Group>
-
           <Button variant='primary' type='submit'>
             Submit
           </Button>

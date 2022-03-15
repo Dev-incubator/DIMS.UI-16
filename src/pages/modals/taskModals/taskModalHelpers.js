@@ -20,6 +20,7 @@ export const initStartModalState = {
   startDate: '',
   deadline: '',
   usersTask: [],
+  readOnly: false,
   formErrors: {
     title: '',
     startDate: '',
@@ -69,7 +70,6 @@ export const getEditModalState = (task, users) => {
   return {
     ...initStartModalState,
     modalTitle: TASK_MODAL_TITLES.edit,
-    readOnly: false,
     title: task.title,
     description: task.description,
     startDate,
@@ -101,7 +101,6 @@ export const getCreateModalState = (users) => {
   return {
     ...initStartModalState,
     modalTitle: TASK_MODAL_TITLES.create,
-    readOnly: false,
     usersTask,
   };
 };

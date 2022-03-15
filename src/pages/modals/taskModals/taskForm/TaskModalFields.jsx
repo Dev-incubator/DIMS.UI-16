@@ -8,7 +8,6 @@ export function TaskModalFields({ formErrors, title, description, startDate, dea
     <div>
       <FormField
         onChange={onChangeInputValue}
-        placeholder={MODAL_VALUES.name}
         inputValue={title}
         error={formErrors.title}
         readOnly={readOnly}
@@ -20,7 +19,6 @@ export function TaskModalFields({ formErrors, title, description, startDate, dea
         fieldName={MODAL_VALUES.description}
         onChange={onChangeInputValue}
         inputName={INPUT_NAMES.description}
-        placeholder={MODAL_VALUES.description}
         readOnly={readOnly}
         inputValue={description}
         stylingType={INPUT_TYPES.text}

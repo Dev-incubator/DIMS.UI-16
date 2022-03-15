@@ -4,12 +4,26 @@ import styles from './MemberInfoRow.module.css';
 import { Button } from '../../../components/Buttons/Button/Button';
 import { BUTTON_COLORS, BUTTON_VALUES } from '../../../scripts/libraries';
 
-export function MemberInfoRow({ id, number, name, direction, education, startDate, age, enableDeleteMode }) {
+export function MemberInfoRow({
+  id,
+  number,
+  name,
+  surname,
+  direction,
+  education,
+  startDate,
+  age,
+  setDeleteMode,
+  setEditMode,
+  setReadMode,
+}) {
   return (
     <tr>
       <td>{number}</td>
       <td>
-        <span>{name}</span>
+        <button type='button' className={styles.userName} onClick={setReadMode}>
+          {name} {surname}
+        </button>
       </td>
       <td>{direction}</td>
       <td>{education}</td>
@@ -23,8 +37,10 @@ export function MemberInfoRow({ id, number, name, direction, education, startDat
           <NavLink to={`/progress/${id}`}>
             <Button color={BUTTON_COLORS.blue}>{BUTTON_VALUES.progress}</Button>
           </NavLink>
-          <Button color={BUTTON_COLORS.orange}>{BUTTON_VALUES.edit}</Button>
-          <Button color={BUTTON_COLORS.red} onClick={enableDeleteMode}>
+          <Button color={BUTTON_COLORS.orange} onClick={setEditMode}>
+            {BUTTON_VALUES.edit}
+          </Button>
+          <Button color={BUTTON_COLORS.red} onClick={setDeleteMode}>
             {BUTTON_VALUES.delete}
           </Button>
         </div>
@@ -36,12 +52,15 @@ export function MemberInfoRow({ id, number, name, direction, education, startDat
 MemberInfoRow.propTypes = {
   number: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
+  surname: PropTypes.string.isRequired,
   direction: PropTypes.string.isRequired,
   education: PropTypes.string,
   startDate: PropTypes.string.isRequired,
   age: PropTypes.number.isRequired,
   id: PropTypes.string.isRequired,
-  enableDeleteMode: PropTypes.func.isRequired,
+  setDeleteMode: PropTypes.func.isRequired,
+  setEditMode: PropTypes.func.isRequired,
+  setReadMode: PropTypes.func.isRequired,
 };
 MemberInfoRow.defaultProps = {
   education: 'None',

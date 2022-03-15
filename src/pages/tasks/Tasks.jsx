@@ -49,10 +49,15 @@ export class Tasks extends PureComponent {
   updateTask = async (updatedTask) => {
     const { actionTaskId, tasks } = this.state;
     const prevTask = tasks.find((task) => task.id === actionTaskId);
-    if (!deepEqual(prevTask, { ...updatedTask, id: actionTaskId })) {
-      const { users } = updatedTask;
-      const prevUsers = prevTask.users;
-      await updateTask(actionTaskId, updatedTask);
+    const { users } = updatedTask;
+    const prevUsers = prevTask.users;
+    const updatedUsers = users.map((user) => {
+      const item = prevUsers.find((el) => el.userId === user.userId);
+
+      return item ? { ...user, status: item.status } : user;
+    });
+    if (!deepEqual(prevTask, { ...updatedTask, id: actionTaskId, users: updatedUsers })) {
+      await updateTask(actionTaskId, { ...updatedTask, users: updatedUsers });
       prevUsers.forEach(async (user) => {
         if (!users.some((item) => item.userId === user.userId)) {
           await deleteTrack(user.userId);

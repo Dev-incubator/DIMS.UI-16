@@ -1,21 +1,27 @@
-.formField{
-    margin-top: 0.8rem;
+.formField {
+    margin-bottom: 0.5rem;
     width: 26rem;
     display: flex;
+    break-inside: avoid;
     justify-content: space-between;
 }
 
-.fieldName{
+.placeholder {
+    opacity: 0.6;
+}
+
+.fieldName {
     letter-spacing: 1.5px;
     font-size: 0.95rem;
 }
 
-.input{
+
+.input {
     box-sizing: border-box;
     width: 17.5rem;
     height: 2rem;
     border-radius: 4px;
-    padding-left: 0.5rem;
+    padding: 0 0.5rem;
     background-color: transparent;
     border: 1px solid var(--borderColor);
     font-style: normal;
@@ -27,18 +33,20 @@
     align-items: center;
 }
 
-.input:focus{
+.input:focus {
     border-color: var(--primary);
 }
-.input::placeholder{
+
+.input::placeholder {
     font-size: 0.9rem;
 }
-.date::placeholder{
+
+.date::placeholder {
     opacity: 1;
 }
 
-.errorMessage{
-    margin-top: 0.2rem;
+.errorMessage {
+    margin-top: 0.1rem;
     color: var(--error);
     font-size: 0.75rem;
 }

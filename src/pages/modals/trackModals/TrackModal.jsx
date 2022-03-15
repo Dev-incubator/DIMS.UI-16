@@ -70,7 +70,6 @@ export class TrackModal extends PureComponent {
             readOnly={readOnly}
             inputName={INPUT_NAMES.note}
             error={formErrors.note}
-            placeholder={MODAL_VALUES.note}
             onChange={this.onChangeInputValue}
             large
           />

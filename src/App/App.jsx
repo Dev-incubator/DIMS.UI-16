@@ -1,5 +1,5 @@
 import { PureComponent } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { appTitle } from '../config';
 import './App.css';
@@ -14,6 +14,11 @@ import { LogIn } from '../pages/logIn/LogIn';
 import { auth } from '../scripts/firebase-config';
 import { About } from '../pages/about/About';
 import { login } from '../scripts/api-service';
+import { SetPassword } from '../pages/setPassword/SetPassword';
+
+onAuthStateChanged(auth, (currentUser) => {
+  localStorage.setItem('user', JSON.stringify(currentUser));
+});
 
 export class App extends PureComponent {
   constructor(props) {
@@ -25,25 +30,17 @@ export class App extends PureComponent {
 
   componentDidMount() {
     document.title = appTitle;
-    const user = JSON.parse(localStorage.getItem('user'));
-    if (!user) {
-      this.auth();
-    } else {
-      this.setState({ user });
-    }
+    this.auth();
   }
 
   auth = () => {
-    onAuthStateChanged(auth, (currentUser) => {
-      localStorage.setItem('user', JSON.stringify(currentUser));
-      this.setState({ user: currentUser });
-    });
+    const user = JSON.parse(localStorage.getItem('user'));
+    this.setState({ user });
   };
 
   logOut = async () => {
     await signOut(auth);
-    localStorage.removeItem('user');
-    this.setState({ user: null });
+    this.auth();
   };
 
   logIn = async (email, password) => {
@@ -55,6 +52,7 @@ export class App extends PureComponent {
 
   render() {
     const { user } = this.state;
+    console.log(auth);
 
     return (
       <div className={styles.App}>
@@ -66,13 +64,16 @@ export class App extends PureComponent {
               <Route path='/tasks' exact component={Tasks} />
               <Route path='/progress/:id' component={Progress} />
               <Route path='/tasks/:id' component={UserTasks} />
-              <Route path='/track/:userId/:taskId' component={Tracks} />
+              <Route path='/track/:userId/task/:taskId' component={Tracks} />
               <Route path='/about' exact component={About} />
+              <Redirect from='/login' to='/users' />
             </Switch>
           ) : (
             <Switch>
               <Route path='/about' exact component={About} />
               <Route path='/login' exact render={() => <LogIn logIn={this.logIn} />} />
+              <Route path='/resetPassword' component={SetPassword} />
+              <Redirect to='/login' />
             </Switch>
           )}
         </main>

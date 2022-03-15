@@ -48,3 +48,22 @@ export const isObjectFieldsEmpty = (obj) => {
 
   return true;
 };
+
+export function getAge(dateString) {
+  const today = new Date();
+  const birthDate = new Date(dateString);
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const month = today.getMonth() - birthDate.getMonth();
+  if (month < 0 || (month === 0 && today.getDate() < birthDate.getDate())) {
+    age -= 1;
+  }
+
+  return age;
+}
+
+export function getUid(urlString) {
+  const searchParams = new URLSearchParams(urlString);
+  const path = searchParams.get('continueUrl');
+
+  return path.split('uid=').reverse()[0];
+}
