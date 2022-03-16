@@ -20,7 +20,13 @@ export function TaskModalUsersList({ usersTask, changeUserValue, error, readOnly
                 };
 
                 return (
-                  <Checkbox key={user.id} value={user.value} onChange={onChangeHandler} text={user.name} id={user.id} />
+                  <Checkbox
+                    key={user.id}
+                    value={user.value}
+                    onChange={onChangeHandler}
+                    text={`${user.name} ${user.surname}`}
+                    id={user.id}
+                  />
                 );
               })}
         </div>
