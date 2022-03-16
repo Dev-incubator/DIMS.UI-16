@@ -63,6 +63,7 @@ export const getEditModalState = (task, users) => {
     id: user.id,
     value: task.users.some((item) => item.userId === user.id),
     name: user.name,
+    surname: user.surname,
   }));
   const startDate = changeDateFormat(task.startDate);
   const deadline = changeDateFormat(task.deadline);
@@ -96,7 +97,7 @@ export const getReadModalState = (task, users) => {
 };
 
 export const getCreateModalState = (users) => {
-  const usersTask = users.map((user) => ({ id: user.id, name: user.name, value: false }));
+  const usersTask = users.map((user) => ({ id: user.id, name: user.name, surname: user.surname, value: false }));
 
   return {
     ...initStartModalState,

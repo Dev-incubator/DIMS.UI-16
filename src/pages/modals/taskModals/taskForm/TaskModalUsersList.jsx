@@ -9,7 +9,11 @@ export function TaskModalUsersList({ usersTask, changeUserValue, error, readOnly
       <div>
         <div className={styles.layer}>
           {readOnly
-            ? usersTask.map((user) => <div key={user.id}>{user.name}</div>)
+            ? usersTask.map((user) => (
+                <div key={user.id}>
+                  {user.name} {user.surname}
+                </div>
+              ))
             : usersTask.map((user) => {
                 const onChangeHandler = (event) => {
                   changeUserValue(user.id, event.currentTarget.checked);
