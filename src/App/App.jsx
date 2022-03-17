@@ -9,6 +9,7 @@ import { UserTasks } from '../pages/members/userTasks/UserTasks';
 import { Tracks } from '../pages/members/tracks/Tracks';
 import { Tasks } from '../pages/tasks/Tasks';
 import { Header } from './header/Header';
+import { COPYRIGHT } from '../scripts/libraries';
 
 export const App = () => {
   useEffect(() => {
@@ -26,7 +27,7 @@ export const App = () => {
         <Route path='/track/:userId/:taskId' component={Tracks} />
       </Switch>
       <footer>
-        <span className={styles.copyright}>© Dev Incubator</span>
+        <span className={styles.copyright}>{COPYRIGHT}</span>
       </footer>
     </div>
   );

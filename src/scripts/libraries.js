@@ -1,3 +1,5 @@
+export const COPYRIGHT = '© Dev Incubator';
+
 export const BUTTON_COLORS = {
   blue: 'primary',
   orange: 'warning',
