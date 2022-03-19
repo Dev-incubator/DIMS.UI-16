@@ -1,5 +1,6 @@
 import { PureComponent } from 'react';
 import { createUserWithEmailAndPassword, sendPasswordResetEmail, signOut, deleteUser } from 'firebase/auth';
+import PropTypes from 'prop-types';
 import styles from './Members.module.css';
 import { MemberInfoRow } from './memberInfoRow/MemberInfoRow';
 import { TableHeader } from '../helpers/TableHeader';
@@ -7,10 +8,11 @@ import { DeleteModal } from '../modals/deleteModal/DeleteModal';
 import { createUser, removeUser, getAllUsers, login, getUserById, updateUser } from '../../scripts/api-service';
 import { PageHeader } from '../helpers/PageHeader';
 import { deepEqual, getAge } from '../../scripts/helpers';
-import { DELETE_VALUES, MODAL_MODES, PAGE_TITLES } from '../../scripts/libraries';
+import { DELETE_VALUES, HEADER_VALUES, MODAL_MODES, PAGE_TITLES, USER_ROLES } from '../../scripts/libraries';
 import { UserModal } from '../modals/userModal/UserModal';
 import { auth } from '../../scripts/firebase-config';
 import { cryptId } from '../../scripts/crypt';
+import pageStyles from '../Page.module.css';
 
 const memberTableTitles = ['#', 'Full name', 'Direction', 'Education', 'Start', 'Age', 'Action'];
 
@@ -96,11 +98,18 @@ export class Members extends PureComponent {
 
   render() {
     const { users, modalMode, actionUserId } = this.state;
+    const { role } = this.props;
     const actionUser = users.find((item) => item.id === actionUserId);
 
     return (
       <div>
-        <PageHeader text={PAGE_TITLES.members} onClick={() => this.setModalMode(MODAL_MODES.create)} />
+        {role === USER_ROLES.mentor ? (
+          <div className={styles.header}>
+            <div className={pageStyles.pageTitle}>{HEADER_VALUES.members}</div>
+          </div>
+        ) : (
+          <PageHeader text={PAGE_TITLES.members} onClick={() => this.setModalMode(MODAL_MODES.create)} />
+        )}
         <table className={styles.members}>
           <TableHeader titles={memberTableTitles} />
           <tbody>
@@ -123,6 +132,7 @@ export class Members extends PureComponent {
                   name={user.name}
                   surname={user.surname}
                   number={index + 1}
+                  role={role}
                   age={getAge(user.birthDate)}
                   education={user.education}
                   startDate={user.startDate}
@@ -153,5 +163,7 @@ export class Members extends PureComponent {
   }
 }
 
-Members.propTypes = {};
+Members.propTypes = {
+  role: PropTypes.string.isRequired,
+};
 Members.defaultProps = {};

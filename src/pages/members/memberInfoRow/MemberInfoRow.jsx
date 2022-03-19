@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import styles from './MemberInfoRow.module.css';
 import { Button } from '../../../components/Buttons/Button/Button';
-import { BUTTON_COLORS, BUTTON_VALUES } from '../../../scripts/libraries';
+import { BUTTON_COLORS, BUTTON_VALUES, USER_ROLES } from '../../../scripts/libraries';
 
 export function MemberInfoRow({
   id,
@@ -13,6 +13,7 @@ export function MemberInfoRow({
   education,
   startDate,
   age,
+  role,
   setDeleteMode,
   setEditMode,
   setReadMode,
@@ -32,17 +33,21 @@ export function MemberInfoRow({
       <td>
         <div className={styles.buttonGroup}>
           <NavLink to={`/tasks/${id}`}>
-            <Button color={BUTTON_COLORS.blue}>{BUTTON_VALUES.tasks}</Button>
+            <Button color={BUTTON_COLORS.green}>{BUTTON_VALUES.tasks}</Button>
           </NavLink>
           <NavLink to={`/progress/${id}`}>
             <Button color={BUTTON_COLORS.blue}>{BUTTON_VALUES.progress}</Button>
           </NavLink>
-          <Button color={BUTTON_COLORS.orange} onClick={setEditMode}>
-            {BUTTON_VALUES.edit}
-          </Button>
-          <Button color={BUTTON_COLORS.red} onClick={setDeleteMode}>
-            {BUTTON_VALUES.delete}
-          </Button>
+          {role === USER_ROLES.admin && (
+            <div className={styles.buttonGroup}>
+              <Button color={BUTTON_COLORS.orange} onClick={setEditMode}>
+                {BUTTON_VALUES.edit}
+              </Button>
+              <Button color={BUTTON_COLORS.red} onClick={setDeleteMode}>
+                {BUTTON_VALUES.delete}
+              </Button>
+            </div>
+          )}
         </div>
       </td>
     </tr>
@@ -58,6 +63,7 @@ MemberInfoRow.propTypes = {
   startDate: PropTypes.string.isRequired,
   age: PropTypes.number.isRequired,
   id: PropTypes.string.isRequired,
+  role: PropTypes.string.isRequired,
   setDeleteMode: PropTypes.func.isRequired,
   setEditMode: PropTypes.func.isRequired,
   setReadMode: PropTypes.func.isRequired,

@@ -4,7 +4,14 @@ import { deepEqual } from '../../../scripts/helpers';
 import { Modal } from '../../../components/Modal/Modal';
 import styles from './UserModal.module.css';
 import { FormField } from '../form/formField/FormField';
-import { BUTTON_COLORS, INPUT_NAMES, INPUT_TYPES, MODAL_VALUES, USER_MODAL_TITLES } from '../../../scripts/libraries';
+import {
+  BUTTON_COLORS,
+  INPUT_NAMES,
+  INPUT_TYPES,
+  MODAL_VALUES,
+  USER_MODAL_TITLES,
+  USER_ROLES,
+} from '../../../scripts/libraries';
 import {
   getCreateUserModalState,
   getEditUserModalState,
@@ -153,7 +160,7 @@ export class UserModal extends PureComponent {
             inputName={INPUT_NAMES.role}
             error={formErrors.role}
             readOnly={readOnly}
-            selectValues={['Admin', 'Mentor', 'User']}
+            selectValues={[USER_ROLES.admin, USER_ROLES.mentor, USER_ROLES.user]}
             fieldName={MODAL_VALUES.role}
           />
           {!user && (

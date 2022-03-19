@@ -7,7 +7,7 @@ import { addTrack, deleteTrack, getTaskById, getTaskTrack, updateTrack } from '.
 import { DeleteModal } from '../modals/deleteModal/DeleteModal';
 import { deepEqual } from '../../scripts/helpers';
 import { PageHeader } from '../helpers/PageHeader';
-import { DELETE_VALUES, MODAL_MODES, PAGE_TITLES } from '../../scripts/libraries';
+import { DELETE_VALUES, MODAL_MODES } from '../../scripts/libraries';
 import { TrackModal } from '../modals/trackModals/TrackModal';
 
 const tableTitles = ['#', 'Task', 'Note', 'Date', 'Action'];
@@ -88,9 +88,13 @@ export class Tracks extends PureComponent {
     const { tracks, modalMode, actionTrackId, taskName } = this.state;
     const actionTrack = tracks.find((task) => task.id === actionTrackId);
 
+    if (!taskName) {
+      return <div className={styles.loading}>Loading...</div>;
+    }
+
     return (
       <div>
-        <PageHeader text={PAGE_TITLES.tracks} onClick={() => this.setModalMode(MODAL_MODES.create)} />
+        <PageHeader text={`"${taskName}" tracks`} onClick={() => this.setModalMode(MODAL_MODES.create)} />
         <table className={styles.tracks}>
           <TableHeader titles={tableTitles} />
           <tbody>

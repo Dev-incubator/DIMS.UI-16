@@ -1,9 +1,22 @@
+export const COPYRIGHT = '© Oleg Yanusik';
+
 export const BUTTON_COLORS = {
   blue: 'primary',
   orange: 'warning',
   red: 'error',
   gray: 'secondary',
   green: 'success',
+};
+
+export const FIELD_NAMES = {
+  pastPassword: 'Past password',
+  newPassword: 'New password',
+};
+
+export const USER_ROLES = {
+  user: 'User',
+  admin: 'Admin',
+  mentor: 'Mentor',
 };
 
 export const BUTTON_VALUES = {
@@ -78,6 +91,7 @@ export const INPUT_NAMES = {
   note: 'note',
   email: 'email',
   password: 'password',
+  newPassword: 'newPassword',
   name: 'name',
   surname: 'surname',
   sex: 'sex',
@@ -114,4 +128,13 @@ export const PAGE_TITLES = {
 export const TRACK_MODAL_TITLES = {
   edit: 'Edit task track',
   create: 'Create new task track',
+};
+
+export const HEADER_VALUES = {
+  tasks: 'Tasks',
+  logIn: 'Log In',
+  logout: 'Log out',
+  about: 'About',
+  members: 'Members',
+  settings: 'Settings',
 };

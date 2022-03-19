@@ -33,3 +33,9 @@
 .members th:nth-child(7) {
     width: 10rem;
 }
+
+.header{
+    margin: 2rem auto;
+    display: flex;
+    justify-content: center;
+}

@@ -1,85 +1,111 @@
-import { PureComponent } from 'react';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Component } from 'react';
+import { Switch, withRouter } from 'react-router-dom';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
+import PropTypes from 'prop-types';
 import { appTitle } from '../config';
 import './App.css';
 import styles from './App.module.css';
-import { Members } from '../pages/members/Members';
-import { Progress } from '../pages/progress/Progress';
-import { UserTasks } from '../pages/userTasks/UserTasks';
-import { Tracks } from '../pages/tracks/Tracks';
-import { Tasks } from '../pages/tasks/Tasks';
 import { Header } from './header/Header';
-import { LogIn } from '../pages/logIn/LogIn';
 import { auth } from '../scripts/firebase-config';
-import { About } from '../pages/about/About';
-import { login } from '../scripts/api-service';
-import { SetPassword } from '../pages/setPassword/SetPassword';
+import { getUserById, login } from '../scripts/api-service';
+import { COPYRIGHT, USER_ROLES } from '../scripts/libraries';
+import { UserRoutes } from './routes/UserRoutes';
+import { AdminRoutes } from './routes/AdminRoutes';
+import { SpectatorRoutes } from './routes/SpectatorRoutes';
+import { themes, ThemeContext } from '../providers/ThemeProvider';
 
 onAuthStateChanged(auth, (currentUser) => {
   localStorage.setItem('user', JSON.stringify(currentUser));
 });
 
-export class App extends PureComponent {
+class App extends Component {
   constructor(props) {
     super(props);
+
+    this.changeTheme = (value) => {
+      this.setState((prevState) => ({
+        ...prevState,
+        themeContext: { ...prevState.themeContext, theme: themes[value] },
+      }));
+    };
+
     this.state = {
       user: null,
+      themeContext: {
+        theme: themes.light,
+        changeTheme: this.changeTheme,
+      },
     };
+    this.isDataSetted = false;
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     document.title = appTitle;
-    this.auth();
+    await this.auth();
   }
 
-  auth = () => {
+  auth = async () => {
     const user = JSON.parse(localStorage.getItem('user'));
-    this.setState({ user });
+    this.isDataSetted = true;
+    if (user) {
+      const currentUser = await getUserById(user.uid);
+      this.setState({ user: currentUser });
+    } else {
+      this.setState({ user });
+    }
   };
 
   logOut = async () => {
     await signOut(auth);
-    this.auth();
+    await this.auth();
   };
 
   logIn = async (email, password) => {
+    const { history } = this.props;
     const error = await login(email, password);
-    this.auth();
+    await this.auth();
+    history.push('/about');
 
     return error;
   };
 
   render() {
-    const { user } = this.state;
+    const { user, themeContext } = this.state;
+    const { theme } = themeContext;
+    if (!this.isDataSetted) {
+      return <div>Loading...</div>;
+    }
 
     return (
-      <div className={styles.App}>
-        <Header user={user} logout={this.logOut} />
-        <main>
-          {user ? (
-            <Switch>
-              <Route path='/users' exact component={Members} />
-              <Route path='/tasks' exact component={Tasks} />
-              <Route path='/progress/:id' component={Progress} />
-              <Route path='/tasks/:id' component={UserTasks} />
-              <Route path='/track/:userId/task/:taskId' component={Tracks} />
-              <Route path='/about' exact component={About} />
-              <Redirect from='/login' to='/users' />
-            </Switch>
-          ) : (
-            <Switch>
-              <Route path='/about' exact component={About} />
-              <Route path='/login' exact render={() => <LogIn logIn={this.logIn} />} />
-              <Route path='/resetPassword' component={SetPassword} />
-              <Redirect to='/login' />
-            </Switch>
-          )}
-        </main>
-        <footer>
-          <span className={styles.copyright}>© Oleg Yanusik</span>
-        </footer>
-      </div>
+      <ThemeContext.Provider value={themeContext}>
+        <div className={styles.App} style={{ backgroundColor: theme.backgroundColor }}>
+          <Header user={user} logout={this.logOut} />
+          <main>
+            {user ? (
+              <Switch>
+                {user.role === USER_ROLES.admin || user.role === USER_ROLES.mentor ? (
+                  <AdminRoutes role={user.role} />
+                ) : (
+                  <UserRoutes />
+                )}
+              </Switch>
+            ) : (
+              <Switch>
+                <SpectatorRoutes logIn={this.logIn} />
+              </Switch>
+            )}
+          </main>
+          <footer>
+            <span className={styles.copyright}>{COPYRIGHT}</span>
+          </footer>
+        </div>
+      </ThemeContext.Provider>
     );
   }
 }
+
+App.propTypes = {
+  history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
+};
+
+export default withRouter(App);

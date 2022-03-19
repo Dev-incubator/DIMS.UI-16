@@ -39,7 +39,6 @@ a.active{
 }
 
 .links{
-    margin-left: 1rem;
     display: flex;
     align-items: center;
     column-gap: 1.5rem;
