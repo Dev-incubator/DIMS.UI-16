@@ -48,7 +48,6 @@
     background-color: transparent;
     font-size: 0.93rem;
     text-align: left;
-    color: var(--primary);
 }
 
 .taskTitle:hover {

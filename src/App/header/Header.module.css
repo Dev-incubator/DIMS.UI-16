@@ -1,7 +1,6 @@
 .header{
     width: 100vw;
     height: 3rem;
-    background-color: var(--primary);
     display: flex;
     column-gap: 2rem;
     z-index: 1;
@@ -15,16 +14,16 @@
 
 .header a{
     font-size: 1.1rem;
-    color: var(--bgColor);
+    color: var(--bgLight);
 }
 
 .header a:hover{
     transition: 200ms;
-    color: var(--warning);
+    color: var(--orange);
 }
 
 a.active{
-    color: var(--warning);
+    color: var(--orange);
 }
 
 .user{

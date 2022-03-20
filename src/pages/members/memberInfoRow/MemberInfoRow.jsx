@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom';
 import styles from './MemberInfoRow.module.css';
 import { Button } from '../../../components/Buttons/Button/Button';
 import { BUTTON_COLORS, BUTTON_VALUES, USER_ROLES } from '../../../scripts/libraries';
+import { ThemeContext } from '../../../providers/ThemeProvider';
 
 export function MemberInfoRow({
   id,
@@ -19,38 +20,42 @@ export function MemberInfoRow({
   setReadMode,
 }) {
   return (
-    <tr>
-      <td>{number}</td>
-      <td>
-        <button type='button' className={styles.userName} onClick={setReadMode}>
-          {name} {surname}
-        </button>
-      </td>
-      <td>{direction}</td>
-      <td>{education}</td>
-      <td>{startDate}</td>
-      <td>{age}</td>
-      <td>
-        <div className={styles.buttonGroup}>
-          <NavLink to={`/tasks/${id}`}>
-            <Button color={BUTTON_COLORS.green}>{BUTTON_VALUES.tasks}</Button>
-          </NavLink>
-          <NavLink to={`/progress/${id}`}>
-            <Button color={BUTTON_COLORS.blue}>{BUTTON_VALUES.progress}</Button>
-          </NavLink>
-          {role === USER_ROLES.admin && (
+    <ThemeContext.Consumer>
+      {({ theme }) => (
+        <tr>
+          <td>{number}</td>
+          <td>
+            <button type='button' className={styles.userName} onClick={setReadMode} style={{ color: theme.primary }}>
+              {name} {surname}
+            </button>
+          </td>
+          <td>{direction}</td>
+          <td>{education}</td>
+          <td>{startDate}</td>
+          <td>{age}</td>
+          <td>
             <div className={styles.buttonGroup}>
-              <Button color={BUTTON_COLORS.orange} onClick={setEditMode}>
-                {BUTTON_VALUES.edit}
-              </Button>
-              <Button color={BUTTON_COLORS.red} onClick={setDeleteMode}>
-                {BUTTON_VALUES.delete}
-              </Button>
+              <NavLink to={`/tasks/${id}`}>
+                <Button color={BUTTON_COLORS.green}>{BUTTON_VALUES.tasks}</Button>
+              </NavLink>
+              <NavLink to={`/progress/${id}`}>
+                <Button color={BUTTON_COLORS.blue}>{BUTTON_VALUES.progress}</Button>
+              </NavLink>
+              {role === USER_ROLES.admin && (
+                <div className={styles.buttonGroup}>
+                  <Button color={BUTTON_COLORS.orange} onClick={setEditMode}>
+                    {BUTTON_VALUES.edit}
+                  </Button>
+                  <Button color={BUTTON_COLORS.red} onClick={setDeleteMode}>
+                    {BUTTON_VALUES.delete}
+                  </Button>
+                </div>
+              )}
             </div>
-          )}
-        </div>
-      </td>
-    </tr>
+          </td>
+        </tr>
+      )}
+    </ThemeContext.Consumer>
   );
 }
 

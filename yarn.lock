@@ -9199,7 +9199,7 @@
   optionalDependencies:
     "fsevents" "^2.3.2"
 
-"react-spinners@0.11.0":
+"react-spinners@^0.11.0":
   "integrity" "sha512-rDZc0ABWn/M1OryboGsWVmIPg8uYWl0L35jPUhr40+Yg+syVPjeHwvnB7XWaRpaKus3M0cG9BiJA+ZB0dAwWyw=="
   "resolved" "https://registry.npmjs.org/react-spinners/-/react-spinners-0.11.0.tgz"
   "version" "0.11.0"

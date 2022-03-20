@@ -16,8 +16,8 @@
 }
 
 .form{
-    border: 3px solid var(--borderColor);
+    border: 2px solid;
     border-radius: 0.4rem;
-    padding: 0.5rem 1rem 1rem;
+    padding: 0.7rem 1.5rem 1.5rem;
     width: 25rem;
 }

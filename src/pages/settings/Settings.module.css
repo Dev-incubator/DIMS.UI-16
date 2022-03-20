@@ -1,7 +1,7 @@
 .settings{
     margin: 2rem auto;
     box-sizing: border-box;
-    width: 52rem;
+    width: 51rem;
     border: 2px solid;
     border-radius: 0.3rem;
     padding: 2rem;
@@ -13,31 +13,21 @@
 }
 
 .changePassword{
+    margin-top: 1.2rem;
     display: flex;
     flex-direction: column;
     row-gap: 0.8rem;
     align-items: center;
 }
 
-.alert{
-    position: fixed;
-    right: 0;
-    left: 0;
-    margin: 0 auto;
-    top: 4rem;
-    opacity: 0;
-    pointer-events: none;
-    width: 13rem;
-    height: 3rem;
+.switchTheme{
     display: flex;
-    justify-content: flex-start;
-    transform: scale(0.3);
+    flex-direction: column;
+    row-gap: 0.4rem;
     align-items: center;
-    transition: 0.3s;
 }
 
-.alert.active{
-    opacity: 1;
-    transform: scale(1);
-    pointer-events: all;
+.themeButtons{
+    display: flex;
+    column-gap: 0.3rem;
 }

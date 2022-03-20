@@ -7,6 +7,8 @@ import { UserTaskRow } from './userTaskRow/UserTaskRow';
 import { getTaskById, getUserById, getUserTasksById, updateTask } from '../../scripts/api-service';
 import { USER_ROLES } from '../../scripts/libraries';
 import pageStyles from '../Page.module.css';
+import { ThemeContext } from '../../providers/ThemeProvider';
+import { Loading } from '../loading/Loading';
 
 const adminTableTitles = ['#', 'Task name', 'Start date', 'Deadline', 'Status', 'Update status'];
 const userTableTitles = adminTableTitles.slice(0, adminTableTitles.length - 1);
@@ -53,38 +55,42 @@ export class UserTasks extends PureComponent {
     const { tasks, name } = this.state;
     const { role } = this.props;
     if (!name) {
-      return <div className={styles.loading}>Loading...</div>;
+      return <Loading />;
     }
 
     return (
-      <div>
-        {role === USER_ROLES.user ? (
-          <div className={styles.header}>
-            <div className={pageStyles.pageTitle}>Hi {name}! There are your current tasks</div>
+      <ThemeContext.Consumer>
+        {({ theme }) => (
+          <div>
+            {role === USER_ROLES.user ? (
+              <div className={styles.header} style={{ color: theme.textColor }}>
+                <div className={pageStyles.pageTitle}>Hi {name}! There are your current tasks</div>
+              </div>
+            ) : (
+              <PageHeader text={`${name}'s current tasks`} isBackButton />
+            )}
+            <table className={styles.userTasks} style={{ color: theme.textColor }}>
+              <TableHeader titles={role === USER_ROLES.user ? userTableTitles : adminTableTitles} />
+              <tbody>
+                {tasks.map((task, index) => (
+                  <UserTaskRow
+                    key={task.id}
+                    role={role}
+                    updateTaskStatus={this.updateTaskStatus}
+                    userId={task.userId}
+                    taskId={task.id}
+                    title={task.title}
+                    deadline={task.deadline}
+                    startDate={task.startDate}
+                    number={index + 1}
+                    status={task.status}
+                  />
+                ))}
+              </tbody>
+            </table>
           </div>
-        ) : (
-          <PageHeader text={`${name}'s current tasks`} isBackButton />
         )}
-        <table className={styles.userTasks}>
-          <TableHeader titles={role === USER_ROLES.user ? userTableTitles : adminTableTitles} />
-          <tbody>
-            {tasks.map((task, index) => (
-              <UserTaskRow
-                key={task.id}
-                role={role}
-                updateTaskStatus={this.updateTaskStatus}
-                userId={task.userId}
-                taskId={task.id}
-                title={task.title}
-                deadline={task.deadline}
-                startDate={task.startDate}
-                number={index + 1}
-                status={task.status}
-              />
-            ))}
-          </tbody>
-        </table>
-      </div>
+      </ThemeContext.Consumer>
     );
   }
 }

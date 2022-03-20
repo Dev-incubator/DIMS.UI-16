@@ -4,23 +4,28 @@ import pageStyles from '../Page.module.css';
 import { BUTTON_COLORS, BUTTON_VALUES } from '../../scripts/libraries';
 import noop from '../../shared/noop';
 import { Button } from '../../components/Buttons/Button/Button';
+import { ThemeContext } from '../../providers/ThemeProvider';
 
 export function PageHeader({ text, onClick, isBackButton }) {
   return (
-    <div className={pageStyles.header}>
-      <div className={pageStyles.pageTitle}>{text}</div>
-      {isBackButton ? (
-        <NavLink to='/users'>
-          <Button onClick={onClick} isBackButton>
-            {BUTTON_VALUES.backToList}
-          </Button>
-        </NavLink>
-      ) : (
-        <Button color={BUTTON_COLORS.blue} onClick={onClick}>
-          {BUTTON_VALUES.create}
-        </Button>
+    <ThemeContext.Consumer>
+      {({ theme }) => (
+        <div className={pageStyles.header} style={{ color: theme.textColor }}>
+          <div className={pageStyles.pageTitle}>{text}</div>
+          {isBackButton ? (
+            <NavLink to='/users'>
+              <Button onClick={onClick} isBackButton>
+                {BUTTON_VALUES.backToList}
+              </Button>
+            </NavLink>
+          ) : (
+            <Button color={BUTTON_COLORS.blue} onClick={onClick}>
+              {BUTTON_VALUES.create}
+            </Button>
+          )}
+        </div>
       )}
-    </div>
+    </ThemeContext.Consumer>
   );
 }
 

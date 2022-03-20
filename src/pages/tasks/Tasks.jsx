@@ -8,6 +8,8 @@ import { DELETE_VALUES, MODAL_MODES, PAGE_TITLES } from '../../scripts/libraries
 import { deepEqual } from '../../scripts/helpers';
 import { DeleteModal } from '../modals/deleteModal/DeleteModal';
 import { TaskModal } from '../modals/taskModals/taskModal/TaskModal';
+import { ThemeContext } from '../../providers/ThemeProvider';
+import { Loading } from '../loading/Loading';
 
 const tableTitles = ['#', 'Task name', 'Description', 'Start date', 'Deadline', 'Action'];
 
@@ -21,6 +23,7 @@ export class Tasks extends PureComponent {
       actionTaskId: null,
     };
     this.isComponentMounted = false;
+    this.isDataSetted = false;
   }
 
   async componentDidMount() {
@@ -41,6 +44,7 @@ export class Tasks extends PureComponent {
   getData = async () => {
     const tasks = await getAllTasks();
     const users = await getAllUsers();
+    this.isDataSetted = true;
     if (this.isComponentMounted) {
       this.setState((prevState) => ({ ...prevState, users, tasks }));
     }
@@ -90,56 +94,64 @@ export class Tasks extends PureComponent {
     const { tasks, modalMode, users, actionTaskId } = this.state;
     const actionTask = tasks.find((task) => task.id === actionTaskId);
 
-    return (
-      <div>
-        <PageHeader text={PAGE_TITLES.tasks} onClick={() => this.setModalMode(MODAL_MODES.create)} />
-        <table className={styles.tasks}>
-          <TableHeader titles={tableTitles} />
-          <tbody>
-            {tasks.map((task, index) => {
-              const setEditMode = () => {
-                this.setModalMode(MODAL_MODES.edit, task.id);
-              };
-              const setReadMode = () => {
-                this.setModalMode(MODAL_MODES.read, task.id);
-              };
-              const setDeleteMode = () => {
-                this.setModalMode(MODAL_MODES.delete, task.id);
-              };
+    if (!this.isDataSetted) {
+      return <Loading />;
+    }
 
-              return (
-                <TaskRow
-                  key={task.id}
-                  id={task.id}
-                  title={task.title}
-                  description={task.description}
-                  deadline={task.deadline}
-                  startDate={task.startDate}
-                  number={index + 1}
-                  setEditMode={setEditMode}
-                  setDeleteMode={setDeleteMode}
-                  setReadMode={setReadMode}
-                />
-              );
-            })}
-          </tbody>
-        </table>
-        <TaskModal
-          users={users}
-          addTask={this.addTask}
-          task={actionTask}
-          readOnly={modalMode === MODAL_MODES.read}
-          updateTask={this.updateTask}
-          disableModalMode={this.disableModalMode}
-          active={!!modalMode && modalMode !== MODAL_MODES.delete}
-        />
-        <DeleteModal
-          active={modalMode === MODAL_MODES.delete}
-          removeHandler={this.removeTask}
-          cancelHandler={this.disableModalMode}
-          target={DELETE_VALUES.task}
-        />
-      </div>
+    return (
+      <ThemeContext.Consumer>
+        {({ theme }) => (
+          <div>
+            <PageHeader text={PAGE_TITLES.tasks} onClick={() => this.setModalMode(MODAL_MODES.create)} />
+            <table className={styles.tasks} style={{ color: theme.textColor }}>
+              <TableHeader titles={tableTitles} />
+              <tbody>
+                {tasks.map((task, index) => {
+                  const setEditMode = () => {
+                    this.setModalMode(MODAL_MODES.edit, task.id);
+                  };
+                  const setReadMode = () => {
+                    this.setModalMode(MODAL_MODES.read, task.id);
+                  };
+                  const setDeleteMode = () => {
+                    this.setModalMode(MODAL_MODES.delete, task.id);
+                  };
+
+                  return (
+                    <TaskRow
+                      key={task.id}
+                      id={task.id}
+                      title={task.title}
+                      description={task.description}
+                      deadline={task.deadline}
+                      startDate={task.startDate}
+                      number={index + 1}
+                      setEditMode={setEditMode}
+                      setDeleteMode={setDeleteMode}
+                      setReadMode={setReadMode}
+                    />
+                  );
+                })}
+              </tbody>
+            </table>
+            <TaskModal
+              users={users}
+              addTask={this.addTask}
+              task={actionTask}
+              readOnly={modalMode === MODAL_MODES.read}
+              updateTask={this.updateTask}
+              disableModalMode={this.disableModalMode}
+              active={!!modalMode && modalMode !== MODAL_MODES.delete}
+            />
+            <DeleteModal
+              active={modalMode === MODAL_MODES.delete}
+              removeHandler={this.removeTask}
+              cancelHandler={this.disableModalMode}
+              target={DELETE_VALUES.task}
+            />
+          </div>
+        )}
+      </ThemeContext.Consumer>
     );
   }
 }

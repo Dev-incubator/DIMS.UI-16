@@ -1,4 +1,4 @@
-const key = 642;
+const key = process.env.REACT_APP_CRYPT_KEY;
 
 export const cryptId = (id) => {
   return id

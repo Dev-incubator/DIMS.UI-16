@@ -1,21 +1,29 @@
 import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { updatePassword } from 'firebase/auth';
-import { Alert } from 'react-bootstrap';
 import styles from './Settings.module.css';
 import { FormField } from '../modals/form/formField/FormField';
-import { BUTTON_COLORS, BUTTON_VALUES, FIELD_NAMES, INPUT_NAMES, INPUT_TYPES } from '../../scripts/libraries';
+import {
+  ALERT_MODES,
+  BUTTON_COLORS,
+  BUTTON_VALUES,
+  FIELD_NAMES,
+  INPUT_NAMES,
+  INPUT_TYPES,
+  THEMES,
+} from '../../scripts/libraries';
 import { Button } from '../../components/Buttons/Button/Button';
 import { getUserById, updateUser } from '../../scripts/api-service';
 import { getChangePasswordErrors, initChangePasswordState } from './settingsHelper';
 import { auth } from '../../scripts/firebase-config';
 import { ThemeContext } from '../../providers/ThemeProvider';
+import { CustomAlert } from '../../components/Alert/Alert';
 
 export class Settings extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      showAlert: false,
+      alertMode: '',
       ...initChangePasswordState,
     };
     this.isComponentMounted = false;
@@ -42,15 +50,16 @@ export class Settings extends PureComponent {
       try {
         await updatePassword(auth.currentUser, newPassword);
         await updateUser(user.id, { password: newPassword, confirmPassword: newPassword });
-        this.setState((prevState) => ({ ...prevState, ...initChangePasswordState, showAlert: true }));
-        setTimeout(() => {
-          if (this.isComponentMounted) {
-            this.setState((prevState) => ({ ...prevState, showAlert: false }));
-          }
-        }, 3000);
+        this.setState((prevState) => ({ ...prevState, ...initChangePasswordState, alertMode: ALERT_MODES.success }));
       } catch (error) {
         console.log(error);
+        this.setState({ alertMode: ALERT_MODES.fail });
       }
+      setTimeout(() => {
+        if (this.isComponentMounted) {
+          this.setState((prevState) => ({ ...prevState, alertMode: '' }));
+        }
+      }, 3000);
     }
   };
 
@@ -64,21 +73,21 @@ export class Settings extends PureComponent {
   };
 
   render() {
-    const { password, newPassword, errors, showAlert } = this.state;
+    const { password, newPassword, errors, alertMode } = this.state;
 
     return (
       <ThemeContext.Consumer>
-        {({ theme, changeTheme }) => (
-          <div className={styles.settings} style={{ borderColor: theme.borderColor }}>
-            <div>
+        {({ theme, toggleTheme }) => (
+          <div className={styles.settings} style={{ borderColor: theme.borderColor, color: theme.textColor }}>
+            <div className={styles.switchTheme}>
               <div className={styles.title}>Switch theme</div>
-              <div>
-                <button type='button' onClick={() => changeTheme('light')}>
+              <div className={styles.themeButtons}>
+                <Button color={BUTTON_COLORS.orange} onClick={() => toggleTheme(THEMES.light)}>
                   Light
-                </button>
-                <button type='button' onClick={() => changeTheme('dark')}>
+                </Button>
+                <Button color={BUTTON_COLORS.blue} onClick={() => toggleTheme(THEMES.dark)}>
                   Dark
-                </button>
+                </Button>
               </div>
             </div>
 
@@ -106,9 +115,16 @@ export class Settings extends PureComponent {
                 {BUTTON_VALUES.save}
               </Button>
             </div>
-            <Alert className={showAlert ? `${styles.alert} ${styles.active}` : styles.alert} show variant='success'>
-              <div>Password was changed</div>
-            </Alert>
+            <CustomAlert
+              isActive={alertMode === ALERT_MODES.fail}
+              variant={ALERT_MODES.success}
+              text='Password was changed'
+            />
+            <CustomAlert
+              isActive={alertMode === ALERT_MODES.fail}
+              variant={ALERT_MODES.fail}
+              text='Fail, try to relogin'
+            />
           </div>
         )}
       </ThemeContext.Consumer>

@@ -5,6 +5,8 @@ import { ProgressRow } from './progressRow/ProgressRow';
 import { PageHeader } from '../helpers/PageHeader';
 import { TableHeader } from '../helpers/TableHeader';
 import { getUserById, getUserTasksById } from '../../scripts/api-service';
+import { ThemeContext } from '../../providers/ThemeProvider';
+import { Loading } from '../loading/Loading';
 
 const tableTitles = ['#', 'Task name', 'Task note', 'Date'];
 
@@ -27,30 +29,34 @@ export class Progress extends PureComponent {
 
   render() {
     const { progress, userName } = this.state;
-    if (!progress || !userName) {
-      return <div className={styles.loading}>Loading...</div>;
+    if (!userName) {
+      return <Loading />;
     }
     const pageTitle = `${userName}'s progress`;
 
     return (
-      <div>
-        <PageHeader text={pageTitle} isBackButton />
-        <table className={styles.progress}>
-          <TableHeader titles={tableTitles} />
-          <tbody>
-            {progress.map((task, index) => (
-              <ProgressRow
-                key={task.id}
-                title={task.title}
-                date={task.startDate}
-                description={task.description}
-                number={index + 1}
-                taskId={task.id}
-              />
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <ThemeContext.Consumer>
+        {({ theme }) => (
+          <div>
+            <PageHeader text={pageTitle} isBackButton />
+            <table className={styles.progress} style={{ color: theme.textColor }}>
+              <TableHeader titles={tableTitles} />
+              <tbody>
+                {progress.map((task, index) => (
+                  <ProgressRow
+                    key={task.id}
+                    title={task.title}
+                    date={task.startDate}
+                    description={task.description}
+                    number={index + 1}
+                    taskId={task.id}
+                  />
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </ThemeContext.Consumer>
     );
   }
 }

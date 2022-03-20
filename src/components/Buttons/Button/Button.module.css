@@ -10,7 +10,7 @@
     justify-content: center;
     line-height: 1rem;
     outline: none;
-    color: white;
+    color: var(--white);
     border: none;
     border-radius: 0.3rem;
 }

@@ -9,6 +9,8 @@ import { deepEqual } from '../../scripts/helpers';
 import { PageHeader } from '../helpers/PageHeader';
 import { DELETE_VALUES, MODAL_MODES } from '../../scripts/libraries';
 import { TrackModal } from '../modals/trackModals/TrackModal';
+import { ThemeContext } from '../../providers/ThemeProvider';
+import { Loading } from '../loading/Loading';
 
 const tableTitles = ['#', 'Task', 'Note', 'Date', 'Action'];
 
@@ -89,54 +91,58 @@ export class Tracks extends PureComponent {
     const actionTrack = tracks.find((task) => task.id === actionTrackId);
 
     if (!taskName) {
-      return <div className={styles.loading}>Loading...</div>;
+      return <Loading />;
     }
 
     return (
-      <div>
-        <PageHeader text={`"${taskName}" tracks`} onClick={() => this.setModalMode(MODAL_MODES.create)} />
-        <table className={styles.tracks}>
-          <TableHeader titles={tableTitles} />
-          <tbody>
-            {tracks.map((track, index) => {
-              const setEditMode = () => {
-                this.setModalMode(MODAL_MODES.edit, track.id);
-              };
-              const setDeleteMode = () => {
-                this.setModalMode(MODAL_MODES.delete, track.id);
-              };
+      <ThemeContext.Consumer>
+        {({ theme }) => (
+          <div>
+            <PageHeader text={`"${taskName}" tracks`} onClick={() => this.setModalMode(MODAL_MODES.create)} />
+            <table className={styles.tracks} style={{ color: theme.textColor }}>
+              <TableHeader titles={tableTitles} />
+              <tbody>
+                {tracks.map((track, index) => {
+                  const setEditMode = () => {
+                    this.setModalMode(MODAL_MODES.edit, track.id);
+                  };
+                  const setDeleteMode = () => {
+                    this.setModalMode(MODAL_MODES.delete, track.id);
+                  };
 
-              return (
-                <TrackRow
-                  key={track.id}
-                  title={track.taskTitle}
-                  note={track.note}
-                  date={track.date}
-                  number={index + 1}
-                  taskId={track.taskId}
-                  userId={track.userId}
-                  setEditMode={setEditMode}
-                  setDeleteMode={setDeleteMode}
-                />
-              );
-            })}
-          </tbody>
-        </table>
-        <TrackModal
-          addTrack={this.addTrack}
-          updateTrack={this.updateTrack}
-          disableModalMode={this.disableModalMode}
-          active={!!modalMode && modalMode !== MODAL_MODES.delete}
-          track={actionTrack}
-          taskName={taskName}
-        />
-        <DeleteModal
-          target={DELETE_VALUES.track}
-          active={modalMode === MODAL_MODES.delete}
-          removeHandler={this.removeTrack}
-          cancelHandler={this.disableModalMode}
-        />
-      </div>
+                  return (
+                    <TrackRow
+                      key={track.id}
+                      title={track.taskTitle}
+                      note={track.note}
+                      date={track.date}
+                      number={index + 1}
+                      taskId={track.taskId}
+                      userId={track.userId}
+                      setEditMode={setEditMode}
+                      setDeleteMode={setDeleteMode}
+                    />
+                  );
+                })}
+              </tbody>
+            </table>
+            <TrackModal
+              addTrack={this.addTrack}
+              updateTrack={this.updateTrack}
+              disableModalMode={this.disableModalMode}
+              active={!!modalMode && modalMode !== MODAL_MODES.delete}
+              track={actionTrack}
+              taskName={taskName}
+            />
+            <DeleteModal
+              target={DELETE_VALUES.track}
+              active={modalMode === MODAL_MODES.delete}
+              removeHandler={this.removeTrack}
+              cancelHandler={this.disableModalMode}
+            />
+          </div>
+        )}
+      </ThemeContext.Consumer>
     );
   }
 }

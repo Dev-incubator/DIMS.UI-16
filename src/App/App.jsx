@@ -22,7 +22,8 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    this.changeTheme = (value) => {
+    this.toggleTheme = (value) => {
+      localStorage.setItem('theme', value);
       this.setState((prevState) => ({
         ...prevState,
         themeContext: { ...prevState.themeContext, theme: themes[value] },
@@ -33,25 +34,36 @@ class App extends Component {
       user: null,
       themeContext: {
         theme: themes.light,
-        changeTheme: this.changeTheme,
+        toggleTheme: this.toggleTheme,
       },
     };
-    this.isDataSetted = false;
+    this.isUserDataSetted = false;
   }
 
   async componentDidMount() {
     document.title = appTitle;
     await this.auth();
+    this.setStartTheme();
   }
 
   auth = async () => {
     const user = JSON.parse(localStorage.getItem('user'));
-    this.isDataSetted = true;
+    this.isUserDataSetted = true;
     if (user) {
       const currentUser = await getUserById(user.uid);
       this.setState({ user: currentUser });
     } else {
       this.setState({ user });
+    }
+  };
+
+  setStartTheme = () => {
+    const theme = localStorage.getItem('theme');
+    if (theme) {
+      this.setState((prevState) => ({
+        ...prevState,
+        themeContext: { ...prevState.themeContext, theme: themes[theme] },
+      }));
     }
   };
 
@@ -72,8 +84,8 @@ class App extends Component {
   render() {
     const { user, themeContext } = this.state;
     const { theme } = themeContext;
-    if (!this.isDataSetted) {
-      return <div>Loading...</div>;
+    if (!this.isUserDataSetted) {
+      return null;
     }
 
     return (

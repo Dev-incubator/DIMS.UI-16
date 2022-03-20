@@ -2,18 +2,28 @@ import React from 'react';
 
 export const themes = {
   light: {
-    primaryColor: 'var(--primary)',
-    warningColor: 'var(--warning)',
-    errorColor: 'var(--error)',
-    secondaryColor: 'var(--secondary)',
-    grayColor: 'var(--gray)',
-    successColor: 'var(--success)',
-    borderColor: 'var(--borderColor)',
-    backgroundColor: 'var(--bgColor)',
+    borderColor: 'var(--borderLight)',
+    backgroundColor: 'var(--bgLight)',
+    headerColor: 'var(--blue)',
+    tableHeader: 'var(--gray)',
+    textColor: 'var(--black)',
+    primary: 'var(--blue)',
+    warning: 'var(--orange)',
+    success: 'var(--green)',
+    secondary: 'var(--secondary)',
+    error: 'var(--red)',
   },
   dark: {
-    borderColor: '#222222',
-    backgroundColor: '#435534',
+    borderColor: 'var(--gray)',
+    backgroundColor: 'var(--bgDark)',
+    headerColor: 'var(--borderDark)',
+    tableHeader: 'var(--darkGray)',
+    textColor: 'var(--gray)',
+    primary: 'var(--darkBlue)',
+    warning: 'var(--darkOrange)',
+    success: 'var(--darkGreen)',
+    secondary: 'var(--secondary)',
+    error: 'var(--darkRed)',
   },
 };
 

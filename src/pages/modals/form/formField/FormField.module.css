@@ -23,7 +23,7 @@
     border-radius: 4px;
     padding: 0 0.5rem;
     background-color: transparent;
-    border: 1px solid var(--borderColor);
+    border: 1px solid;
     font-style: normal;
     font-weight: normal;
     font-size: 0.9rem;
@@ -34,7 +34,7 @@
 }
 
 .input:focus {
-    border-color: var(--primary);
+    border-color: var(--blue);
 }
 
 .input::placeholder {
@@ -47,6 +47,5 @@
 
 .errorMessage {
     margin-top: 0.1rem;
-    color: var(--error);
     font-size: 0.75rem;
 }

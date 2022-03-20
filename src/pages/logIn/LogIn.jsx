@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { INPUT_NAMES } from '../../scripts/libraries';
 import styles from './LogIn.module.css';
 import { emailRegular } from '../../scripts/regulars';
+import { ThemeContext } from '../../providers/ThemeProvider';
 
 export class LogIn extends PureComponent {
   constructor(props) {
@@ -63,39 +64,43 @@ export class LogIn extends PureComponent {
     const { email, password, formErrors } = this.state;
 
     return (
-      <div className={styles.login}>
-        <Form className={styles.form} onSubmit={this.submitHandler}>
-          <div className={styles.title}>Log In</div>
-          <Form.Group className='mb-3' controlId='formBasicEmail'>
-            <Form.Label>Email address</Form.Label>
-            <Form.Control
-              type='text'
-              value={email}
-              onChange={this.changeInputValue}
-              name={INPUT_NAMES.email}
-              placeholder='Enter email'
-              isInvalid={formErrors.email}
-            />
-            <Form.Control.Feedback type='invalid'>{formErrors.email}</Form.Control.Feedback>
-          </Form.Group>
+      <ThemeContext.Consumer>
+        {({ theme }) => (
+          <div className={styles.login} style={{ color: theme.textColor }}>
+            <Form className={styles.form} onSubmit={this.submitHandler} style={{ borderColor: theme.borderColor }}>
+              <div className={styles.title}>Log In</div>
+              <Form.Group className='mb-3' controlId='formBasicEmail'>
+                <Form.Label>Email address</Form.Label>
+                <Form.Control
+                  type='text'
+                  value={email}
+                  onChange={this.changeInputValue}
+                  name={INPUT_NAMES.email}
+                  placeholder='Enter email'
+                  isInvalid={formErrors.email}
+                />
+                <Form.Control.Feedback type='invalid'>{formErrors.email}</Form.Control.Feedback>
+              </Form.Group>
 
-          <Form.Group className='mb-3' controlId='formBasicPassword'>
-            <Form.Label>Password</Form.Label>
-            <Form.Control
-              type='password'
-              value={password}
-              onChange={this.changeInputValue}
-              name={INPUT_NAMES.password}
-              placeholder='Password'
-              isInvalid={formErrors.password}
-            />
-            <Form.Control.Feedback type='invalid'>{formErrors.password}</Form.Control.Feedback>
-          </Form.Group>
-          <Button variant='primary' type='submit'>
-            Submit
-          </Button>
-        </Form>
-      </div>
+              <Form.Group className='mb-3' controlId='formBasicPassword'>
+                <Form.Label>Password</Form.Label>
+                <Form.Control
+                  type='password'
+                  value={password}
+                  onChange={this.changeInputValue}
+                  name={INPUT_NAMES.password}
+                  placeholder='Password'
+                  isInvalid={formErrors.password}
+                />
+                <Form.Control.Feedback type='invalid'>{formErrors.password}</Form.Control.Feedback>
+              </Form.Group>
+              <Button variant='primary' type='submit'>
+                Submit
+              </Button>
+            </Form>
+          </div>
+        )}
+      </ThemeContext.Consumer>
     );
   }
 }

@@ -7,9 +7,6 @@
     gap: 0.3rem;
 }
 
-td span{
-    color: var(--primary);
-}
 
 .userName {
     outline: none;
@@ -17,5 +14,4 @@ td span{
     background-color: transparent;
     font-size: 1rem;
     text-align: left;
-    color: var(--primary);
 }

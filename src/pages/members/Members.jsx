@@ -13,6 +13,8 @@ import { UserModal } from '../modals/userModal/UserModal';
 import { auth } from '../../scripts/firebase-config';
 import { cryptId } from '../../scripts/crypt';
 import pageStyles from '../Page.module.css';
+import { ThemeContext } from '../../providers/ThemeProvider';
+import { Loading } from '../loading/Loading';
 
 const memberTableTitles = ['#', 'Full name', 'Direction', 'Education', 'Start', 'Age', 'Action'];
 
@@ -25,6 +27,7 @@ export class Members extends PureComponent {
       actionUserId: null,
     };
     this.isComponentMounted = false;
+    this.isDataSetted = false;
   }
 
   async componentDidMount() {
@@ -44,6 +47,7 @@ export class Members extends PureComponent {
 
   getData = async () => {
     const users = await getAllUsers();
+    this.isDataSetted = true;
     if (this.isComponentMounted) {
       this.setState((prevState) => ({ ...prevState, users }));
     }
@@ -101,64 +105,72 @@ export class Members extends PureComponent {
     const { role } = this.props;
     const actionUser = users.find((item) => item.id === actionUserId);
 
-    return (
-      <div>
-        {role === USER_ROLES.mentor ? (
-          <div className={styles.header}>
-            <div className={pageStyles.pageTitle}>{HEADER_VALUES.members}</div>
-          </div>
-        ) : (
-          <PageHeader text={PAGE_TITLES.members} onClick={() => this.setModalMode(MODAL_MODES.create)} />
-        )}
-        <table className={styles.members}>
-          <TableHeader titles={memberTableTitles} />
-          <tbody>
-            {users.map((user, index) => {
-              const setDeleteMode = () => {
-                this.setModalMode(MODAL_MODES.delete, user.id);
-              };
-              const setEditMode = () => {
-                this.setModalMode(MODAL_MODES.edit, user.id);
-              };
-              const setReadMode = () => {
-                this.setModalMode(MODAL_MODES.read, user.id);
-              };
+    if (!this.isDataSetted) {
+      return <Loading />;
+    }
 
-              return (
-                <MemberInfoRow
-                  key={user.id}
-                  id={user.id}
-                  direction={user.direction}
-                  name={user.name}
-                  surname={user.surname}
-                  number={index + 1}
-                  role={role}
-                  age={getAge(user.birthDate)}
-                  education={user.education}
-                  startDate={user.startDate}
-                  setEditMode={setEditMode}
-                  setReadMode={setReadMode}
-                  setDeleteMode={setDeleteMode}
-                />
-              );
-            })}
-          </tbody>
-        </table>
-        <DeleteModal
-          target={DELETE_VALUES.member}
-          active={modalMode === MODAL_MODES.delete}
-          removeHandler={this.removeUser}
-          cancelHandler={this.disableModalMode}
-        />
-        <UserModal
-          updateUser={this.updateUser}
-          createUser={this.createUser}
-          user={actionUser}
-          disableModalMode={this.disableModalMode}
-          readOnly={modalMode === MODAL_MODES.read}
-          active={!!modalMode && modalMode !== MODAL_MODES.delete}
-        />
-      </div>
+    return (
+      <ThemeContext.Consumer>
+        {({ theme }) => (
+          <div>
+            {role === USER_ROLES.mentor ? (
+              <div className={styles.header} style={{ color: theme.textColor }}>
+                <div className={pageStyles.pageTitle}>{HEADER_VALUES.members}</div>
+              </div>
+            ) : (
+              <PageHeader text={PAGE_TITLES.members} onClick={() => this.setModalMode(MODAL_MODES.create)} />
+            )}
+            <table className={styles.members} style={{ color: theme.textColor }}>
+              <TableHeader titles={memberTableTitles} />
+              <tbody>
+                {users.map((user, index) => {
+                  const setDeleteMode = () => {
+                    this.setModalMode(MODAL_MODES.delete, user.id);
+                  };
+                  const setEditMode = () => {
+                    this.setModalMode(MODAL_MODES.edit, user.id);
+                  };
+                  const setReadMode = () => {
+                    this.setModalMode(MODAL_MODES.read, user.id);
+                  };
+
+                  return (
+                    <MemberInfoRow
+                      key={user.id}
+                      id={user.id}
+                      direction={user.direction}
+                      name={user.name}
+                      surname={user.surname}
+                      number={index + 1}
+                      role={role}
+                      age={getAge(user.birthDate)}
+                      education={user.education}
+                      startDate={user.startDate}
+                      setEditMode={setEditMode}
+                      setReadMode={setReadMode}
+                      setDeleteMode={setDeleteMode}
+                    />
+                  );
+                })}
+              </tbody>
+            </table>
+            <DeleteModal
+              target={DELETE_VALUES.member}
+              active={modalMode === MODAL_MODES.delete}
+              removeHandler={this.removeUser}
+              cancelHandler={this.disableModalMode}
+            />
+            <UserModal
+              updateUser={this.updateUser}
+              createUser={this.createUser}
+              user={actionUser}
+              disableModalMode={this.disableModalMode}
+              readOnly={modalMode === MODAL_MODES.read}
+              active={!!modalMode && modalMode !== MODAL_MODES.delete}
+            />
+          </div>
+        )}
+      </ThemeContext.Consumer>
     );
   }
 }

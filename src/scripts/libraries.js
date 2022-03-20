@@ -8,6 +8,16 @@ export const BUTTON_COLORS = {
   green: 'success',
 };
 
+export const THEMES = {
+  light: 'light',
+  dark: 'dark',
+};
+
+export const ALERT_MODES = {
+  success: 'success',
+  fail: 'danger',
+};
+
 export const FIELD_NAMES = {
   pastPassword: 'Past password',
   newPassword: 'New password',

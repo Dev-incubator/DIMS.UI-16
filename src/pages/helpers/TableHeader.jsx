@@ -1,17 +1,26 @@
 import PropTypes from 'prop-types';
 import pageStyles from '../Page.module.css';
+import { ThemeContext } from '../../providers/ThemeProvider';
 
 export function TableHeader({ titles }) {
   return (
-    <thead>
-      <tr>
-        {titles.map((title, index) => (
-          <th key={title + index.toString()} className={pageStyles.tableTitle}>
-            {title}
-          </th>
-        ))}
-      </tr>
-    </thead>
+    <ThemeContext.Consumer>
+      {({ theme }) => (
+        <thead>
+          <tr>
+            {titles.map((title, index) => (
+              <th
+                key={title + index.toString()}
+                className={pageStyles.tableTitle}
+                style={{ backgroundColor: theme.tableHeader, color: theme.textColor }}
+              >
+                {title}
+              </th>
+            ))}
+          </tr>
+        </thead>
+      )}
+    </ThemeContext.Consumer>
   );
 }
 
