@@ -53,7 +53,7 @@ export class Settings extends PureComponent {
         this.setState((prevState) => ({ ...prevState, ...initChangePasswordState, alertMode: ALERT_MODES.success }));
       } catch (error) {
         console.log(error);
-        this.setState({ alertMode: ALERT_MODES.fail });
+        this.setState((prevState) => ({ ...prevState, ...initChangePasswordState, alertMode: ALERT_MODES.fail }));
       }
       setTimeout(() => {
         if (this.isComponentMounted) {
@@ -116,7 +116,7 @@ export class Settings extends PureComponent {
               </Button>
             </div>
             <CustomAlert
-              isActive={alertMode === ALERT_MODES.fail}
+              isActive={alertMode === ALERT_MODES.success}
               variant={ALERT_MODES.success}
               text='Password was changed'
             />
