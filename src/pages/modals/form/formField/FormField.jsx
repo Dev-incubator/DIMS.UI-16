@@ -3,6 +3,10 @@ import styles from './FormField.module.css';
 import noop from '../../../../shared/noop';
 
 export function FormField({ onChange, placeholder, inputValue, fieldName, readOnly, stylingType, inputName, error }) {
+  const onChangeHandler = ({ target: { name, value } }) => {
+    onChange(name, value);
+  };
+
   return (
     <div className={styles.formField}>
       <div className={styles.fieldName}>{fieldName}</div>
@@ -14,7 +18,7 @@ export function FormField({ onChange, placeholder, inputValue, fieldName, readOn
           className={styles.input}
           placeholder={placeholder}
           value={inputValue}
-          onChange={({ target: { name, value } }) => onChange(name, value)}
+          onChange={onChangeHandler}
         />
         {error && <div className={styles.errorMessage}>{error}</div>}
       </div>

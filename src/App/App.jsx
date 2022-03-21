@@ -13,6 +13,7 @@ import { Header } from './header/Header';
 import { LogIn } from '../pages/logIn/LogIn';
 import { auth } from '../scripts/firebase-config';
 import { About } from '../pages/about/About';
+import { COPYRIGHT } from '../scripts/libraries';
 
 export const App = () => {
   useEffect(() => {
@@ -47,7 +48,7 @@ export const App = () => {
         )}
       </main>
       <footer>
-        <span className={styles.copyright}>© Oleg Yanusik</span>
+        <span className={styles.copyright}>{COPYRIGHT}</span>
       </footer>
     </div>
   );

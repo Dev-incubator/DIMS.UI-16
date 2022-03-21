@@ -1,3 +1,5 @@
+export const COPYRIGHT = '© Dev Incubator';
+
 export const BUTTON_COLORS = {
   blue: 'primary',
   orange: 'warning',
@@ -17,6 +19,11 @@ export const BUTTON_VALUES = {
   success: 'Success',
   fail: 'Fail',
   save: 'Save',
+};
+
+export const INPUT_TYPES = {
+  text: 'text',
+  date: 'date',
 };
 
 export const MODAL_VALUES = {
@@ -43,11 +50,6 @@ export const MODAL_MODES = {
   delete: 'delete',
 };
 
-export const INPUT_TYPES = {
-  text: 'text',
-  date: 'date',
-};
-
 export const INPUT_NAMES = {
   deadline: 'deadline',
   startDate: 'startDate',
@@ -57,12 +59,6 @@ export const INPUT_NAMES = {
   note: 'note',
   email: 'email',
   password: 'password',
-};
-
-export const TASK_STATUS = {
-  active: 'Active',
-  fail: 'Fail',
-  success: 'Success',
 };
 
 export const DELETE_VALUES = {
@@ -80,4 +76,10 @@ export const PAGE_TITLES = {
 export const TRACK_MODAL_TITLES = {
   edit: 'Edit task track',
   create: 'Create new task track',
+};
+
+export const TASK_STATUS = {
+  fail: 'Fail',
+  success: 'Success',
+  active: 'Active',
 };
