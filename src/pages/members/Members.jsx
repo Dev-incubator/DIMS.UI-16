@@ -50,7 +50,7 @@ export class Members extends PureComponent {
   };
 
   disableDeleteMode = () => {
-    this.setState({ deleteMode: false });
+    this.setState({ deleteMode: false, actionUserId: null });
   };
 
   render() {
@@ -77,7 +77,9 @@ export class Members extends PureComponent {
             ))}
           </tbody>
         </table>
-        {deleteMode && <DeleteModal removeHandler={this.removeUser} cancelHandler={this.disableDeleteMode} />}
+        {deleteMode && (
+          <DeleteModal target='member' removeHandler={this.removeUser} cancelHandler={this.disableDeleteMode} />
+        )}
       </div>
     );
   }

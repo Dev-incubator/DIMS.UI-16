@@ -1,0 +1,23 @@
+.header{
+    width: 100vw;
+    height: 3rem;
+    background-color: var(--primary);
+    display: flex;
+    column-gap: 2rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.header a{
+    font-size: 1.1rem;
+    color: var(--bgColor);
+}
+
+.header a:hover{
+    transition: 200ms;
+    color: var(--warning);
+}
+
+a.active{
+    color: var(--warning);
+}

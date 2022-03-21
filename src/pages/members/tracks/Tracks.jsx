@@ -6,7 +6,8 @@ import { Button } from '../../../components/Buttons/Button/Button';
 import styles from './Tracks.module.css';
 import { TableHeader } from '../../helpers/TableHeader';
 import { TrackRow } from './trackRow/TrackRow';
-import { getTaskTrack } from '../../../scripts/api-service';
+import { deleteTrack, getTaskTrack } from '../../../scripts/api-service';
+import { DeleteModal } from '../../modals/deleteModal/DeleteModal';
 
 const tableTitles = ['#', 'Task', 'Note', 'Date', 'Action'];
 
@@ -15,18 +16,52 @@ export class Tracks extends PureComponent {
     super(props);
     this.state = {
       tracks: [],
+      deleteMode: false,
+      actionTrackId: null,
     };
+    this.isComponentMounted = false;
   }
 
   async componentDidMount() {
-    const { match } = this.props;
-    const { userId, taskId } = match.params;
-    const tracks = await getTaskTrack(userId, taskId);
+    this.isComponentMounted = true;
+    const tracks = await this.getData();
     this.setState((prevState) => ({ ...prevState, tracks }));
   }
 
+  async componentDidUpdate() {
+    const tracks = await this.getData();
+    if (this.isComponentMounted) {
+      this.setState((prevState) => ({ ...prevState, tracks }));
+    }
+  }
+
+  componentWillUnmount() {
+    this.isComponentMounted = false;
+  }
+
+  getData = () => {
+    const { match } = this.props;
+    const { userId, taskId } = match.params;
+
+    return getTaskTrack(userId, taskId);
+  };
+
+  enableDeleteMode = (id) => {
+    this.setState({ deleteMode: true, actionTrackId: id });
+  };
+
+  disableDeleteMode = () => {
+    this.setState({ deleteMode: false, actionTrackId: null });
+  };
+
+  removeTrack = async () => {
+    const { actionTrackId } = this.state;
+    this.disableDeleteMode();
+    await deleteTrack(actionTrackId);
+  };
+
   render() {
-    const { tracks } = this.state;
+    const { tracks, deleteMode } = this.state;
 
     return (
       <div>
@@ -40,16 +75,21 @@ export class Tracks extends PureComponent {
             {tracks.map((track, index) => (
               <TrackRow
                 key={track.id}
+                id={track.id}
                 title={track.taskTitle}
                 note={track.note}
                 date={track.date}
                 number={index + 1}
                 taskId={track.taskId}
                 userId={track.userId}
+                enableDeleteMode={this.enableDeleteMode}
               />
             ))}
           </tbody>
         </table>
+        {deleteMode && (
+          <DeleteModal target='task track' removeHandler={this.removeTrack} cancelHandler={this.disableDeleteMode} />
+        )}
       </div>
     );
   }

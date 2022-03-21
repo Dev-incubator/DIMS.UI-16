@@ -11,7 +11,7 @@
 }
 
 .userTasks th:nth-child(1) {
-    width: 6.5rem;
+    width: 3.2rem;
 }
 
 .userTasks th:nth-child(2) {
@@ -37,4 +37,10 @@
 .userTasks td:nth-child(2){
     padding-left: 0.8rem;
     text-align: left;
+}
+
+.loading{
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
 }
