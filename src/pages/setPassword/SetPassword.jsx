@@ -8,6 +8,7 @@ import styles from './SetPassword.module.css';
 import { BUTTON_COLORS, BUTTON_VALUES, INPUT_TYPES } from '../../scripts/libraries';
 import { Button } from '../../components/Buttons/Button/Button';
 import { encryptId } from '../../scripts/crypt';
+import { Loading } from '../loading/Loading';
 
 export class SetPassword extends PureComponent {
   constructor(props) {
@@ -57,7 +58,7 @@ export class SetPassword extends PureComponent {
   render() {
     const { user, password, error } = this.state;
     if (!user) {
-      return <div className={styles.wrapper}>Loading...</div>;
+      return <Loading />;
     }
 
     return (
