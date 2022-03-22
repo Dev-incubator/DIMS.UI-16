@@ -23,7 +23,6 @@ export class SetPassword extends PureComponent {
   async componentDidMount() {
     const cryptedId = getUid(document.location.search);
     const id = encryptId(cryptedId);
-    console.log(id);
     const user = await getUserById(id);
     await login(user.email, user.password);
     this.setState({ user });
