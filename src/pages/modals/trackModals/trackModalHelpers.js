@@ -1,5 +1,5 @@
 import { changeDateFormat, isObjectFieldsEmpty } from '../../../scripts/helpers';
-import { TRACK_MODAL_TITLES } from '../../../scripts/libraries';
+import { MODAL_VALUES, TRACK_MODAL_TITLES } from '../../../constants/libraries';
 
 export const initTrackModalState = {
   modalTitle: '',
@@ -13,17 +13,17 @@ export const initTrackModalState = {
   },
 };
 
-export const getTrackModalErrors = (note, date) => {
+export const getTrackModalErrors = (state) => {
   const formErrors = {
     note: '',
     date: '',
   };
-  if (!note.trim()) {
-    formErrors.note = 'Note is required';
-  }
-  if (!date.trim()) {
-    formErrors.date = 'Date is required';
-  }
+  const keys = Object.keys(formErrors);
+  keys.forEach((key) => {
+    if (!state[key].trim()) {
+      formErrors[key] = `${MODAL_VALUES[key]} is required`;
+    }
+  });
 
   if (!isObjectFieldsEmpty(formErrors)) {
     return formErrors;

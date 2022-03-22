@@ -7,7 +7,7 @@ import { addTrack, deleteTrack, getTaskById, getTaskTrack, updateTrack } from '.
 import { DeleteModal } from '../modals/deleteModal/DeleteModal';
 import { deepEqual } from '../../scripts/helpers';
 import { PageHeader } from '../helpers/PageHeader';
-import { DELETE_VALUES, MODAL_MODES, PAGE_TITLES } from '../../scripts/libraries';
+import { DELETE_VALUES, MODAL_MODES, PAGE_TITLES } from '../../constants/libraries';
 import { TrackModal } from '../modals/trackModals/TrackModal';
 
 const tableTitles = ['#', 'Task', 'Note', 'Date', 'Action'];

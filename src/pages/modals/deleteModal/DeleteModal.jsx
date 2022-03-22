@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import styles from './DeleteModal.module.css';
-import { BUTTON_COLORS, BUTTON_VALUES } from '../../../scripts/libraries';
+import { BUTTON_COLORS, BUTTON_VALUES } from '../../../constants/libraries';
 import { Modal } from '../../../components/Modal/Modal';
 import { FormSubmit } from '../form/formSubmit/FormSubmit';
 

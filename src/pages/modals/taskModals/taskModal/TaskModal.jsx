@@ -9,7 +9,7 @@ import {
   initStartModalState,
 } from '../taskModalHelpers';
 import { deepEqual } from '../../../../scripts/helpers';
-import { BUTTON_COLORS, TASK_MODAL_TITLES } from '../../../../scripts/libraries';
+import { BUTTON_COLORS, TASK_MODAL_TITLES } from '../../../../constants/libraries';
 import { Modal } from '../../../../components/Modal/Modal';
 import styles from './TaskModal.module.css';
 import { TaskModalFields } from '../taskForm/TaskModalFields';

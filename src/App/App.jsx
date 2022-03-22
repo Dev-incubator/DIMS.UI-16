@@ -13,7 +13,7 @@ import { Header } from './header/Header';
 import { LogIn } from '../pages/logIn/LogIn';
 import { auth } from '../scripts/firebase-config';
 import { About } from '../pages/about/About';
-import { COPYRIGHT } from '../scripts/libraries';
+import { COPYRIGHT } from '../constants/libraries';
 
 export const App = () => {
   useEffect(() => {

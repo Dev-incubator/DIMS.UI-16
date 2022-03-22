@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import styles from './MemberInfoRow.module.css';
 import { Button } from '../../../components/Buttons/Button/Button';
-import { BUTTON_COLORS, BUTTON_VALUES } from '../../../scripts/libraries';
+import { BUTTON_COLORS, BUTTON_VALUES } from '../../../constants/libraries';
 
 export function MemberInfoRow({ id, number, name, direction, education, startDate, age, enableDeleteMode }) {
   return (

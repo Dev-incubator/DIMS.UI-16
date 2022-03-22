@@ -4,7 +4,13 @@ import { changeDateFormat, deepEqual } from '../../../scripts/helpers';
 import { Modal } from '../../../components/Modal/Modal';
 import styles from './TrackModal.module.css';
 import { FormField } from '../form/formField/FormField';
-import { BUTTON_COLORS, INPUT_NAMES, INPUT_TYPES, MODAL_VALUES, TRACK_MODAL_TITLES } from '../../../scripts/libraries';
+import {
+  BUTTON_COLORS,
+  INPUT_NAMES,
+  INPUT_TYPES,
+  MODAL_VALUES,
+  TRACK_MODAL_TITLES,
+} from '../../../constants/libraries';
 import { FormSubmit } from '../form/formSubmit/FormSubmit';
 import { gatherTrackModalState, getTrackModalErrors, initTrackModalState } from './trackModalHelpers';
 
@@ -30,7 +36,7 @@ export class TrackModal extends PureComponent {
   submitTrack = () => {
     const { track, addTrack, updateTrack } = this.props;
     const { note, date } = this.state;
-    const formErrors = getTrackModalErrors(note, date);
+    const formErrors = getTrackModalErrors(this.state);
     const submitTrack = { note, date: changeDateFormat(date) };
     if (formErrors) {
       this.setState({ formErrors });

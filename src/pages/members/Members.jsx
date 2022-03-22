@@ -6,7 +6,7 @@ import { DeleteModal } from '../modals/deleteModal/DeleteModal';
 import { deleteUser, getAllUsers } from '../../scripts/api-service';
 import { PageHeader } from '../helpers/PageHeader';
 import { deepEqual } from '../../scripts/helpers';
-import { DELETE_VALUES, PAGE_TITLES } from '../../scripts/libraries';
+import { DELETE_VALUES, PAGE_TITLES } from '../../constants/libraries';
 
 const memberTableTitles = ['#', 'Full name', 'Direction', 'Education', 'Start', 'Age', 'Action'];
 

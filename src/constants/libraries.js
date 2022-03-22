@@ -32,6 +32,7 @@ export const MODAL_VALUES = {
   startDate: 'Start date',
   deadline: 'Deadline',
   members: 'Members',
+  title: 'Title',
   task: 'Task',
   date: 'Date',
   note: 'Note',

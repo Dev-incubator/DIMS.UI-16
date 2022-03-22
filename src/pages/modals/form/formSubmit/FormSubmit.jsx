@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import styles from './FormSubmit.module.css';
 import { Button } from '../../../../components/Buttons/Button/Button';
-import { BUTTON_VALUES } from '../../../../scripts/libraries';
+import { BUTTON_VALUES } from '../../../../constants/libraries';
 
 export function FormSubmit({ disableModalMode, onSubmit, submitButtonColor, readOnly, submitButtonValue }) {
   return (

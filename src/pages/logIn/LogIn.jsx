@@ -1,7 +1,7 @@
 import { PureComponent } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import { INPUT_NAMES } from '../../scripts/libraries';
+import { INPUT_NAMES } from '../../constants/libraries';
 import styles from './LogIn.module.css';
 import { isObjectFieldsEmpty } from '../../scripts/helpers';
 import { login } from '../../scripts/api-service';

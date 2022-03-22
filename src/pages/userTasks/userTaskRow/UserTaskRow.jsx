@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import { Button } from '../../../components/Buttons/Button/Button';
-import { BUTTON_COLORS, BUTTON_VALUES, TASK_STATUS } from '../../../scripts/libraries';
+import { BUTTON_COLORS, BUTTON_VALUES, TASK_STATUS } from '../../../constants/libraries';
 import styles from '../UserTasks.module.css';
 
 export function UserTaskRow({ userId, number, title, startDate, status, deadline, taskId, updateTaskStatus }) {

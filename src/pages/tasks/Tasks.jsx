@@ -4,7 +4,7 @@ import { PageHeader } from '../helpers/PageHeader';
 import { TableHeader } from '../helpers/TableHeader';
 import styles from './Tasks.module.css';
 import { TaskRow } from './taskRow/TaskRow';
-import { DELETE_VALUES, MODAL_MODES, PAGE_TITLES } from '../../scripts/libraries';
+import { DELETE_VALUES, MODAL_MODES, PAGE_TITLES } from '../../constants/libraries';
 import { deepEqual } from '../../scripts/helpers';
 import { DeleteModal } from '../modals/deleteModal/DeleteModal';
 import { TaskModal } from '../modals/taskModals/taskModal/TaskModal';
