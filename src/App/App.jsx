@@ -75,8 +75,10 @@ class App extends Component {
   logIn = async (email, password) => {
     const { history } = this.props;
     const error = await login(email, password);
-    await this.auth();
-    history.push('/about');
+    if (!error) {
+      await this.auth();
+      history.push('/about');
+    }
 
     return error;
   };
