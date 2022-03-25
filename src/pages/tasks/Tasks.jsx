@@ -1,84 +1,53 @@
 import { PureComponent } from 'react';
-import { addTask, deleteTask, deleteTrack, getAllTasks, getAllUsers, updateTask } from '../../scripts/api-service';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import { PageHeader } from '../helpers/PageHeader';
 import { TableHeader } from '../helpers/TableHeader';
 import styles from './Tasks.module.css';
 import { TaskRow } from './taskRow/TaskRow';
-import { DELETE_VALUES, MODAL_MODES, PAGE_TITLES } from '../../scripts/libraries';
-import { deepEqual } from '../../scripts/helpers';
+import { ALERT_MODES, DELETE_VALUES, MODAL_MODES, PAGE_TITLES } from '../../scripts/libraries';
 import { DeleteModal } from '../modals/deleteModal/DeleteModal';
 import { TaskModal } from '../modals/taskModals/taskModal/TaskModal';
 import { ThemeContext } from '../../providers/ThemeProvider';
 import { Loading } from '../loading/Loading';
+import { getUsersThunk } from '../../redux/usersThunk/userThunks';
+import { CustomAlert } from '../../components/Alert/Alert';
+import { addTaskThunk, getTasksThunk, removeTaskThunk, updateTaskThunk } from '../../redux/tasksThunk/tasksThunk';
 
 const tableTitles = ['#', 'Task name', 'Description', 'Start date', 'Deadline', 'Action'];
 
-export class Tasks extends PureComponent {
+class Tasks extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      tasks: [],
-      users: [],
       modalMode: null,
       actionTaskId: null,
     };
-    this.isComponentMounted = false;
-    this.isDataSetted = false;
   }
 
   async componentDidMount() {
-    this.isComponentMounted = true;
-    await this.getData();
+    const { getTasks, getUsers } = this.props;
+    getTasks();
+    getUsers();
   }
 
-  async componentDidUpdate(prevProps, prevState) {
-    if (!deepEqual(prevState, this.state)) {
-      await this.getData();
-    }
-  }
-
-  componentWillUnmount() {
-    this.isComponentMounted = false;
-  }
-
-  getData = async () => {
-    const tasks = await getAllTasks();
-    const users = await getAllUsers();
-    this.isDataSetted = true;
-    if (this.isComponentMounted) {
-      this.setState((prevState) => ({ ...prevState, users, tasks }));
-    }
-  };
-
-  updateTask = async (updatedTask) => {
-    const { actionTaskId, tasks } = this.state;
-    const prevTask = tasks.find((task) => task.id === actionTaskId);
-    const { users } = updatedTask;
-    const prevUsers = prevTask.users;
-    const updatedUsers = users.map((user) => {
-      const item = prevUsers.find((el) => el.userId === user.userId);
-
-      return item ? { ...user, status: item.status } : user;
-    });
-    if (!deepEqual(prevTask, { ...updatedTask, id: actionTaskId, users: updatedUsers })) {
-      await updateTask(actionTaskId, { ...updatedTask, users: updatedUsers });
-      prevUsers.forEach(async (user) => {
-        if (!users.some((item) => item.userId === user.userId)) {
-          await deleteTrack(user.userId);
-        }
-      });
-    }
-    this.disableModalMode();
-  };
-
-  addTask = async (task) => {
-    await addTask(task);
-    this.disableModalMode();
-  };
-
-  removeTask = async () => {
+  updateTask = (updatedTask) => {
     const { actionTaskId } = this.state;
-    await deleteTask(actionTaskId);
+    const { updateTask } = this.props;
+    updateTask(actionTaskId, updatedTask);
+    this.disableModalMode();
+  };
+
+  addTask = (task) => {
+    const { addTask } = this.props;
+    addTask(task);
+    this.disableModalMode();
+  };
+
+  removeTask = () => {
+    const { actionTaskId } = this.state;
+    const { removeTask } = this.props;
+    removeTask(actionTaskId);
     this.disableModalMode();
   };
 
@@ -91,17 +60,16 @@ export class Tasks extends PureComponent {
   };
 
   render() {
-    const { tasks, modalMode, users, actionTaskId } = this.state;
+    const { modalMode, actionTaskId } = this.state;
+    const { users, tasks, isFetching, error } = this.props;
     const actionTask = tasks.find((task) => task.id === actionTaskId);
-
-    if (!this.isDataSetted) {
-      return <Loading />;
-    }
 
     return (
       <ThemeContext.Consumer>
         {({ theme }) => (
           <div>
+            {isFetching && <Loading />}
+            <CustomAlert isActive={!!error} variant={ALERT_MODES.fail} text={error} />
             <PageHeader text={PAGE_TITLES.tasks} onClick={() => this.setModalMode(MODAL_MODES.create)} />
             <table className={styles.tasks} style={{ color: theme.textColor }}>
               <TableHeader titles={tableTitles} />
@@ -155,3 +123,54 @@ export class Tasks extends PureComponent {
     );
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    users: state.users,
+    tasks: state.tasks,
+    isFetching: state.fetch.isFetching,
+    error: state.fetch.error,
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    getUsers: () => dispatch(getUsersThunk()),
+    getTasks: () => dispatch(getTasksThunk()),
+    updateTask: (id, updatedTask) => dispatch(updateTaskThunk(id, updatedTask)),
+    removeTask: (id) => dispatch(removeTaskThunk(id)),
+    addTask: (task) => dispatch(addTaskThunk(task)),
+  };
+}
+
+Tasks.propTypes = {
+  getUsers: PropTypes.func.isRequired,
+  getTasks: PropTypes.func.isRequired,
+  updateTask: PropTypes.func.isRequired,
+  removeTask: PropTypes.func.isRequired,
+  error: PropTypes.string.isRequired,
+  isFetching: PropTypes.bool.isRequired,
+  addTask: PropTypes.func.isRequired,
+  users: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      direction: PropTypes.string,
+      name: PropTypes.string,
+      surname: PropTypes.string,
+      birthDate: PropTypes.string,
+      education: PropTypes.string,
+      startDate: PropTypes.string,
+    }),
+  ).isRequired,
+  tasks: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      title: PropTypes.string,
+      description: PropTypes.string,
+      deadline: PropTypes.string,
+      startDate: PropTypes.string,
+    }),
+  ).isRequired,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Tasks);

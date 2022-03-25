@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 
 export const themes = {
   light: {
@@ -31,3 +32,46 @@ export const ThemeContext = React.createContext({
   theme: themes.dark,
   changeTheme: () => {},
 });
+
+export class ThemeProvider extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.toggleTheme = (value) => {
+      localStorage.setItem('theme', value);
+      this.setState((prevState) => ({
+        themeContext: { ...prevState.themeContext, theme: themes[value] },
+      }));
+    };
+
+    this.state = {
+      themeContext: {
+        theme: themes.light,
+        toggleTheme: this.toggleTheme,
+      },
+    };
+  }
+
+  componentDidMount() {
+    this.setStartTheme();
+  }
+
+  setStartTheme = () => {
+    const theme = localStorage.getItem('theme');
+    if (theme) {
+      this.setState((prevState) => ({
+        themeContext: { ...prevState.themeContext, theme: themes[theme] },
+      }));
+    }
+  };
+
+  render() {
+    const { children } = this.props;
+    const { themeContext } = this.state;
+
+    return <ThemeContext.Provider value={themeContext}>{children}</ThemeContext.Provider>;
+  }
+}
+
+ThemeProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+};

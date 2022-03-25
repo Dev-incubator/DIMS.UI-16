@@ -16,8 +16,8 @@ export async function createUser(id, user) {
   await setDoc(doc(db, 'users', id), user);
 }
 
-export async function addTask(task) {
-  await addDoc(tasksCollectionRef, task);
+export function addTask(task) {
+  return addDoc(tasksCollectionRef, task);
 }
 
 export async function addTrack(track) {

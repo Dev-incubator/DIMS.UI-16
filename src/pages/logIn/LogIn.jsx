@@ -1,10 +1,10 @@
 import { PureComponent } from 'react';
 import { Button, Form } from 'react-bootstrap';
-import PropTypes from 'prop-types';
 import { INPUT_NAMES } from '../../scripts/libraries';
 import styles from './LogIn.module.css';
 import { emailRegular } from '../../scripts/regulars';
 import { ThemeContext } from '../../providers/ThemeProvider';
+import { AuthContext } from '../../providers/AuthProvider';
 
 export class LogIn extends PureComponent {
   constructor(props) {
@@ -41,7 +41,8 @@ export class LogIn extends PureComponent {
   submitHandler = async (event) => {
     event.preventDefault();
     event.stopPropagation();
-    const { logIn } = this.props;
+    const { context } = this;
+    const { logIn } = context;
     const { email, password } = this.state;
     if (this.isFormValid()) {
       const error = await logIn(email, password);
@@ -105,6 +106,4 @@ export class LogIn extends PureComponent {
   }
 }
 
-LogIn.propTypes = {
-  logIn: PropTypes.func.isRequired,
-};
+LogIn.contextType = AuthContext;

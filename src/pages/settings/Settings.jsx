@@ -52,7 +52,7 @@ export class Settings extends PureComponent {
         await updateUser(user.id, { password: newPassword, confirmPassword: newPassword });
         this.setState((prevState) => ({ ...prevState, ...initChangePasswordState, alertMode: ALERT_MODES.success }));
       } catch (error) {
-        console.log(error);
+        console.error(error);
         this.setState((prevState) => ({ ...prevState, ...initChangePasswordState, alertMode: ALERT_MODES.fail }));
       }
       setTimeout(() => {
@@ -95,7 +95,7 @@ export class Settings extends PureComponent {
               <div className={styles.title}>Change password</div>
               <div>
                 <FormField
-                  fieldName={FIELD_NAMES.pastPassword}
+                  fieldName={FIELD_NAMES.currentPassword}
                   inputValue={password}
                   inputName={INPUT_NAMES.password}
                   error={errors.password}
