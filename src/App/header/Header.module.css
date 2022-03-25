@@ -27,7 +27,7 @@ a.active{
     color: var(--warning);
 }
 
-.user{
+.auth{
     display: flex;
     align-items: center;
     column-gap: 0.8rem;
@@ -43,4 +43,8 @@ a.active{
     display: flex;
     align-items: center;
     column-gap: 1.5rem;
+}
+
+.logIn{
+    margin-left: -4rem;
 }

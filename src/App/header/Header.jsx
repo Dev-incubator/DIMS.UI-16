@@ -16,40 +16,37 @@ export function Header({ user }) {
       <Container className={styles.container}>
         <Navbar.Brand>DIMS</Navbar.Brand>
         <Navbar.Toggle aria-controls='responsive-navbar-nav' />
-        {user ? (
-          <Navbar.Collapse id='responsive-navbar-nav'>
-            <Nav className={`${styles.links} me-auto`}>
-              <NavLink to='/users' activeClassName={styles.active}>
-                Members
-              </NavLink>
-              <NavLink to='/tasks' activeClassName={styles.active}>
-                Tasks
-              </NavLink>
-              <NavLink to='/about' activeClassName={styles.active}>
-                About
-              </NavLink>
-            </Nav>
-            <Nav className={styles.user}>
-              <Navbar.Text>{userName}</Navbar.Text>
-              <NavLink to='/login' onClick={logOut} activeClassName={styles.active}>
-                Log out
-              </NavLink>
-            </Nav>
-          </Navbar.Collapse>
-        ) : (
-          <Navbar.Collapse id='responsive-navbar-nav'>
-            <Nav className={`${styles.links} me-auto`}>
-              <NavLink to='/about' activeClassName={styles.active}>
-                About
-              </NavLink>
-            </Nav>
-            <Nav>
-              <NavLink to='/login' activeClassName={styles.active}>
+        <Navbar.Collapse id='responsive-navbar-nav'>
+          <Nav className={`${styles.links} me-auto`}>
+            {user && (
+              <div className={styles.links}>
+                <NavLink to='/users' activeClassName={styles.active}>
+                  Members
+                </NavLink>
+                <NavLink to='/tasks' activeClassName={styles.active}>
+                  Tasks
+                </NavLink>
+              </div>
+            )}
+            <NavLink to='/about' activeClassName={styles.active}>
+              About
+            </NavLink>
+          </Nav>
+          <Nav>
+            {user ? (
+              <div className={styles.auth}>
+                <Navbar.Text>{userName}</Navbar.Text>
+                <NavLink to='/login' onClick={logOut} activeClassName={styles.active}>
+                  Log out
+                </NavLink>
+              </div>
+            ) : (
+              <NavLink to='/login' className={styles.logIn} activeClassName={styles.active}>
                 Log In
               </NavLink>
-            </Nav>
-          </Navbar.Collapse>
-        )}
+            )}
+          </Nav>
+        </Navbar.Collapse>
       </Container>
     </Navbar>
   );

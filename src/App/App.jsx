@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
 import { appTitle } from '../config';
 import './App.css';
@@ -26,26 +26,32 @@ export const App = () => {
     setUser(currentUser);
   });
 
-  return (
-    <div className={styles.App}>
-      <Header user={user} />
-      <main>
+  const generateRoutes = () => {
+    return (
+      <div>
+        <Route path='/about' exact component={About} />
         {user ? (
-          <Switch>
+          <div>
             <Route path='/users' exact component={Members} />
             <Route path='/tasks' exact component={Tasks} />
             <Route path='/progress/:id' component={Progress} />
             <Route path='/tasks/:id' component={UserTasks} />
             <Route path='/track/:userId/:taskId' component={Tracks} />
-            <Route path='/about' exact component={About} />
-          </Switch>
+          </div>
         ) : (
-          <Switch>
-            <Route path='/about' exact component={About} />
+          <div>
             <Route path='/login' exact component={LogIn} />
-            <Redirect from='/' to='/login' />
-          </Switch>
+          </div>
         )}
+      </div>
+    );
+  };
+
+  return (
+    <div className={styles.App}>
+      <Header user={user} />
+      <main>
+        <Switch>{generateRoutes()}</Switch>
       </main>
       <footer>
         <span className={styles.copyright}>{COPYRIGHT}</span>
