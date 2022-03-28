@@ -48,3 +48,7 @@ export const isObjectFieldsEmpty = (obj) => {
 
   return true;
 };
+
+export const getUserName = (user) => {
+  return user?.email.split('@')[0];
+};

@@ -78,7 +78,7 @@ export class Members extends PureComponent {
                   direction={user.direction}
                   name={user.name}
                   number={index + 1}
-                  age={user.age}
+                  age={user.birthDate}
                   education={user.education}
                   startDate={user.startDate}
                   enableDeleteMode={enableDeleteMode}

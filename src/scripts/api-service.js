@@ -189,10 +189,9 @@ export async function updateTrack(trackId, updatedFields) {
   }
 }
 
-export async function login(email, password, history) {
+export async function login(email, password) {
   try {
     await signInWithEmailAndPassword(auth, email, password);
-    history.push('users');
   } catch (error) {
     return error;
   }

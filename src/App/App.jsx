@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
+import { PureComponent } from 'react';
 import { Route, Switch } from 'react-router-dom';
-import { onAuthStateChanged } from 'firebase/auth';
 import { appTitle } from '../config';
 import './App.css';
 import styles from './App.module.css';
@@ -11,22 +10,18 @@ import { Tracks } from '../pages/tracks/Tracks';
 import { Tasks } from '../pages/tasks/Tasks';
 import { Header } from './header/Header';
 import { LogIn } from '../pages/logIn/LogIn';
-import { auth } from '../scripts/firebase-config';
 import { About } from '../pages/about/About';
 import { COPYRIGHT } from '../constants/libraries';
+import { AuthContext } from '../providers/AuthProvider';
 
-export const App = () => {
-  useEffect(() => {
+class App extends PureComponent {
+  componentDidMount() {
     document.title = appTitle;
-  }, []);
+  }
 
-  const [user, setUser] = useState(null);
+  generateRoutes = () => {
+    const { user } = this.context;
 
-  onAuthStateChanged(auth, (currentUser) => {
-    setUser(currentUser);
-  });
-
-  const generateRoutes = () => {
     return (
       <div>
         <Route path='/about' exact component={About} />
@@ -47,15 +42,21 @@ export const App = () => {
     );
   };
 
-  return (
-    <div className={styles.App}>
-      <Header user={user} />
-      <main>
-        <Switch>{generateRoutes()}</Switch>
-      </main>
-      <footer>
-        <span className={styles.copyright}>{COPYRIGHT}</span>
-      </footer>
-    </div>
-  );
-};
+  render() {
+    return (
+      <div className={styles.App}>
+        <Header />
+        <main>
+          <Switch>{this.generateRoutes()}</Switch>
+        </main>
+        <footer>
+          <span className={styles.copyright}>{COPYRIGHT}</span>
+        </footer>
+      </div>
+    );
+  }
+}
+
+App.contextType = AuthContext;
+
+export default App;

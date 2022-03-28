@@ -3,8 +3,8 @@ import { Button, Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { INPUT_NAMES } from '../../constants/libraries';
 import styles from './LogIn.module.css';
-import { isObjectFieldsEmpty } from '../../scripts/helpers';
-import { login } from '../../scripts/api-service';
+import { emailRegular } from '../../scripts/regulars';
+import { AuthContext } from '../../providers/AuthProvider';
 
 export class LogIn extends PureComponent {
   constructor(props) {
@@ -19,25 +19,35 @@ export class LogIn extends PureComponent {
     };
   }
 
-  submitHandler = async (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-    const { history } = this.props;
-    const { email, password, formErrors } = this.state;
+  isFormValid = () => {
+    const { email, password } = this.state;
+    let formValid = false;
     if (password.length < 8) {
       this.setError(INPUT_NAMES.password, 'Password should contains 8 or more symbols');
     } else if (password.length > 24) {
-      this.setError(INPUT_NAMES.password, 'Password is too big');
+      this.setError(INPUT_NAMES.password, 'Password is too long');
+    } else {
+      formValid = true;
     }
-    // eslint-disable-next-line
-    const reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
-    if (!reg.test(email)) {
+
+    if (!emailRegular.test(email)) {
       this.setError(INPUT_NAMES.email, 'Please, use correct email');
+      formValid = false;
     }
-    if (isObjectFieldsEmpty(formErrors)) {
-      const error = await login(email, password, history);
+
+    return formValid;
+  };
+
+  submitHandler = async (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    const { context } = this;
+    const { logIn } = context;
+    const { email, password } = this.state;
+    if (this.isFormValid()) {
+      const error = await logIn(email, password);
       if (error) {
-        this.setError(INPUT_NAMES.password, 'Login or password is incorrect');
+        this.setError(INPUT_NAMES.password, 'Login or password are incorrect');
       }
     }
   };
@@ -92,6 +102,8 @@ export class LogIn extends PureComponent {
     );
   }
 }
+
+LogIn.contextType = AuthContext;
 
 LogIn.propTypes = {
   history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,

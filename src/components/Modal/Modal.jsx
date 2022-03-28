@@ -6,11 +6,11 @@ export function Modal({ active, disableModalMode, children }) {
   return ReactDOM.createPortal(
     <div
       className={active ? `${styles.modal} ${styles.active}` : styles.modal}
-      onClick={() => disableModalMode()}
+      onClick={disableModalMode}
       aria-hidden='true'
     >
       <div
-        className={active ? `${styles.modalContent} ${styles.active}` : styles.modalContent}
+        className={`${styles.modalContent} ${active ? styles.active : ''}`}
         onClick={(event) => event.stopPropagation()}
         aria-hidden='true'
       >

@@ -39,7 +39,7 @@ MemberInfoRow.propTypes = {
   direction: PropTypes.string.isRequired,
   education: PropTypes.string,
   startDate: PropTypes.string.isRequired,
-  age: PropTypes.number.isRequired,
+  age: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
   enableDeleteMode: PropTypes.func.isRequired,
 };
