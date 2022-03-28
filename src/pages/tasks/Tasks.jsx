@@ -1,4 +1,4 @@
-import { PureComponent } from 'react';
+import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { PageHeader } from '../helpers/PageHeader';
@@ -16,112 +16,96 @@ import { addTaskThunk, getTasksThunk, removeTaskThunk, updateTaskThunk } from '.
 
 const tableTitles = ['#', 'Task name', 'Description', 'Start date', 'Deadline', 'Action'];
 
-class Tasks extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      modalMode: null,
-      actionTaskId: null,
-    };
-  }
+function Tasks({ addTask, getTasks, getUsers, updateTask, removeTask, users, tasks, isFetching, error }) {
+  const [modalValues, setModalValues] = useState({ mode: null, actionId: null });
 
-  async componentDidMount() {
-    const { getTasks, getUsers } = this.props;
+  useEffect(() => {
     getTasks();
     getUsers();
-  }
+  }, []);
 
-  updateTask = (updatedTask) => {
-    const { actionTaskId } = this.state;
-    const { updateTask } = this.props;
-    updateTask(actionTaskId, updatedTask);
-    this.disableModalMode();
+  const updateTaskHandler = (updatedTask) => {
+    updateTask(modalValues.actionId, updatedTask);
+    disableModalMode();
   };
 
-  addTask = (task) => {
-    const { addTask } = this.props;
+  const addTaskHandler = (task) => {
     addTask(task);
-    this.disableModalMode();
+    disableModalMode();
   };
 
-  removeTask = () => {
-    const { actionTaskId } = this.state;
-    const { removeTask } = this.props;
-    removeTask(actionTaskId);
-    this.disableModalMode();
+  const removeTaskHandler = () => {
+    removeTask(modalValues.actionId);
+    disableModalMode();
   };
 
-  setModalMode = (modalMode, actionTaskId = null) => {
-    this.setState({ modalMode, actionTaskId });
+  const setModalMode = (mode, actionId = null) => {
+    setModalValues({ mode, actionId });
   };
 
-  disableModalMode = () => {
-    this.setState({ modalMode: null, actionTaskId: null });
+  const disableModalMode = () => {
+    setModalValues({ mode: null, actionId: null });
   };
 
-  render() {
-    const { modalMode, actionTaskId } = this.state;
-    const { users, tasks, isFetching, error } = this.props;
-    const actionTask = tasks.find((task) => task.id === actionTaskId);
+  const actionTask = tasks.find((task) => task.id === modalValues.actionId);
 
-    return (
-      <ThemeContext.Consumer>
-        {({ theme }) => (
-          <div>
-            {isFetching && <Loading />}
-            <CustomAlert isActive={!!error} variant={ALERT_MODES.fail} text={error} />
-            <PageHeader text={PAGE_TITLES.tasks} onClick={() => this.setModalMode(MODAL_MODES.create)} />
-            <table className={styles.tasks} style={{ color: theme.textColor }}>
-              <TableHeader titles={tableTitles} />
-              <tbody>
-                {tasks.map((task, index) => {
-                  const setEditMode = () => {
-                    this.setModalMode(MODAL_MODES.edit, task.id);
-                  };
-                  const setReadMode = () => {
-                    this.setModalMode(MODAL_MODES.read, task.id);
-                  };
-                  const setDeleteMode = () => {
-                    this.setModalMode(MODAL_MODES.delete, task.id);
-                  };
+  return (
+    <ThemeContext.Consumer>
+      {({ theme }) => (
+        <div>
+          {isFetching && <Loading />}
+          <CustomAlert isActive={!!error} variant={ALERT_MODES.fail} text={error} />
+          <PageHeader text={PAGE_TITLES.tasks} onClick={() => setModalMode(MODAL_MODES.create)} />
+          <table className={styles.tasks} style={{ color: theme.textColor }}>
+            <TableHeader titles={tableTitles} />
+            <tbody>
+              {tasks.map((task, index) => {
+                const setEditMode = () => {
+                  setModalMode(MODAL_MODES.edit, task.id);
+                };
+                const setReadMode = () => {
+                  setModalMode(MODAL_MODES.read, task.id);
+                };
+                const setDeleteMode = () => {
+                  setModalMode(MODAL_MODES.delete, task.id);
+                };
 
-                  return (
-                    <TaskRow
-                      key={task.id}
-                      id={task.id}
-                      title={task.title}
-                      description={task.description}
-                      deadline={task.deadline}
-                      startDate={task.startDate}
-                      number={index + 1}
-                      setEditMode={setEditMode}
-                      setDeleteMode={setDeleteMode}
-                      setReadMode={setReadMode}
-                    />
-                  );
-                })}
-              </tbody>
-            </table>
-            <TaskModal
-              users={users}
-              addTask={this.addTask}
-              task={actionTask}
-              readOnly={modalMode === MODAL_MODES.read}
-              updateTask={this.updateTask}
-              disableModalMode={this.disableModalMode}
-              active={!!modalMode && modalMode !== MODAL_MODES.delete}
-            />
-            <DeleteModal
-              active={modalMode === MODAL_MODES.delete}
-              removeHandler={this.removeTask}
-              cancelHandler={this.disableModalMode}
-              target={DELETE_VALUES.task}
-            />
-          </div>
-        )}
-      </ThemeContext.Consumer>
-    );
-  }
+                return (
+                  <TaskRow
+                    key={task.id}
+                    id={task.id}
+                    title={task.title}
+                    description={task.description}
+                    deadline={task.deadline}
+                    startDate={task.startDate}
+                    number={index + 1}
+                    setEditMode={setEditMode}
+                    setDeleteMode={setDeleteMode}
+                    setReadMode={setReadMode}
+                  />
+                );
+              })}
+            </tbody>
+          </table>
+          <TaskModal
+            users={users}
+            addTask={addTaskHandler}
+            task={actionTask}
+            readOnly={modalValues.mode === MODAL_MODES.read}
+            updateTask={updateTaskHandler}
+            disableModalMode={disableModalMode}
+            active={!!modalValues.mode && modalValues.mode !== MODAL_MODES.delete}
+          />
+          <DeleteModal
+            active={modalValues.mode === MODAL_MODES.delete}
+            removeHandler={removeTaskHandler}
+            cancelHandler={disableModalMode}
+            target={DELETE_VALUES.task}
+          />
+        </div>
+      )}
+    </ThemeContext.Consumer>
+  );
 }
 
 function mapStateToProps(state) {

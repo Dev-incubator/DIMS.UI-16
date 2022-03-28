@@ -45,7 +45,14 @@ export const updateTaskThunk = (id, updatedTask) => {
 export const addTaskThunk = (task) => {
   return (dispatch) => {
     dispatch(enableLoaderAC());
-    addTask(task).then((doc) => dispatch(addTaskAC(doc.id, task)));
+    addTask(task)
+      .then((doc) => dispatch(addTaskAC(doc.id, task)))
+      .catch((error) => {
+        dispatch(setErrorAC(error.message));
+        setTimeout(() => {
+          dispatch(disableErrorAC());
+        }, 3500);
+      });
     dispatch(disableLoaderAC());
   };
 };

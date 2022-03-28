@@ -21,7 +21,7 @@ export function addTask(task) {
 }
 
 export async function addTrack(track) {
-  await addDoc(tracksCollectionRef, track);
+  return addDoc(tracksCollectionRef, track);
 }
 
 export async function getAllTasks() {
@@ -72,12 +72,9 @@ export async function getTaskById(taskId) {
 }
 
 export async function getTaskTrack(userId, taskId) {
-  const task = await getTaskById(taskId);
   const allTracks = await getAllTracks();
 
-  return allTracks
-    .filter((track) => track.userId === userId && track.taskId === taskId)
-    .map((track) => ({ ...track, taskTitle: task.title }));
+  return allTracks.filter((track) => track.userId === userId && track.taskId === taskId);
 }
 
 export async function removeUser(userId) {
