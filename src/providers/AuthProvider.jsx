@@ -34,7 +34,7 @@ class AuthProvider extends PureComponent {
 
   logOut = async () => {
     await signOut(auth);
-    await this.auth();
+    this.setState((prevState) => ({ userContext: { ...prevState.userContext, user: null } }));
   };
 
   logIn = async (email, password) => {
@@ -54,8 +54,6 @@ class AuthProvider extends PureComponent {
     if (user) {
       const currentUser = await getUserById(user.uid);
       this.setState((prevState) => ({ userContext: { ...prevState.userContext, user: currentUser } }));
-    } else {
-      this.setState((prevState) => ({ userContext: { ...prevState.userContext, user } }));
     }
   };
 
