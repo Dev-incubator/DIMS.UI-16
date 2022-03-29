@@ -4,11 +4,7 @@ import styles from './Modal.module.css';
 
 export function Modal({ active, disableModalMode, children }) {
   return ReactDOM.createPortal(
-    <div
-      className={active ? `${styles.modal} ${styles.active}` : styles.modal}
-      onClick={disableModalMode}
-      aria-hidden='true'
-    >
+    <div className={`${styles.modal} ${active ? styles.active : ''}`} onClick={disableModalMode} aria-hidden='true'>
       <div
         className={`${styles.modalContent} ${active ? styles.active : ''}`}
         onClick={(event) => event.stopPropagation()}

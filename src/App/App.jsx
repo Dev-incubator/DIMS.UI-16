@@ -13,6 +13,7 @@ import { LogIn } from '../pages/logIn/LogIn';
 import { About } from '../pages/about/About';
 import { COPYRIGHT } from '../constants/libraries';
 import { AuthContext } from '../providers/AuthProvider';
+import { ErrorBoundary } from '../components/errorBoundary/ErrorBoundary';
 
 class App extends PureComponent {
   componentDidMount() {
@@ -47,7 +48,9 @@ class App extends PureComponent {
       <div className={styles.App}>
         <Header />
         <main>
-          <Switch>{this.generateRoutes()}</Switch>
+          <ErrorBoundary>
+            <Switch>{this.generateRoutes()}</Switch>
+          </ErrorBoundary>
         </main>
         <footer>
           <span className={styles.copyright}>{COPYRIGHT}</span>
