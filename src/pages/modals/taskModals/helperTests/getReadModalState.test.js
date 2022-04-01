@@ -20,7 +20,7 @@ describe('Task modal tests', () => {
     ],
   };
 
-  it('Function should return data to read in task modal', () => {
+  it('Should return data to read in task modal', () => {
     const task = {
       deadline: '09.03.2022',
       description: 'dasdasdt',
@@ -36,7 +36,7 @@ describe('Task modal tests', () => {
     expect(getReadModalState(task, users)).toEqual(result);
   });
 
-  it('Function should return wrong data to read in task modal', () => {
+  it('Should return wrong data to read in task modal', () => {
     const task = {
       deadline: '09.03.2022',
       description: 'dasdasdt',

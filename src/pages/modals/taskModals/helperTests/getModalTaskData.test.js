@@ -12,7 +12,7 @@ describe('Task modal tests', () => {
     ],
   };
 
-  it('Function returns data in task modal', () => {
+  it('Should return data in task modal', () => {
     const state = {
       deadline: '2022-03-17',
       description: 'qwerty',
@@ -28,7 +28,7 @@ describe('Task modal tests', () => {
     expect(getModalTaskData(state)).toEqual(result);
   });
 
-  it('Function returns wrong data from task modal', () => {
+  it('Should return wrong data from task modal', () => {
     const state = {
       deadline: '2021-03-17',
       description: 'qwerty',

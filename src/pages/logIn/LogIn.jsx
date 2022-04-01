@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 import { INPUT_NAMES } from '../../constants/libraries';
 import styles from './LogIn.module.css';
 import { emailRegular } from '../../scripts/regulars';
-import { AuthContext } from '../../providers/AuthProvider';
+import { withAuthContext } from '../../HOCs/withAuthContext';
 
-export class LogIn extends PureComponent {
+class LogIn extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -41,7 +41,7 @@ export class LogIn extends PureComponent {
   submitHandler = async (event) => {
     event.preventDefault();
     event.stopPropagation();
-    const { context } = this;
+    const { context } = this.props;
     const { logIn } = context;
     const { email, password } = this.state;
     if (this.isFormValid()) {
@@ -103,8 +103,11 @@ export class LogIn extends PureComponent {
   }
 }
 
-LogIn.contextType = AuthContext;
-
 LogIn.propTypes = {
   history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
+  context: PropTypes.shape({
+    logIn: PropTypes.func,
+  }).isRequired,
 };
+
+export default withAuthContext(LogIn);

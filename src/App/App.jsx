@@ -1,47 +1,17 @@
 import { PureComponent } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Switch } from 'react-router-dom';
 import { appTitle } from '../config';
 import './App.css';
 import styles from './App.module.css';
-import { Members } from '../pages/members/Members';
-import { Progress } from '../pages/progress/Progress';
-import { UserTasks } from '../pages/userTasks/UserTasks';
-import { Tracks } from '../pages/tracks/Tracks';
-import { Tasks } from '../pages/tasks/Tasks';
-import { Header } from './header/Header';
-import { LogIn } from '../pages/logIn/LogIn';
-import { About } from '../pages/about/About';
+import Header from './header/Header';
 import { COPYRIGHT } from '../constants/libraries';
-import { AuthContext } from '../providers/AuthProvider';
 import { ErrorBoundary } from '../components/errorBoundary/ErrorBoundary';
+import { GeneratedRoutes } from './GeneratedRoutes';
 
 class App extends PureComponent {
   componentDidMount() {
     document.title = appTitle;
   }
-
-  generateRoutes = () => {
-    const { user } = this.context;
-
-    return (
-      <div>
-        <Route path='/about' exact component={About} />
-        {user ? (
-          <div>
-            <Route path='/users' exact component={Members} />
-            <Route path='/tasks' exact component={Tasks} />
-            <Route path='/progress/:id' component={Progress} />
-            <Route path='/tasks/:id' component={UserTasks} />
-            <Route path='/track/:userId/:taskId' component={Tracks} />
-          </div>
-        ) : (
-          <div>
-            <Route path='/login' exact component={LogIn} />
-          </div>
-        )}
-      </div>
-    );
-  };
 
   render() {
     return (
@@ -49,7 +19,9 @@ class App extends PureComponent {
         <Header />
         <main>
           <ErrorBoundary>
-            <Switch>{this.generateRoutes()}</Switch>
+            <Switch>
+              <GeneratedRoutes />
+            </Switch>
           </ErrorBoundary>
         </main>
         <footer>
@@ -59,7 +31,5 @@ class App extends PureComponent {
     );
   }
 }
-
-App.contextType = AuthContext;
 
 export default App;

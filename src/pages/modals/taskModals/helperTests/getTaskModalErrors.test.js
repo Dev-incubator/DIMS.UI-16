@@ -1,7 +1,7 @@
 import { getTaskModalErrors } from '../taskModalHelpers';
 
 describe('Task modal tests', () => {
-  it('Function return validation errors from modal', () => {
+  it('Should return validation errors from modal', () => {
     const state = {
       deadline: '2022-03-17',
       startDate: '2022-03-11',
@@ -17,7 +17,7 @@ describe('Task modal tests', () => {
     expect(getTaskModalErrors(state)).toEqual(result);
   });
 
-  it('Function should return that it is no error in modal', () => {
+  it('Should should return that it is no error in modal', () => {
     const state = {
       deadline: '2022-03-17',
       startDate: '2022-03-11',
@@ -28,10 +28,10 @@ describe('Task modal tests', () => {
         { id: 'hwvzuSySXaWFi82ROqaw6BU43tf1', name: 'vscx', value: false },
       ],
     };
-    expect(getTaskModalErrors(state)).toBeFalsy();
+    expect(getTaskModalErrors(state)).toBeNull();
   });
 
-  it('Function should check, has modal validation errors or not unsuccessfully', () => {
+  it('Should should check, has modal validation errors or not unsuccessfully', () => {
     const state = {
       deadline: '2022-03-17',
       startDate: '2022-03-11',
@@ -42,6 +42,6 @@ describe('Task modal tests', () => {
       ],
     };
 
-    expect(getTaskModalErrors(state)).not.toBeFalsy();
+    expect(getTaskModalErrors(state)).not.toBeNull();
   });
 });

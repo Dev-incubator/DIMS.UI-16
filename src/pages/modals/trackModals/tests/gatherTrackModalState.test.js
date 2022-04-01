@@ -1,7 +1,7 @@
 import { gatherTrackModalState } from '../trackModalHelpers';
 
 describe('Track modal tests', () => {
-  it('Function should successfully gather state to track modal', () => {
+  it('Should successfully gather state to track modal', () => {
     const track = {
       date: '04.03.2022',
       id: 'JhXh6ZYbxNaq6XsF4iCG',
@@ -23,7 +23,7 @@ describe('Track modal tests', () => {
     expect(gatherTrackModalState(track, taskName)).toEqual(result);
   });
 
-  it('Function should unsuccessfully gather state to track modal', () => {
+  it('Should unsuccessfully gather state to track modal', () => {
     const track = {
       date: '04.03.2022',
       id: 'JhXh6ZYbxNaq6XsF4iCG',

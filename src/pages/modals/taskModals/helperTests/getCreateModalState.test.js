@@ -16,7 +16,7 @@ describe('Task modal tests', () => {
     ],
   };
 
-  it('Function should return state to create task in modal', () => {
+  it('Should return state to create task in modal', () => {
     const users = [
       { id: 'EYzZEFH2vCh8Bz0xYbXxHbzZdWG2', name: 'Prohor' },
       { id: 'Mnj7ER92EfOGm7txx4ZnRUjY8Lr1', name: 'Dima' },
@@ -26,7 +26,7 @@ describe('Task modal tests', () => {
     expect(getCreateModalState(users)).toEqual(result);
   });
 
-  it('Function should return wrong state to create task in modal', () => {
+  it('Should return wrong state to create task in modal', () => {
     const users = [
       { id: 'EYzZEFH2vCh8Bz0xYbXxHbzZdWG2', name: 'Prohor' },
       { id: 'Mnj7ER92EfOGm7txx4ZnRUjY8Lr1', name: 'Dima' },

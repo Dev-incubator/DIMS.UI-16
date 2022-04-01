@@ -52,7 +52,7 @@ export const getTaskModalErrors = (state) => {
     return formErrors;
   }
 
-  return false;
+  return null;
 };
 
 export const getEditModalState = (task, users) => {

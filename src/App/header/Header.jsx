@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import { Container, Nav, Navbar } from 'react-bootstrap';
 import { PureComponent } from 'react';
 import styles from './Header.module.css';
-import { AuthContext } from '../../providers/AuthProvider';
 import { getUserName } from '../../scripts/helpers';
+import { withAuthContext } from '../../HOCs/withAuthContext';
 
-export class Header extends PureComponent {
+class Header extends PureComponent {
   render() {
-    const { logOut, user } = this.context;
-
+    const { context } = this.props;
+    const { logOut, user } = context;
     const userName = getUserName(user);
 
     return (
@@ -54,11 +54,15 @@ export class Header extends PureComponent {
   }
 }
 
-Header.contextType = AuthContext;
-
 Header.propTypes = {
   user: PropTypes.shape({ email: PropTypes.string }),
+  context: PropTypes.shape({
+    logOut: PropTypes.func,
+    user: PropTypes.shape({}),
+  }).isRequired,
 };
 Header.defaultProps = {
   user: null,
 };
+
+export default withAuthContext(Header);

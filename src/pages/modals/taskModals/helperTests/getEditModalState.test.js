@@ -28,7 +28,7 @@ describe('Task modal tests', () => {
     ],
   };
 
-  it('Function returns data to edit in modal', () => {
+  it('Should return data to edit in modal', () => {
     const task = {
       deadline: '09.03.2022',
       description: 'dasdasdt',
@@ -44,7 +44,7 @@ describe('Task modal tests', () => {
     expect(getEditModalState(task, users)).toEqual(result);
   });
 
-  it('Function returns wrong data to edit in modal', () => {
+  it('Should return wrong data to edit in modal', () => {
     const task = {
       deadline: '08.03.2022',
       description: 'Hello',

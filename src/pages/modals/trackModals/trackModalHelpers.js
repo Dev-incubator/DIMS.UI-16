@@ -29,7 +29,7 @@ export const getTrackModalErrors = (state) => {
     return formErrors;
   }
 
-  return false;
+  return null;
 };
 
 export const gatherTrackModalState = (track, taskName) => {
