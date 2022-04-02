@@ -2,7 +2,7 @@ import { PureComponent } from 'react';
 import styles from './Members.module.css';
 import { MemberInfoRow } from './memberInfoRow/MemberInfoRow';
 import { TableHeader } from '../helpers/TableHeader';
-import { DeleteModal } from '../modals/deleteModal/DeleteModal';
+import DeleteModal from '../modals/deleteModal/DeleteModal';
 import { deleteUser, getAllUsers } from '../../scripts/api-service';
 import { PageHeader } from '../helpers/PageHeader';
 import { deepEqual } from '../../scripts/helpers';
@@ -54,7 +54,9 @@ export class Members extends PureComponent {
   };
 
   disableDeleteMode = () => {
-    this.setState({ deleteMode: false, actionUserId: null });
+    setTimeout(() => {
+      this.setState({ deleteMode: false, actionUserId: null });
+    }, 300);
   };
 
   render() {
@@ -87,12 +89,13 @@ export class Members extends PureComponent {
             })}
           </tbody>
         </table>
-        <DeleteModal
-          target={DELETE_VALUES.member}
-          active={deleteMode}
-          removeHandler={this.removeUser}
-          cancelHandler={this.disableDeleteMode}
-        />
+        {deleteMode && (
+          <DeleteModal
+            target={DELETE_VALUES.member}
+            removeHandler={this.removeUser}
+            disableModalMode={this.disableDeleteMode}
+          />
+        )}
       </div>
     );
   }

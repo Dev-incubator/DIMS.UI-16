@@ -14,7 +14,7 @@ export async function getUserById(userId) {
   } catch (error) {
     console.error(error);
 
-    return null;
+    return undefined;
   }
 }
 
@@ -42,7 +42,7 @@ export async function getAllTasks() {
   } catch (error) {
     console.error(error);
 
-    return null;
+    return undefined;
   }
 }
 
@@ -54,7 +54,7 @@ export async function getAllUsers() {
   } catch (error) {
     console.error(error);
 
-    return null;
+    return undefined;
   }
 }
 
@@ -66,7 +66,7 @@ export async function getAllTracks() {
   } catch (error) {
     console.error(error);
 
-    return null;
+    return undefined;
   }
 }
 
@@ -93,7 +93,7 @@ export async function getUserTasksById(userId) {
   } catch (error) {
     console.error(error);
 
-    return null;
+    return undefined;
   }
 }
 
@@ -105,7 +105,7 @@ export async function getTaskById(taskId) {
   } catch (error) {
     console.error(error);
 
-    return null;
+    return undefined;
   }
 }
 
@@ -120,7 +120,7 @@ export async function getTaskTrack(userId, taskId) {
   } catch (error) {
     console.error(error);
 
-    return null;
+    return undefined;
   }
 }
 
@@ -196,5 +196,5 @@ export async function login(email, password) {
     return error;
   }
 
-  return null;
+  return undefined;
 }

@@ -33,7 +33,6 @@ export const getTrackModalErrors = (state) => {
 };
 
 export const gatherTrackModalState = (track, taskName) => {
-  console.log(taskName);
   const state = {
     ...initTrackModalState,
     taskName,

@@ -18,12 +18,12 @@ export class Modal extends PureComponent {
   }
 
   render() {
-    const { active, disableModalMode, children } = this.props;
+    const { children, active, disableModalMode } = this.props;
 
     return ReactDOM.createPortal(
-      <div className={`${styles.modal} ${active ? styles.active : ''}`} onClick={disableModalMode} aria-hidden='true'>
+      <div className={`${styles.modal} ${active && styles.active}`} onClick={disableModalMode} aria-hidden='true'>
         <div
-          className={`${styles.modalContent} ${active ? styles.active : ''}`}
+          className={`${styles.modalContent} ${active && styles.active}`}
           onClick={(event) => event.stopPropagation()}
           aria-hidden='true'
         >

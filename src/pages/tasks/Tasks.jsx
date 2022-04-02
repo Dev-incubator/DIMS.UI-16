@@ -6,8 +6,8 @@ import styles from './Tasks.module.css';
 import { TaskRow } from './taskRow/TaskRow';
 import { DELETE_VALUES, MODAL_MODES, PAGE_TITLES } from '../../constants/libraries';
 import { deepEqual } from '../../scripts/helpers';
-import { DeleteModal } from '../modals/deleteModal/DeleteModal';
-import { TaskModal } from '../modals/taskModals/taskModal/TaskModal';
+import DeleteModal from '../modals/deleteModal/DeleteModal';
+import TaskModal from '../modals/taskModals/taskModal/TaskModal';
 
 const tableTitles = ['#', 'Task name', 'Description', 'Start date', 'Deadline', 'Action'];
 
@@ -78,7 +78,9 @@ export class Tasks extends PureComponent {
   };
 
   disableModalMode = () => {
-    this.setState({ modalMode: null, actionTaskId: null });
+    setTimeout(() => {
+      this.setState({ modalMode: null, actionTaskId: null });
+    }, 300);
   };
 
   render() {
@@ -119,21 +121,23 @@ export class Tasks extends PureComponent {
             })}
           </tbody>
         </table>
-        <TaskModal
-          users={users}
-          addTask={this.addTask}
-          task={actionTask}
-          readOnly={modalMode === MODAL_MODES.read}
-          updateTask={this.updateTask}
-          disableModalMode={this.disableModalMode}
-          active={!!modalMode && modalMode !== MODAL_MODES.delete}
-        />
-        <DeleteModal
-          active={modalMode === MODAL_MODES.delete}
-          removeHandler={this.removeTask}
-          cancelHandler={this.disableModalMode}
-          target={DELETE_VALUES.task}
-        />
+        {modalMode && modalMode !== MODAL_MODES.delete ? (
+          <TaskModal
+            users={users}
+            addTask={this.addTask}
+            task={actionTask}
+            readOnly={modalMode === MODAL_MODES.read}
+            updateTask={this.updateTask}
+            disableModalMode={this.disableModalMode}
+          />
+        ) : null}
+        {modalMode === MODAL_MODES.delete && (
+          <DeleteModal
+            removeHandler={this.removeTask}
+            disableModalMode={this.disableModalMode}
+            target={DELETE_VALUES.task}
+          />
+        )}
       </div>
     );
   }
