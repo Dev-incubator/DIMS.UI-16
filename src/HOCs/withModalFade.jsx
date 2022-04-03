@@ -1,7 +1,8 @@
 import { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 
 export const withModalFade = (Component) => {
-  return class extends PureComponent {
+  class Wrapper extends PureComponent {
     constructor(props) {
       super(props);
       this.state = {
@@ -10,9 +11,8 @@ export const withModalFade = (Component) => {
     }
 
     onClose = () => {
-      // eslint-disable-next-line react/prop-types
       const { disableModalMode } = this.props;
-      this.setState({ active: false });
+      this.setFade();
       disableModalMode();
     };
 
@@ -21,10 +21,16 @@ export const withModalFade = (Component) => {
     };
 
     render() {
-      const { props } = this;
+      const { props, setFade, onClose } = this;
       const { active } = this.state;
 
-      return <Component {...props} onClose={this.onClose} setFade={this.setFade} active={active} />;
+      return <Component {...props} onClose={onClose} setFade={setFade} active={active} />;
     }
+  }
+
+  Wrapper.propTypes = {
+    disableModalMode: PropTypes.func.isRequired,
   };
+
+  return Wrapper;
 };
