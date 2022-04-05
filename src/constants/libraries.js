@@ -108,13 +108,12 @@ export const DELETE_VALUES = {
   track: 'task track',
 };
 
+export const TRACK_MODAL_TITLES = {
+  edit: 'Edit task track',
+  create: 'Create new task track',
+};
 export const PAGE_TITLES = {
   tasks: 'Tasks',
   members: 'Members',
   tracks: 'Current task tracks',
-};
-
-export const TRACK_MODAL_TITLES = {
-  edit: 'Edit task track',
-  create: 'Create new task track',
 };
