@@ -150,7 +150,6 @@ export class Members extends PureComponent {
             user={actionUser}
             disableModalMode={this.disableModalMode}
             readOnly={modalMode === MODAL_MODES.read}
-            active={!!modalMode && modalMode !== MODAL_MODES.delete}
           />
         ) : null}
       </div>
