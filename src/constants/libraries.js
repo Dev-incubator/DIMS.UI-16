@@ -1,9 +1,17 @@
+export const COPYRIGHT = '© Dev Incubator';
+
 export const BUTTON_COLORS = {
   blue: 'primary',
   orange: 'warning',
   red: 'error',
   gray: 'secondary',
   green: 'success',
+};
+
+export const TASK_STATUS = {
+  active: 'Active',
+  fail: 'Fail',
+  success: 'Success',
 };
 
 export const BUTTON_VALUES = {
@@ -25,6 +33,7 @@ export const MODAL_VALUES = {
   startDate: 'Start date',
   deadline: 'Deadline',
   members: 'Members',
+  title: 'Title',
   task: 'Task',
   date: 'Date',
   note: 'Note',
@@ -91,12 +100,6 @@ export const INPUT_NAMES = {
   birthDate: 'birthDate',
   address: 'address',
   education: 'education',
-};
-
-export const TASK_STATUS = {
-  active: 'Active',
-  fail: 'Fail',
-  success: 'Success',
 };
 
 export const DELETE_VALUES = {

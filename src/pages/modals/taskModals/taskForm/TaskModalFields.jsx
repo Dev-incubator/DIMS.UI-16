@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { FormField } from '../../form/formField/FormField';
-import { INPUT_NAMES, INPUT_TYPES, MODAL_VALUES } from '../../../../scripts/libraries';
+import { INPUT_NAMES, INPUT_TYPES, MODAL_VALUES } from '../../../../constants/libraries';
 import noop from '../../../../shared/noop';
 
 export function TaskModalFields({ formErrors, title, description, startDate, deadline, onChangeInputValue, readOnly }) {

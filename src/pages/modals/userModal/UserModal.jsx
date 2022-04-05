@@ -1,10 +1,9 @@
 import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { deepEqual } from '../../../scripts/helpers';
 import { Modal } from '../../../components/Modal/Modal';
 import styles from './UserModal.module.css';
 import { FormField } from '../form/formField/FormField';
-import { BUTTON_COLORS, INPUT_NAMES, INPUT_TYPES, MODAL_VALUES, USER_MODAL_TITLES } from '../../../scripts/libraries';
+import { BUTTON_COLORS, INPUT_NAMES, INPUT_TYPES, MODAL_VALUES, USER_MODAL_TITLES } from '../../../constants/libraries';
 import {
   getCreateUserModalState,
   getEditUserModalState,
@@ -14,24 +13,22 @@ import {
   initStartUserModalState,
 } from './userModalHelpers';
 import { FormSubmit } from '../form/formSubmit/FormSubmit';
+import { withModalFade } from '../../../HOCs/withModalFade';
 
-export class UserModal extends PureComponent {
+class UserModal extends PureComponent {
   constructor(props) {
     super(props);
     this.state = initStartUserModalState;
   }
 
-  componentDidUpdate(prevProps) {
-    const { active } = this.props;
-    if (!deepEqual(prevProps, this.props) && active) {
-      const { user, readOnly } = this.props;
-      if (readOnly && user) {
-        this.setReadData();
-      } else if (user) {
-        this.setEditData();
-      } else {
-        this.setCreateData();
-      }
+  componentDidMount() {
+    const { user, readOnly } = this.props;
+    if (readOnly && user) {
+      this.setReadData();
+    } else if (user) {
+      this.setEditData();
+    } else {
+      this.setCreateData();
     }
   }
 
@@ -59,6 +56,8 @@ export class UserModal extends PureComponent {
       this.setState({ formErrors });
     } else {
       const submitUser = getModalUserData(this.state);
+      const { setFade } = this.props;
+      setFade();
       if (user) {
         updateUser(submitUser);
       } else {
@@ -77,7 +76,7 @@ export class UserModal extends PureComponent {
   };
 
   render() {
-    const { disableModalMode, active, user } = this.props;
+    const { onClose, active, user } = this.props;
     const {
       modalTitle,
       name,
@@ -101,7 +100,7 @@ export class UserModal extends PureComponent {
     } = this.state;
 
     return (
-      <Modal disableModalMode={disableModalMode} active={active}>
+      <Modal disableModalMode={onClose} active={active}>
         <div className={styles.title}>{modalTitle}</div>
         <div className={styles.form}>
           <FormField
@@ -246,7 +245,7 @@ export class UserModal extends PureComponent {
           />
         </div>
         <FormSubmit
-          disableModalMode={disableModalMode}
+          disableModalMode={onClose}
           onSubmit={this.submitUser}
           submitButtonColor={modalTitle === USER_MODAL_TITLES.edit ? BUTTON_COLORS.green : BUTTON_COLORS.blue}
           readOnly={readOnly}
@@ -258,7 +257,8 @@ export class UserModal extends PureComponent {
 
 UserModal.propTypes = {
   active: PropTypes.bool.isRequired,
-  disableModalMode: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
+  setFade: PropTypes.func.isRequired,
   readOnly: PropTypes.bool.isRequired,
   createUser: PropTypes.func.isRequired,
   user: PropTypes.objectOf(PropTypes.string),
@@ -268,3 +268,5 @@ UserModal.propTypes = {
 UserModal.defaultProps = {
   user: null,
 };
+
+export default withModalFade(UserModal);

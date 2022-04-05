@@ -3,14 +3,14 @@ import { createUserWithEmailAndPassword, sendPasswordResetEmail, signOut, delete
 import styles from './Members.module.css';
 import { MemberInfoRow } from './memberInfoRow/MemberInfoRow';
 import { TableHeader } from '../helpers/TableHeader';
-import { DeleteModal } from '../modals/deleteModal/DeleteModal';
 import { createUser, removeUser, getAllUsers, login, getUserById, updateUser } from '../../scripts/api-service';
+import DeleteModal from '../modals/deleteModal/DeleteModal';
 import { PageHeader } from '../helpers/PageHeader';
 import { deepEqual, getAge } from '../../scripts/helpers';
-import { DELETE_VALUES, MODAL_MODES, PAGE_TITLES } from '../../scripts/libraries';
-import { UserModal } from '../modals/userModal/UserModal';
+import UserModal from '../modals/userModal/UserModal';
 import { auth } from '../../scripts/firebase-config';
 import { cryptId } from '../../scripts/crypt';
+import { DELETE_VALUES, MODAL_MODES, PAGE_TITLES } from '../../constants/libraries';
 
 const memberTableTitles = ['#', 'Full name', 'Direction', 'Education', 'Start', 'Age', 'Action'];
 
@@ -52,7 +52,9 @@ export class Members extends PureComponent {
   };
 
   disableModalMode = () => {
-    this.setState({ modalMode: null, actionUserId: null });
+    setTimeout(() => {
+      this.setState({ modalMode: null, actionUserId: null });
+    }, 300);
   };
 
   createUser = async (user) => {
@@ -134,20 +136,23 @@ export class Members extends PureComponent {
             })}
           </tbody>
         </table>
-        <DeleteModal
-          target={DELETE_VALUES.member}
-          active={modalMode === MODAL_MODES.delete}
-          removeHandler={this.removeUser}
-          cancelHandler={this.disableModalMode}
-        />
-        <UserModal
-          updateUser={this.updateUser}
-          createUser={this.createUser}
-          user={actionUser}
-          disableModalMode={this.disableModalMode}
-          readOnly={modalMode === MODAL_MODES.read}
-          active={!!modalMode && modalMode !== MODAL_MODES.delete}
-        />
+        {modalMode === MODAL_MODES.delete && (
+          <DeleteModal
+            target={DELETE_VALUES.member}
+            removeHandler={this.removeUser}
+            disableModalMode={this.disableModalMode}
+          />
+        )}
+        {!!modalMode && modalMode !== MODAL_MODES.delete ? (
+          <UserModal
+            updateUser={this.updateUser}
+            createUser={this.createUser}
+            user={actionUser}
+            disableModalMode={this.disableModalMode}
+            readOnly={modalMode === MODAL_MODES.read}
+            active={!!modalMode && modalMode !== MODAL_MODES.delete}
+          />
+        ) : null}
       </div>
     );
   }

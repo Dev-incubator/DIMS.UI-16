@@ -8,31 +8,28 @@ import {
   getTaskModalErrors,
   initStartModalState,
 } from '../taskModalHelpers';
-import { deepEqual } from '../../../../scripts/helpers';
-import { BUTTON_COLORS, TASK_MODAL_TITLES } from '../../../../scripts/libraries';
+import { BUTTON_COLORS, TASK_MODAL_TITLES } from '../../../../constants/libraries';
 import { Modal } from '../../../../components/Modal/Modal';
 import styles from './TaskModal.module.css';
 import { TaskModalFields } from '../taskForm/TaskModalFields';
 import { TaskModalUsersList } from '../taskForm/TaskModalUsersList';
 import { FormSubmit } from '../../form/formSubmit/FormSubmit';
+import { withModalFade } from '../../../../HOCs/withModalFade';
 
-export class TaskModal extends PureComponent {
+class TaskModal extends PureComponent {
   constructor(props) {
     super(props);
     this.state = initStartModalState;
   }
 
-  componentDidUpdate(prevProps) {
-    const { active } = this.props;
-    if (!deepEqual(prevProps, this.props) && active) {
-      const { task, readOnly } = this.props;
-      if (readOnly && task) {
-        this.setReadData();
-      } else if (task) {
-        this.setEditData();
-      } else {
-        this.setCreateData();
-      }
+  componentDidMount() {
+    const { task, readOnly } = this.props;
+    if (readOnly && task) {
+      this.setReadData();
+    } else if (task) {
+      this.setEditData();
+    } else {
+      this.setCreateData();
     }
   }
 
@@ -74,6 +71,8 @@ export class TaskModal extends PureComponent {
       this.setState({ formErrors });
     } else {
       const submitTask = getModalTaskData(this.state);
+      const { setFade } = this.props;
+      setFade();
       if (task) {
         updateTask(submitTask);
       } else {
@@ -87,11 +86,11 @@ export class TaskModal extends PureComponent {
   };
 
   render() {
-    const { disableModalMode, active } = this.props;
+    const { active, onClose } = this.props;
     const { usersTask, title, description, startDate, deadline, formErrors, readOnly, modalTitle } = this.state;
 
     return (
-      <Modal disableModalMode={disableModalMode} active={active}>
+      <Modal disableModalMode={onClose} active={active}>
         <div className={styles.title}>{modalTitle}</div>
         <form className={styles.form}>
           <TaskModalFields
@@ -112,7 +111,7 @@ export class TaskModal extends PureComponent {
           <FormSubmit
             onSubmit={this.submitTask}
             readOnly={readOnly}
-            disableModalMode={disableModalMode}
+            disableModalMode={onClose}
             submitButtonColor={modalTitle === TASK_MODAL_TITLES.edit ? BUTTON_COLORS.green : BUTTON_COLORS.blue}
           />
         </form>
@@ -122,8 +121,10 @@ export class TaskModal extends PureComponent {
 }
 
 TaskModal.propTypes = {
-  readOnly: PropTypes.bool.isRequired,
   active: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  setFade: PropTypes.func.isRequired,
+  readOnly: PropTypes.bool.isRequired,
   task: PropTypes.shape({
     title: PropTypes.string,
     description: PropTypes.string,
@@ -136,7 +137,6 @@ TaskModal.propTypes = {
       }),
     ),
   }),
-  disableModalMode: PropTypes.func.isRequired,
   addTask: PropTypes.func.isRequired,
   updateTask: PropTypes.func.isRequired,
   users: PropTypes.arrayOf(
@@ -149,3 +149,5 @@ TaskModal.propTypes = {
 TaskModal.defaultProps = {
   task: null,
 };
+
+export default withModalFade(TaskModal);

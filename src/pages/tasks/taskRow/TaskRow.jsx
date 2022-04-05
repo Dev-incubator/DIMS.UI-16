@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import styles from '../Tasks.module.css';
 import { Button } from '../../../components/Buttons/Button/Button';
-import { BUTTON_COLORS, BUTTON_VALUES } from '../../../scripts/libraries';
+import { BUTTON_COLORS, BUTTON_VALUES } from '../../../constants/libraries';
 
 export function TaskRow({ number, title, description, startDate, deadline, setEditMode, setReadMode, setDeleteMode }) {
   return (

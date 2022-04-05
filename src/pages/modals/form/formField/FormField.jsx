@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import styles from './FormField.module.css';
 import noop from '../../../../shared/noop';
-import { INPUT_TYPES } from '../../../../scripts/libraries';
+import { INPUT_TYPES } from '../../../../constants/libraries';
 
 export function FormField({ onChange, inputValue, fieldName, readOnly, stylingType, inputName, error, selectValues }) {
   const changeInputHandler = ({ target: { name, value } }) => {

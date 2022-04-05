@@ -1,5 +1,5 @@
 import { changeDateFormat, isObjectFieldsEmpty } from '../../../scripts/helpers';
-import { TASK_MODAL_TITLES } from '../../../scripts/libraries';
+import { MODAL_VALUES, TASK_MODAL_TITLES } from '../../../constants/libraries';
 
 export const getModalTaskData = (state) => {
   const { title, description, startDate, deadline, usersTask } = state;
@@ -31,22 +31,20 @@ export const initStartModalState = {
 };
 
 export const getTaskModalErrors = (state) => {
-  const { title, startDate, deadline, usersTask } = state;
+  const { usersTask } = state;
   const formErrors = {
     title: '',
     startDate: '',
     deadline: '',
-    users: '',
   };
-  if (!title.trim()) {
-    formErrors.title = 'Title is required';
-  }
-  if (!startDate.trim()) {
-    formErrors.startDate = 'Start date is required';
-  }
-  if (!deadline.trim()) {
-    formErrors.deadline = 'Deadline is required';
-  }
+
+  const keys = Object.keys(formErrors);
+  keys.forEach((key) => {
+    if (!state[key].trim()) {
+      formErrors[key] = `${MODAL_VALUES[key]} is required`;
+    }
+  });
+
   if (!usersTask.filter((user) => user.value).length) {
     formErrors.users = 'At least one member must be assigned';
   }
@@ -55,7 +53,7 @@ export const getTaskModalErrors = (state) => {
     return formErrors;
   }
 
-  return false;
+  return null;
 };
 
 export const getEditModalState = (task, users) => {

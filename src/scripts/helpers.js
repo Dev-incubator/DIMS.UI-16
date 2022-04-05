@@ -51,7 +51,7 @@ export const isObjectFieldsEmpty = (obj) => {
 
 export function getAge(dateString) {
   const today = new Date();
-  const birthDate = new Date(dateString);
+  const birthDate = new Date(dateString.split('-').join(','));
   let age = today.getFullYear() - birthDate.getFullYear();
   const month = today.getMonth() - birthDate.getMonth();
   if (month < 0 || (month === 0 && today.getDate() < birthDate.getDate())) {
@@ -67,3 +67,7 @@ export function getUid(urlString) {
 
   return path.split('uid=').reverse()[0];
 }
+
+export const getUserName = (user) => {
+  return user?.email.split('@')[0];
+};

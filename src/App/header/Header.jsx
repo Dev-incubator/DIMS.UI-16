@@ -1,59 +1,68 @@
 import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Container, Nav, Navbar } from 'react-bootstrap';
+import { PureComponent } from 'react';
 import styles from './Header.module.css';
+import { getUserName } from '../../scripts/helpers';
+import { withAuthContext } from '../../HOCs/withAuthContext';
 
-export function Header({ user, logout }) {
-  const userName = user && user.email ? user.email.split('@')[0] : '';
+class Header extends PureComponent {
+  render() {
+    const { context } = this.props;
+    const { logOut, user } = context;
+    const userName = getUserName(user);
 
-  return (
-    <Navbar collapseOnSelect expand='lg' bg='primary' variant='dark' className={styles.header}>
-      <Container className={styles.container}>
-        <Navbar.Brand>DIMS</Navbar.Brand>
-        <Navbar.Toggle aria-controls='responsive-navbar-nav' />
-        {user ? (
+    return (
+      <Navbar collapseOnSelect expand='lg' bg='primary' variant='dark' className={styles.header}>
+        <Container className={styles.container}>
+          <Navbar.Brand>DIMS</Navbar.Brand>
+          <Navbar.Toggle aria-controls='responsive-navbar-nav' />
           <Navbar.Collapse id='responsive-navbar-nav'>
             <Nav className={`${styles.links} me-auto`}>
-              <NavLink to='/users' activeClassName={styles.active}>
-                Members
-              </NavLink>
-              <NavLink to='/tasks' activeClassName={styles.active}>
-                Tasks
-              </NavLink>
-              <NavLink to='/about' activeClassName={styles.active}>
-                About
-              </NavLink>
-            </Nav>
-            <Nav className={styles.user}>
-              <Navbar.Text>{userName}</Navbar.Text>
-              <NavLink to='/login' onClick={logout} activeClassName={styles.active}>
-                Log out
-              </NavLink>
-            </Nav>
-          </Navbar.Collapse>
-        ) : (
-          <Navbar.Collapse id='responsive-navbar-nav'>
-            <Nav className={`${styles.links} me-auto`}>
+              {user && (
+                <div className={styles.links}>
+                  <NavLink to='/users' activeClassName={styles.active}>
+                    Members
+                  </NavLink>
+                  <NavLink to='/tasks' activeClassName={styles.active}>
+                    Tasks
+                  </NavLink>
+                </div>
+              )}
               <NavLink to='/about' activeClassName={styles.active}>
                 About
               </NavLink>
             </Nav>
             <Nav>
-              <NavLink to='/login' activeClassName={styles.active}>
-                Log In
-              </NavLink>
+              {user ? (
+                <div className={styles.auth}>
+                  <Navbar.Text>{userName}</Navbar.Text>
+                  <NavLink to='/login' onClick={logOut} activeClassName={styles.active}>
+                    Log out
+                  </NavLink>
+                </div>
+              ) : (
+                <NavLink to='/login' className={styles.logIn} activeClassName={styles.active}>
+                  Log In
+                </NavLink>
+              )}
             </Nav>
           </Navbar.Collapse>
-        )}
-      </Container>
-    </Navbar>
-  );
+        </Container>
+      </Navbar>
+    );
+  }
 }
 
 Header.propTypes = {
-  logout: PropTypes.func.isRequired,
   user: PropTypes.shape({ email: PropTypes.string }),
+  context: PropTypes.shape({
+    logOut: PropTypes.func,
+    user: PropTypes.shape({}),
+  }).isRequired,
 };
 Header.defaultProps = {
   user: null,
 };
+
+export default withAuthContext(Header);

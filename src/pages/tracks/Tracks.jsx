@@ -4,11 +4,11 @@ import styles from './Tracks.module.css';
 import { TableHeader } from '../helpers/TableHeader';
 import { TrackRow } from './trackRow/TrackRow';
 import { addTrack, deleteTrack, getTaskById, getTaskTrack, updateTrack } from '../../scripts/api-service';
-import { DeleteModal } from '../modals/deleteModal/DeleteModal';
+import DeleteModal from '../modals/deleteModal/DeleteModal';
 import { deepEqual } from '../../scripts/helpers';
 import { PageHeader } from '../helpers/PageHeader';
-import { DELETE_VALUES, MODAL_MODES, PAGE_TITLES } from '../../scripts/libraries';
-import { TrackModal } from '../modals/trackModals/TrackModal';
+import { DELETE_VALUES, MODAL_MODES, PAGE_TITLES } from '../../constants/libraries';
+import TrackModal from '../modals/trackModals/TrackModal';
 
 const tableTitles = ['#', 'Task', 'Note', 'Date', 'Action'];
 
@@ -75,7 +75,9 @@ export class Tracks extends PureComponent {
   };
 
   disableModalMode = () => {
-    this.setState({ modalMode: null, actionTrackId: null });
+    setTimeout(() => {
+      this.setState({ modalMode: null, actionTrackId: null });
+    }, 300);
   };
 
   removeTrack = async () => {
@@ -118,20 +120,23 @@ export class Tracks extends PureComponent {
             })}
           </tbody>
         </table>
-        <TrackModal
-          addTrack={this.addTrack}
-          updateTrack={this.updateTrack}
-          disableModalMode={this.disableModalMode}
-          active={!!modalMode && modalMode !== MODAL_MODES.delete}
-          track={actionTrack}
-          taskName={taskName}
-        />
-        <DeleteModal
-          target={DELETE_VALUES.track}
-          active={modalMode === MODAL_MODES.delete}
-          removeHandler={this.removeTrack}
-          cancelHandler={this.disableModalMode}
-        />
+        {modalMode && modalMode !== MODAL_MODES.delete ? (
+          <TrackModal
+            addTrack={this.addTrack}
+            updateTrack={this.updateTrack}
+            disableModalMode={this.disableModalMode}
+            track={actionTrack}
+            taskName={taskName}
+          />
+        ) : null}
+        {modalMode === MODAL_MODES.delete && (
+          <DeleteModal
+            target={DELETE_VALUES.track}
+            active={modalMode === MODAL_MODES.delete}
+            removeHandler={this.removeTrack}
+            disableModalMode={this.disableModalMode}
+          />
+        )}
       </div>
     );
   }

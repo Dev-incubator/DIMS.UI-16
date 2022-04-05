@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { Button } from '../../../components/Buttons/Button/Button';
-import { BUTTON_COLORS, BUTTON_VALUES } from '../../../scripts/libraries';
+import { BUTTON_COLORS, BUTTON_VALUES } from '../../../constants/libraries';
 import styles from './TrackRow.module.css';
 
 export function TrackRow({ number, title, note, date, setDeleteMode, setEditMode }) {

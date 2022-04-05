@@ -1,6 +1,6 @@
-import { changeDateFormat, getAge, isObjectFieldsEmpty } from '../../../scripts/helpers';
+import { getAge, isObjectFieldsEmpty } from '../../../scripts/helpers';
 import { emailRegular, phoneRegular } from '../../../scripts/regulars';
-import { MODAL_VALUES, USER_MODAL_TITLES } from '../../../scripts/libraries';
+import { MODAL_VALUES, USER_MODAL_TITLES } from '../../../constants/libraries';
 
 const formFields = {
   name: '',
@@ -52,7 +52,7 @@ export const getUserModalErrors = (state) => {
     formErrors.phone = 'Mobile phone is incorrect';
   }
   if (birthDate) {
-    const age = getAge(changeDateFormat(birthDate));
+    const age = getAge(birthDate);
     if (age < 18) {
       formErrors.birthDate = 'User age is lower than 18';
     }
