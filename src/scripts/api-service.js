@@ -19,7 +19,11 @@ export async function getUserById(userId) {
 }
 
 export async function createUser(id, user) {
-  await setDoc(doc(db, 'users', id), user);
+  try {
+    await setDoc(doc(db, 'users', id), user);
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 export async function addTask(task) {
@@ -193,13 +197,15 @@ export async function updateTrack(trackId, updatedFields) {
   } catch (error) {
     console.error(error);
   }
-  const trackDoc = doc(db, 'tracks', trackId);
-  await updateDoc(trackDoc, { ...updatedFields });
 }
 
 export async function updateUser(userId, updatedFields) {
-  const userDoc = doc(db, 'users', userId);
-  await updateDoc(userDoc, { ...updatedFields });
+  try {
+    const userDoc = doc(db, 'users', userId);
+    await updateDoc(userDoc, { ...updatedFields });
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 export async function login(email, password) {

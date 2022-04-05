@@ -62,7 +62,7 @@ export const getUserModalErrors = (state) => {
     return formErrors;
   }
 
-  return false;
+  return null;
 };
 
 export const getReadUserModalState = (user) => {

@@ -17,7 +17,7 @@ describe('Task modal tests', () => {
     expect(getTaskModalErrors(state)).toEqual(result);
   });
 
-  it('Should should return that it is no error in modal', () => {
+  it('Should return that it is no error in modal', () => {
     const state = {
       deadline: '2022-03-17',
       startDate: '2022-03-11',
