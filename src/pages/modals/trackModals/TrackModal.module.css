@@ -1,0 +1,13 @@
+.title{
+    font-family: Roboto, sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 2rem;
+    line-height: 1rem;
+    text-align: center;
+}
+
+
+.form {
+    margin-top: 2rem;
+}

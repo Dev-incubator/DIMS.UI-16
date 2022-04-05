@@ -1,10 +1,10 @@
 import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { PageHeader } from '../../helpers/PageHeader';
-import { TableHeader } from '../../helpers/TableHeader';
+import { PageHeader } from '../helpers/PageHeader';
+import { TableHeader } from '../helpers/TableHeader';
 import styles from './UserTasks.module.css';
 import { UserTaskRow } from './userTaskRow/UserTaskRow';
-import { getUserById, getUserTasksById } from '../../../scripts/api-service';
+import { getTaskById, getUserById, getUserTasksById, updateTask } from '../../scripts/api-service';
 
 const tableTitles = ['#', 'Task name', 'Start date', 'Deadline', 'Status', 'Update status'];
 
@@ -18,12 +18,25 @@ export class UserTasks extends PureComponent {
   }
 
   async componentDidMount() {
+    await this.updateData();
+  }
+
+  updateData = async () => {
     const { match } = this.props;
     const userId = match.params.id;
     const user = await getUserById(userId);
     const tasks = await getUserTasksById(userId);
     this.setState((prevState) => ({ ...prevState, name: user.name, tasks }));
-  }
+  };
+
+  updateTaskStatus = async (taskId, userId, status) => {
+    const task = await getTaskById(taskId);
+    if (task) {
+      const updatedTaskUsers = task.users.map((user) => (user.userId === userId ? { ...user, status } : user));
+      await updateTask(taskId, { users: updatedTaskUsers });
+      await this.updateData();
+    }
+  };
 
   render() {
     const { tasks, name } = this.state;
@@ -33,13 +46,14 @@ export class UserTasks extends PureComponent {
 
     return (
       <div>
-        <PageHeader text={`${name}'s current tasks`} />
+        <PageHeader text={`${name}'s current tasks`} isBackButton />
         <table className={styles.userTasks}>
           <TableHeader titles={tableTitles} />
           <tbody>
             {tasks.map((task, index) => (
               <UserTaskRow
                 key={task.id}
+                updateTaskStatus={this.updateTaskStatus}
                 userId={task.userId}
                 taskId={task.id}
                 title={task.title}

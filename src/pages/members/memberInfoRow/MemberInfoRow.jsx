@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import styles from './MemberInfoRow.module.css';
 import { Button } from '../../../components/Buttons/Button/Button';
-import { BUTTON_COLORS, BUTTON_VALUES } from '../../../scripts/libraries';
+import { BUTTON_COLORS, BUTTON_VALUES } from '../../../constants/libraries';
 
 export function MemberInfoRow({ id, number, name, direction, education, startDate, age, enableDeleteMode }) {
   return (
@@ -24,7 +24,7 @@ export function MemberInfoRow({ id, number, name, direction, education, startDat
             <Button color={BUTTON_COLORS.blue}>{BUTTON_VALUES.progress}</Button>
           </NavLink>
           <Button color={BUTTON_COLORS.orange}>{BUTTON_VALUES.edit}</Button>
-          <Button color={BUTTON_COLORS.red} onClick={() => enableDeleteMode(id)}>
+          <Button color={BUTTON_COLORS.red} onClick={enableDeleteMode}>
             {BUTTON_VALUES.delete}
           </Button>
         </div>
@@ -39,7 +39,7 @@ MemberInfoRow.propTypes = {
   direction: PropTypes.string.isRequired,
   education: PropTypes.string,
   startDate: PropTypes.string.isRequired,
-  age: PropTypes.number.isRequired,
+  age: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
   enableDeleteMode: PropTypes.func.isRequired,
 };

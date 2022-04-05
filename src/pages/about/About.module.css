@@ -1,0 +1,7 @@
+.content{
+    width: 52rem;
+    margin: 2rem auto;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}

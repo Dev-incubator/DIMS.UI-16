@@ -4,8 +4,13 @@
     background-color: var(--primary);
     display: flex;
     column-gap: 2rem;
+    z-index: 1;
     align-items: center;
     justify-content: center;
+}
+
+.container{
+    width: 52.2rem;
 }
 
 .header a{
@@ -20,4 +25,26 @@
 
 a.active{
     color: var(--warning);
+}
+
+.auth{
+    display: flex;
+    align-items: center;
+    column-gap: 0.8rem;
+}
+
+.userName{
+    color: var(--gray);
+    font-size: 1rem;
+}
+
+.links{
+    margin-left: 1rem;
+    display: flex;
+    align-items: center;
+    column-gap: 1.5rem;
+}
+
+.logIn{
+    margin-left: -4rem;
 }

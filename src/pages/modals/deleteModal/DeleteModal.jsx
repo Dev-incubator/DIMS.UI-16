@@ -1,34 +1,42 @@
 import PropTypes from 'prop-types';
 import styles from './DeleteModal.module.css';
-import modalStyles from '../Modals.module.css';
-import { Button } from '../../../components/Buttons/Button/Button';
-import { BUTTON_COLORS, BUTTON_VALUES } from '../../../scripts/libraries';
+import { BUTTON_COLORS, BUTTON_VALUES } from '../../../constants/libraries';
+import { Modal } from '../../../components/Modal/Modal';
+import { FormSubmit } from '../form/formSubmit/FormSubmit';
+import { withModalFade } from '../../../HOCs/withModalFade';
 
-export function DeleteModal({ target, removeHandler, cancelHandler }) {
+function DeleteModal({ target, active, onClose, removeHandler, setFade }) {
+  const onRemove = () => {
+    setFade();
+    removeHandler();
+  };
+
   return (
-    <div className={modalStyles.popup}>
-      <div className={`${modalStyles.popupContent} ${styles.content}`}>
+    <Modal disableModalMode={onClose} active={active}>
+      <div>
         <div className={styles.title}>Delete {target}</div>
         <div className={styles.text}>
           Are you sure you want <br />
           to delete the current <br />
           {target} ?
         </div>
-        <div className={styles.buttonGroup}>
-          <Button color={BUTTON_COLORS.red} onClick={removeHandler}>
-            {BUTTON_VALUES.delete}
-          </Button>
-          <Button onClick={cancelHandler} isBackButton>
-            {BUTTON_VALUES.backToList}
-          </Button>
-        </div>
+        <FormSubmit
+          submitButtonColor={BUTTON_COLORS.red}
+          onSubmit={onRemove}
+          disableModalMode={onClose}
+          submitButtonValue={BUTTON_VALUES.delete}
+        />
       </div>
-    </div>
+    </Modal>
   );
 }
 
 DeleteModal.propTypes = {
+  active: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  setFade: PropTypes.func.isRequired,
   target: PropTypes.string.isRequired,
   removeHandler: PropTypes.func.isRequired,
-  cancelHandler: PropTypes.func.isRequired,
 };
+
+export default withModalFade(DeleteModal);
