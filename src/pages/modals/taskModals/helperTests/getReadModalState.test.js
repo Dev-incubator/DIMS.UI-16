@@ -9,7 +9,7 @@ describe('Task modal tests', () => {
   const result = {
     deadline: '2022-03-09',
     description: 'dasdasdt',
-    formErrors: { deadline: '', description: '', startDate: '', title: '', users: '' },
+    errors: { deadline: '', description: '', startDate: '', title: '', users: '' },
     modalTitle: 'Task details',
     readOnly: true,
     startDate: '2022-03-10',

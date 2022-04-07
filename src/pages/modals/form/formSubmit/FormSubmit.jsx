@@ -3,7 +3,7 @@ import styles from './FormSubmit.module.css';
 import { Button } from '../../../../components/Buttons/Button/Button';
 import { BUTTON_VALUES } from '../../../../constants/libraries';
 
-export function FormSubmit({ disableModalMode, onSubmit, submitButtonColor, readOnly, submitButtonValue }) {
+export function FormSubmit({ onClose, onSubmit, submitButtonColor, readOnly, submitButtonValue }) {
   return (
     <div className={styles.buttonGroup}>
       {!readOnly && (
@@ -11,7 +11,7 @@ export function FormSubmit({ disableModalMode, onSubmit, submitButtonColor, read
           {submitButtonValue}
         </Button>
       )}
-      <Button onClick={disableModalMode} isBackButton>
+      <Button onClick={onClose} isBackButton>
         {BUTTON_VALUES.backToList}
       </Button>
     </div>
@@ -19,7 +19,7 @@ export function FormSubmit({ disableModalMode, onSubmit, submitButtonColor, read
 }
 
 FormSubmit.propTypes = {
-  disableModalMode: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   submitButtonColor: PropTypes.string.isRequired,
   readOnly: PropTypes.bool,

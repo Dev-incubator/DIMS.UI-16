@@ -59,7 +59,7 @@ export const TASK_MODAL_TITLES = {
   create: 'Create new task',
 };
 
-export const USER_MODAL_TITLES = {
+export const USER_TITLES = {
   read: 'Member details',
   edit: 'Edit member',
   create: 'Create member',

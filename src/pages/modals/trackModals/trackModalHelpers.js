@@ -1,32 +1,32 @@
 import { changeDateFormat, isObjectFieldsEmpty } from '../../../scripts/helpers';
 import { MODAL_VALUES, TRACK_MODAL_TITLES } from '../../../constants/libraries';
 
-export const initTrackModalState = {
-  modalTitle: '',
+export const trackModalState = {
+  title: '',
   taskName: '',
   note: '',
   date: '',
   readOnly: false,
-  formErrors: {
+  errors: {
     note: '',
     date: '',
   },
 };
 
 export const getTrackModalErrors = (state) => {
-  const formErrors = {
+  const errors = {
     note: '',
     date: '',
   };
-  const keys = Object.keys(formErrors);
+  const keys = Object.keys(errors);
   keys.forEach((key) => {
     if (!state[key].trim()) {
-      formErrors[key] = `${MODAL_VALUES[key]} is required`;
+      errors[key] = `${MODAL_VALUES[key]} is required`;
     }
   });
 
-  if (!isObjectFieldsEmpty(formErrors)) {
-    return formErrors;
+  if (!isObjectFieldsEmpty(errors)) {
+    return errors;
   }
 
   return null;
@@ -34,12 +34,12 @@ export const getTrackModalErrors = (state) => {
 
 export const gatherTrackModalState = (track, taskName) => {
   const state = {
-    ...initTrackModalState,
+    ...trackModalState,
     taskName,
-    modalTitle: TRACK_MODAL_TITLES.create,
+    title: TRACK_MODAL_TITLES.create,
   };
   if (track) {
-    state.modalTitle = TRACK_MODAL_TITLES.edit;
+    state.title = TRACK_MODAL_TITLES.edit;
     state.note = track.note;
     state.date = changeDateFormat(track.date);
   }

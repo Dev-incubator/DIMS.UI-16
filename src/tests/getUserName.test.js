@@ -1,6 +1,6 @@
 import { getUserName } from '../scripts/helpers';
 
-describe('Helper functions tests', () => {
+describe('Function returns username from email', () => {
   it('Should return username from email', () => {
     const user = {
       email: 'oleg@gmail.com',

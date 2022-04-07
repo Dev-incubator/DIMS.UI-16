@@ -11,9 +11,9 @@ export const withModalFade = (Component) => {
     }
 
     onClose = () => {
-      const { disableModalMode } = this.props;
+      const { onClose } = this.props;
       this.setFade();
-      disableModalMode();
+      onClose();
     };
 
     setFade = () => {
@@ -29,7 +29,7 @@ export const withModalFade = (Component) => {
   }
 
   Wrapper.propTypes = {
-    disableModalMode: PropTypes.func.isRequired,
+    onClose: PropTypes.func.isRequired,
   };
 
   return Wrapper;

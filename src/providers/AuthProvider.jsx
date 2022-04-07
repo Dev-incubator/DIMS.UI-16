@@ -24,8 +24,8 @@ class AuthProvider extends PureComponent {
         logIn: this.logIn,
         logOut: this.logOut,
       },
+      isAuth: false,
     };
-    this.isUserDataSetted = false;
   }
 
   async componentDidMount() {
@@ -50,17 +50,17 @@ class AuthProvider extends PureComponent {
 
   auth = async () => {
     const user = JSON.parse(localStorage.getItem('user'));
-    this.isUserDataSetted = true;
     if (user) {
       const currentUser = await getUserById(user.uid);
       this.setState((prevState) => ({ userContext: { ...prevState.userContext, user: currentUser } }));
     }
+    this.setState({ isAuth: true });
   };
 
   render() {
-    const { userContext } = this.state;
+    const { userContext, isAuth } = this.state;
     const { children } = this.props;
-    if (!this.isUserDataSetted) {
+    if (!isAuth) {
       return null;
     }
 

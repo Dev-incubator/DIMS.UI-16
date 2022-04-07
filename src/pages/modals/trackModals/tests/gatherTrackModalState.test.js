@@ -14,8 +14,8 @@ describe('Track modal tests', () => {
 
     const result = {
       date: '2022-03-04',
-      formErrors: { date: '', note: '' },
-      modalTitle: 'Edit task track',
+      errors: { date: '', note: '' },
+      title: 'Edit task track',
       note: 'dasaddas',
       readOnly: false,
       taskName: 'Create button',
@@ -37,8 +37,8 @@ describe('Track modal tests', () => {
 
     const result = {
       date: '2022-03-04',
-      formErrors: { date: '', note: '' },
-      modalTitle: 'Edit task track',
+      errors: { date: '', note: '' },
+      title: 'Edit task track',
       note: 'dasaddas',
       readOnly: false,
       taskName: 'Create button',

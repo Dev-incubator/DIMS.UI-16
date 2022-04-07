@@ -3,7 +3,7 @@ import { Button } from '../../../components/Buttons/Button/Button';
 import { BUTTON_COLORS, BUTTON_VALUES } from '../../../constants/libraries';
 import styles from './TrackRow.module.css';
 
-export function TrackRow({ number, title, note, date, setDeleteMode, setEditMode }) {
+export function TrackRow({ number, title, note, date, openDeleteModal, openEditModal }) {
   return (
     <tr>
       <td>{number}</td>
@@ -12,10 +12,10 @@ export function TrackRow({ number, title, note, date, setDeleteMode, setEditMode
       <td>{date}</td>
       <td>
         <div className={styles.buttonGroup}>
-          <Button color={BUTTON_COLORS.orange} onClick={setEditMode}>
+          <Button color={BUTTON_COLORS.orange} onClick={openEditModal}>
             {BUTTON_VALUES.edit}
           </Button>
-          <Button color={BUTTON_COLORS.red} onClick={setDeleteMode}>
+          <Button color={BUTTON_COLORS.red} onClick={openDeleteModal}>
             {BUTTON_VALUES.delete}
           </Button>
         </div>
@@ -29,6 +29,6 @@ TrackRow.propTypes = {
   title: PropTypes.string.isRequired,
   note: PropTypes.string.isRequired,
   date: PropTypes.string.isRequired,
-  setDeleteMode: PropTypes.func.isRequired,
-  setEditMode: PropTypes.func.isRequired,
+  openDeleteModal: PropTypes.func.isRequired,
+  openEditModal: PropTypes.func.isRequired,
 };

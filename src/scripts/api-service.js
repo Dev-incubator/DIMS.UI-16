@@ -1,6 +1,13 @@
 import { collection, doc, getDoc, getDocs, deleteDoc, updateDoc, addDoc, setDoc } from 'firebase/firestore/lite';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import {
+  createUserWithEmailAndPassword,
+  deleteUser,
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+  signOut,
+} from 'firebase/auth';
 import { auth, db } from './firebase-config';
+import { cryptId } from './crypt';
 
 const usersCollectionRef = collection(db, 'users');
 const tasksCollectionRef = collection(db, 'tasks');
@@ -216,4 +223,34 @@ export async function login(email, password) {
   }
 
   return undefined;
+}
+
+export async function createUserAuth(user) {
+  try {
+    const { email, password } = await getUserById(auth.currentUser.uid);
+    const newUser = await createUserWithEmailAndPassword(auth, user.email, user.password);
+    await login(user.email, user.password);
+    await sendPasswordResetEmail(auth, user.email, {
+      url: `http://localhost/?uid${cryptId(newUser.user.uid)}`,
+    });
+    await signOut(auth);
+    await login(email, password);
+    await createUser(newUser.user.uid, user);
+  } catch (error) {
+    console.error(error.message);
+  }
+}
+
+export async function deleteUserAuth(user) {
+  const { email, password, id } = user;
+  try {
+    const currentUser = await getUserById(auth.currentUser.uid);
+    await login(email, password);
+    await deleteUser(auth.currentUser);
+    await signOut(auth);
+    await login(currentUser.email, currentUser.password);
+    await removeUser(id);
+  } catch (error) {
+    console.error(error);
+  }
 }

@@ -38,7 +38,7 @@ describe('User modal tests', () => {
       education: 'BSUIR',
       averageScore: '81',
       mathScore: '82',
-      modalTitle: 'Create user',
+      title: 'Create user',
     };
     const actual = getModalUserData(state);
     expect(actual).toEqual(result);
@@ -62,7 +62,7 @@ describe('User modal tests', () => {
       education: 'BSUIR',
       averageScore: '81',
       mathScore: '82',
-      modalTitle: 'Create user',
+      title: 'Create user',
     };
     const actual = getModalUserData(state);
     expect(actual).not.toEqual(result);

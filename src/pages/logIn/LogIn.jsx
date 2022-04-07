@@ -5,6 +5,7 @@ import { INPUT_NAMES } from '../../constants/libraries';
 import styles from './LogIn.module.css';
 import { withAuthContext } from '../../HOCs/withAuthContext';
 import { emailRegular } from '../../scripts/regulars';
+import { isPasswordValid } from '../../scripts/helpers';
 
 class LogIn extends PureComponent {
   constructor(props) {
@@ -22,10 +23,8 @@ class LogIn extends PureComponent {
   isFormValid = () => {
     const { email, password } = this.state;
     let formValid = false;
-    if (password.length < 8) {
-      this.setError(INPUT_NAMES.password, 'Password should contains 8 or more symbols');
-    } else if (password.length > 24) {
-      this.setError(INPUT_NAMES.password, 'Password is too long');
+    if (!isPasswordValid(password)) {
+      this.setError(INPUT_NAMES.password, 'Password should contains 8-24 symbols');
     } else {
       formValid = true;
     }

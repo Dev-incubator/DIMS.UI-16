@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import styles from '../taskModal/TaskModal.module.css';
 import { Checkbox } from '../../../../components/Checkbox/Checkbox';
+import { getFullName } from '../../../../scripts/helpers';
+import { Error } from '../../../../components/Error/Error';
 
 export function TaskModalUsersList({ usersTask, changeUserValue, error, readOnly }) {
   return (
@@ -24,13 +26,13 @@ export function TaskModalUsersList({ usersTask, changeUserValue, error, readOnly
                     key={user.id}
                     value={user.value}
                     onChange={onChangeHandler}
-                    text={`${user.name} ${user.surname}`}
+                    text={getFullName(user.name, user.surname)}
                     id={user.id}
                   />
                 );
               })}
         </div>
-        {error && <div className={styles.errorMessage}>{error}</div>}
+        {error && <Error message={error} />}
       </div>
     </div>
   );

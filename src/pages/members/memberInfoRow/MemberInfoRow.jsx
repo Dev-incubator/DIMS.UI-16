@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom';
 import styles from './MemberInfoRow.module.css';
 import { Button } from '../../../components/Buttons/Button/Button';
 import { BUTTON_COLORS, BUTTON_VALUES } from '../../../constants/libraries';
+import { getFullName } from '../../../scripts/helpers';
 
 export function MemberInfoRow({
   id,
@@ -13,16 +14,16 @@ export function MemberInfoRow({
   education,
   startDate,
   age,
-  setDeleteMode,
-  setEditMode,
-  setReadMode,
+  openDeleteModal,
+  openEditModal,
+  openReadModal,
 }) {
   return (
     <tr>
       <td>{number}</td>
       <td>
-        <button type='button' className={styles.userName} onClick={setReadMode}>
-          {name} {surname}
+        <button type='button' className={styles.userName} onClick={openReadModal}>
+          {getFullName(name, surname)}
         </button>
       </td>
       <td>{direction}</td>
@@ -37,10 +38,10 @@ export function MemberInfoRow({
           <NavLink to={`/progress/${id}`}>
             <Button color={BUTTON_COLORS.blue}>{BUTTON_VALUES.progress}</Button>
           </NavLink>
-          <Button color={BUTTON_COLORS.orange} onClick={setEditMode}>
+          <Button color={BUTTON_COLORS.orange} onClick={openEditModal}>
             {BUTTON_VALUES.edit}
           </Button>
-          <Button color={BUTTON_COLORS.red} onClick={setDeleteMode}>
+          <Button color={BUTTON_COLORS.red} onClick={openDeleteModal}>
             {BUTTON_VALUES.delete}
           </Button>
         </div>
@@ -58,9 +59,9 @@ MemberInfoRow.propTypes = {
   startDate: PropTypes.string.isRequired,
   age: PropTypes.number.isRequired,
   id: PropTypes.string.isRequired,
-  setDeleteMode: PropTypes.func.isRequired,
-  setEditMode: PropTypes.func.isRequired,
-  setReadMode: PropTypes.func.isRequired,
+  openDeleteModal: PropTypes.func.isRequired,
+  openEditModal: PropTypes.func.isRequired,
+  openReadModal: PropTypes.func.isRequired,
 };
 MemberInfoRow.defaultProps = {
   education: 'None',

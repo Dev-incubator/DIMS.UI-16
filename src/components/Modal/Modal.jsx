@@ -18,10 +18,10 @@ export class Modal extends PureComponent {
   }
 
   render() {
-    const { children, active, disableModalMode } = this.props;
+    const { children, active, onClose } = this.props;
 
     return ReactDOM.createPortal(
-      <div className={`${styles.modal} ${active && styles.active}`} onClick={disableModalMode} aria-hidden='true'>
+      <div className={`${styles.modal} ${active && styles.active}`} onClick={onClose} aria-hidden='true'>
         <div
           className={`${styles.modalContent} ${active && styles.active}`}
           onClick={(event) => event.stopPropagation()}
@@ -37,6 +37,6 @@ export class Modal extends PureComponent {
 
 Modal.propTypes = {
   active: PropTypes.bool.isRequired,
-  disableModalMode: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
   children: PropTypes.node.isRequired,
 };

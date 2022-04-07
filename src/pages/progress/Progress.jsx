@@ -5,6 +5,7 @@ import { ProgressRow } from './progressRow/ProgressRow';
 import { PageHeader } from '../helpers/PageHeader';
 import { TableHeader } from '../helpers/TableHeader';
 import { getUserById, getUserTasksById } from '../../scripts/api-service';
+import { Loading } from '../../components/Loading/Loading';
 
 const tableTitles = ['#', 'Task name', 'Task note', 'Date'];
 
@@ -28,7 +29,7 @@ export class Progress extends PureComponent {
   render() {
     const { progress, userName } = this.state;
     if (!progress || !userName) {
-      return <div className={styles.loading}>Loading...</div>;
+      return <Loading />;
     }
     const pageTitle = `${userName}'s progress`;
 

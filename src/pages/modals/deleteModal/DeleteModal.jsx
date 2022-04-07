@@ -5,14 +5,14 @@ import { Modal } from '../../../components/Modal/Modal';
 import { FormSubmit } from '../form/formSubmit/FormSubmit';
 import { withModalFade } from '../../../HOCs/withModalFade';
 
-function DeleteModal({ target, active, onClose, removeHandler, setFade }) {
-  const onRemove = () => {
+function DeleteModal({ target, active, onClose, onRemove, setFade }) {
+  const removeHandler = () => {
     setFade();
-    removeHandler();
+    onRemove();
   };
 
   return (
-    <Modal disableModalMode={onClose} active={active}>
+    <Modal onClose={onClose} active={active}>
       <div>
         <div className={styles.title}>Delete {target}</div>
         <div className={styles.text}>
@@ -22,8 +22,8 @@ function DeleteModal({ target, active, onClose, removeHandler, setFade }) {
         </div>
         <FormSubmit
           submitButtonColor={BUTTON_COLORS.red}
-          onSubmit={onRemove}
-          disableModalMode={onClose}
+          onSubmit={removeHandler}
+          onClose={onClose}
           submitButtonValue={BUTTON_VALUES.delete}
         />
       </div>
@@ -36,7 +36,7 @@ DeleteModal.propTypes = {
   onClose: PropTypes.func.isRequired,
   setFade: PropTypes.func.isRequired,
   target: PropTypes.string.isRequired,
-  removeHandler: PropTypes.func.isRequired,
+  onRemove: PropTypes.func.isRequired,
 };
 
 export default withModalFade(DeleteModal);

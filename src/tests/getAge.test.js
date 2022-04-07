@@ -1,6 +1,6 @@
 import { getAge } from '../scripts/helpers';
 
-describe('Helper functions tests', () => {
+describe('Function returns age from date string', () => {
   it('Should return age', () => {
     const actual = getAge('2012-04-22');
 
