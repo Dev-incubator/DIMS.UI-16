@@ -1,4 +1,5 @@
 import { encryptId } from './crypt';
+import { cryptedIdRegular } from './regulars';
 
 export function changeDateFormat(date) {
   if (date.includes('.')) {
@@ -64,8 +65,7 @@ export function getAge(dateString) {
 }
 
 export function getUid(url) {
-  const idParameter = 'uid';
-  const cryptedId = url.substring(url.indexOf(idParameter) + idParameter.length, url.lastIndexOf('&'));
+  const cryptedId = url.match(cryptedIdRegular).pop();
 
   return encryptId(cryptedId);
 }
