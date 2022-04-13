@@ -27,8 +27,8 @@ jobs:
     - stage: install dependeincies
       install: npm i
       skip_cleanup: true
-    - stage: test
-      script: npm run test:coverage:ci:codecov
+    - stage: helperTests
+      script: npm run helperTests:coverage:ci:codecov
       skip_cleanup: true
     - stage: release
       before_deploy:

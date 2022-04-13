@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import pageStyles from '../Page.module.css';
-import { BUTTON_COLORS, BUTTON_VALUES } from '../../scripts/libraries';
+import { BUTTON_COLORS, BUTTON_VALUES } from '../../constants/libraries';
 import noop from '../../shared/noop';
-import { Button } from '../../components/Buttons/Button/Button';
+import Button from '../../components/Buttons/Button/Button';
 import { ThemeContext } from '../../providers/ThemeProvider';
 
 export function PageHeader({ text, onClick, isBackButton }) {

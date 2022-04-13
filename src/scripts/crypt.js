@@ -4,12 +4,12 @@ export const cryptId = (id) => {
   return id
     .split('')
     .map((value) => value.charCodeAt(0) + Number(key))
-    .join('&');
+    .join('a');
 };
 
 export const encryptId = (str) => {
   return str
-    .split('&')
+    .split('a')
     .map((value) => String.fromCharCode(value - Number(key)))
     .join('');
 };

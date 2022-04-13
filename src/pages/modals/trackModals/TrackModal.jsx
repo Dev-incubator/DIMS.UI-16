@@ -1,25 +1,30 @@
 import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { changeDateFormat, deepEqual } from '../../../scripts/helpers';
+import { changeDateFormat } from '../../../scripts/helpers';
 import { Modal } from '../../../components/Modal/Modal';
 import styles from './TrackModal.module.css';
-import { FormField } from '../form/formField/FormField';
-import { BUTTON_COLORS, INPUT_NAMES, INPUT_TYPES, MODAL_VALUES, TRACK_MODAL_TITLES } from '../../../scripts/libraries';
+import {
+  BUTTON_COLORS,
+  INPUT_NAMES,
+  INPUT_TYPES,
+  MODAL_VALUES,
+  TRACK_MODAL_TITLES,
+} from '../../../constants/libraries';
 import { FormSubmit } from '../form/formSubmit/FormSubmit';
-import { gatherTrackModalState, getTrackModalErrors, initTrackModalState } from './trackModalHelpers';
+import { gatherTrackModalState, getTrackModalErrors, trackModalState } from './trackModalHelpers';
+import { withModalFade } from '../../../HOCs/withModalFade';
+import { Input } from '../form/ModalFields/Input';
 
-export class TrackModal extends PureComponent {
+class TrackModal extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = initTrackModalState;
+    this.state = trackModalState;
   }
 
-  componentDidUpdate(prevProps) {
-    const { active, track, taskName } = this.props;
-    if (!deepEqual(prevProps, this.props) && active) {
-      const state = gatherTrackModalState(track, taskName);
-      this.setState(state);
-    }
+  componentDidMount() {
+    const { track, taskName } = this.props;
+    const state = gatherTrackModalState(track, taskName);
+    this.setState(state);
   }
 
   onChangeInputValue = (name, value) => {
@@ -30,53 +35,58 @@ export class TrackModal extends PureComponent {
   submitTrack = () => {
     const { track, addTrack, updateTrack } = this.props;
     const { note, date } = this.state;
-    const formErrors = getTrackModalErrors(note, date);
+    const errors = getTrackModalErrors(this.state);
     const submitTrack = { note, date: changeDateFormat(date) };
-    if (formErrors) {
-      this.setState({ formErrors });
-    } else if (track) {
-      updateTrack(submitTrack);
+    if (errors) {
+      this.setState({ errors });
     } else {
-      addTrack(submitTrack);
+      const { setFade } = this.props;
+      setFade();
+      if (track) {
+        updateTrack(submitTrack);
+      } else {
+        addTrack(submitTrack);
+      }
     }
   };
 
   resetFieldError = (name) => {
-    this.setState((prevState) => ({ ...prevState, formErrors: { ...prevState.formErrors, [name]: '' } }));
+    this.setState((prevState) => ({ ...prevState, errors: { ...prevState.errors, [name]: '' } }));
   };
 
   render() {
-    const { disableModalMode, active } = this.props;
-    const { modalTitle, note, date, formErrors, taskName, readOnly } = this.state;
+    const { active, onClose } = this.props;
+    const { title, note, date, errors, taskName, readOnly } = this.state;
 
     return (
-      <Modal disableModalMode={disableModalMode} active={active}>
-        <div className={styles.title}>{modalTitle}</div>
+      <Modal onClose={onClose} active={active}>
+        <div className={styles.title}>{title}</div>
         <form className={styles.form}>
-          <FormField inputValue={taskName} fieldName={MODAL_VALUES.task} stylingType={INPUT_TYPES.text} readOnly />
-          <FormField
-            inputValue={date}
-            fieldName={MODAL_VALUES.date}
-            stylingType={INPUT_TYPES.date}
+          <Input title={MODAL_VALUES.task} value={taskName} type={INPUT_TYPES.text} readOnly />
+          <Input
+            value={date}
+            title={MODAL_VALUES.date}
+            placeholder={MODAL_VALUES.date}
+            type={INPUT_TYPES.date}
             readOnly={readOnly}
-            inputName={INPUT_NAMES.date}
             onChange={this.onChangeInputValue}
-            error={formErrors.date}
+            fieldName={INPUT_NAMES.date}
+            error={errors.date}
           />
-          <FormField
-            inputValue={note}
-            fieldName={MODAL_VALUES.note}
-            stylingType={INPUT_TYPES.text}
+          <Input
+            value={note}
+            title={MODAL_VALUES.note}
+            placeholder={MODAL_VALUES.note}
+            type={INPUT_TYPES.text}
             readOnly={readOnly}
-            inputName={INPUT_NAMES.note}
-            error={formErrors.note}
             onChange={this.onChangeInputValue}
-            large
+            fieldName={INPUT_NAMES.note}
+            error={errors.note}
           />
           <FormSubmit
-            disableModalMode={disableModalMode}
+            onClose={onClose}
             onSubmit={this.submitTrack}
-            submitButtonColor={modalTitle === TRACK_MODAL_TITLES.edit ? BUTTON_COLORS.green : BUTTON_COLORS.blue}
+            submitButtonColor={title === TRACK_MODAL_TITLES.edit ? BUTTON_COLORS.green : BUTTON_COLORS.blue}
           />
         </form>
       </Modal>
@@ -85,10 +95,11 @@ export class TrackModal extends PureComponent {
 }
 
 TrackModal.propTypes = {
+  active: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  setFade: PropTypes.func.isRequired,
   addTrack: PropTypes.func.isRequired,
   updateTrack: PropTypes.func.isRequired,
-  disableModalMode: PropTypes.func.isRequired,
-  active: PropTypes.bool.isRequired,
   track: PropTypes.shape({
     note: PropTypes.string.isRequired,
     date: PropTypes.string.isRequired,
@@ -98,3 +109,5 @@ TrackModal.propTypes = {
 TrackModal.defaultProps = {
   track: null,
 };
+
+export default withModalFade(TrackModal);

@@ -2,12 +2,12 @@ import { PureComponent } from 'react';
 import { signOut, updatePassword } from 'firebase/auth';
 import PropTypes from 'prop-types';
 import { auth } from '../../scripts/firebase-config';
-import { getUid } from '../../scripts/helpers';
+import { getUid, isPasswordValid } from '../../scripts/helpers';
 import { getUserById, login, updateUser } from '../../scripts/api-service';
 import styles from './SetPassword.module.css';
-import { BUTTON_COLORS, BUTTON_VALUES, INPUT_TYPES } from '../../scripts/libraries';
-import { Button } from '../../components/Buttons/Button/Button';
-import { encryptId } from '../../scripts/crypt';
+import Button from '../../components/Buttons/Button/Button';
+import { BUTTON_COLORS, BUTTON_VALUES, INPUT_TYPES } from '../../constants/libraries';
+import { Error } from '../../components/Error/Error';
 import { Loading } from '../loading/Loading';
 
 export class SetPassword extends PureComponent {
@@ -21,8 +21,7 @@ export class SetPassword extends PureComponent {
   }
 
   async componentDidMount() {
-    const cryptedId = getUid(document.location.search);
-    const id = encryptId(cryptedId);
+    const id = getUid(document.location.search);
     const user = await getUserById(id);
     await login(user.email, user.password);
     this.setState({ user });
@@ -41,7 +40,7 @@ export class SetPassword extends PureComponent {
   setPassword = async () => {
     const { password, user } = this.state;
     const { history } = this.props;
-    if (password.length < 8 || password.length > 24) {
+    if (!isPasswordValid(password)) {
       this.setState({ error: true });
     } else {
       try {
@@ -72,7 +71,7 @@ export class SetPassword extends PureComponent {
               placeholder='Password'
               onChange={this.changePasswordValue}
             />
-            {error && <div className={styles.error}>Password should contains 8-24 symbols</div>}
+            {error && <Error message='Password should contains 8-24 symbols' />}
           </div>
           <div className={styles.submit}>
             <Button color={BUTTON_COLORS.green} onClick={this.setPassword}>

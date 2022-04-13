@@ -29,6 +29,12 @@ export const USER_ROLES = {
   mentor: 'Mentor',
 };
 
+export const TASK_STATUS = {
+  active: 'Active',
+  fail: 'Fail',
+  success: 'Success',
+};
+
 export const BUTTON_VALUES = {
   create: 'Create',
   tasks: 'Tasks',
@@ -48,6 +54,7 @@ export const MODAL_VALUES = {
   startDate: 'Start date',
   deadline: 'Deadline',
   members: 'Members',
+  title: 'Title',
   task: 'Task',
   date: 'Date',
   note: 'Note',
@@ -73,7 +80,7 @@ export const TASK_MODAL_TITLES = {
   create: 'Create new task',
 };
 
-export const USER_MODAL_TITLES = {
+export const USER_TITLES = {
   read: 'Member details',
   edit: 'Edit member',
   create: 'Create member',
@@ -117,27 +124,20 @@ export const INPUT_NAMES = {
   education: 'education',
 };
 
-export const TASK_STATUS = {
-  active: 'Active',
-  fail: 'Fail',
-  success: 'Success',
-};
-
 export const DELETE_VALUES = {
   member: 'member',
   task: 'task',
   track: 'task track',
 };
 
+export const TRACK_MODAL_TITLES = {
+  edit: 'Edit task track',
+  create: 'Create new task track',
+};
 export const PAGE_TITLES = {
   tasks: 'Tasks',
   members: 'Members',
   tracks: 'Current task tracks',
-};
-
-export const TRACK_MODAL_TITLES = {
-  edit: 'Edit task track',
-  create: 'Create new task track',
 };
 
 export const HEADER_VALUES = {

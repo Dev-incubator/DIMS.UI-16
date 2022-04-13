@@ -2,7 +2,6 @@ import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { updatePassword } from 'firebase/auth';
 import styles from './Settings.module.css';
-import { FormField } from '../modals/form/formField/FormField';
 import {
   ALERT_MODES,
   BUTTON_COLORS,
@@ -11,13 +10,14 @@ import {
   INPUT_NAMES,
   INPUT_TYPES,
   THEMES,
-} from '../../scripts/libraries';
-import { Button } from '../../components/Buttons/Button/Button';
+} from '../../constants/libraries';
+import Button from '../../components/Buttons/Button/Button';
 import { getUserById, updateUser } from '../../scripts/api-service';
 import { getChangePasswordErrors, initChangePasswordState } from './settingsHelper';
 import { auth } from '../../scripts/firebase-config';
 import { ThemeContext } from '../../providers/ThemeProvider';
 import { CustomAlert } from '../../components/Alert/Alert';
+import { Input } from '../modals/form/ModalFields/Input';
 
 export class Settings extends PureComponent {
   constructor(props) {
@@ -94,21 +94,23 @@ export class Settings extends PureComponent {
             <div className={styles.changePassword}>
               <div className={styles.title}>Change password</div>
               <div>
-                <FormField
-                  fieldName={FIELD_NAMES.pastPassword}
-                  inputValue={password}
-                  inputName={INPUT_NAMES.password}
+                <Input
+                  value={password}
+                  title={FIELD_NAMES.pastPassword}
+                  onChange={this.onChangeInputValue}
+                  placeholder={FIELD_NAMES.pastPassword}
                   error={errors.password}
-                  onChange={this.onChangeInputValue}
-                  stylingType={INPUT_TYPES.password}
+                  type={INPUT_TYPES.password}
+                  fieldName={INPUT_NAMES.password}
                 />
-                <FormField
-                  fieldName={FIELD_NAMES.newPassword}
-                  inputValue={newPassword}
-                  inputName={INPUT_NAMES.newPassword}
-                  error={errors.newPassword}
+                <Input
+                  value={newPassword}
+                  title={FIELD_NAMES.newPassword}
                   onChange={this.onChangeInputValue}
-                  stylingType={INPUT_TYPES.password}
+                  type={INPUT_TYPES.password}
+                  placeholder={FIELD_NAMES.newPassword}
+                  error={errors.newPassword}
+                  fieldName={INPUT_NAMES.newPassword}
                 />
               </div>
               <Button color={BUTTON_COLORS.green} onClick={this.changePasswordHandler}>

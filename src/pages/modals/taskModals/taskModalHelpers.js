@@ -1,5 +1,5 @@
 import { changeDateFormat, isObjectFieldsEmpty } from '../../../scripts/helpers';
-import { TASK_MODAL_TITLES } from '../../../scripts/libraries';
+import { MODAL_VALUES, TASK_MODAL_TITLES } from '../../../constants/libraries';
 
 export const getModalTaskData = (state) => {
   const { title, description, startDate, deadline, usersTask } = state;
@@ -14,14 +14,14 @@ export const getModalTaskData = (state) => {
   };
 };
 
-export const initStartModalState = {
+export const taskModalState = {
   title: '',
   description: '',
   startDate: '',
   deadline: '',
   usersTask: [],
   readOnly: false,
-  formErrors: {
+  errors: {
     title: '',
     startDate: '',
     deadline: '',
@@ -31,31 +31,29 @@ export const initStartModalState = {
 };
 
 export const getTaskModalErrors = (state) => {
-  const { title, startDate, deadline, usersTask } = state;
-  const formErrors = {
+  const { usersTask } = state;
+  const errors = {
     title: '',
     startDate: '',
     deadline: '',
-    users: '',
   };
-  if (!title.trim()) {
-    formErrors.title = 'Title is required';
-  }
-  if (!startDate.trim()) {
-    formErrors.startDate = 'Start date is required';
-  }
-  if (!deadline.trim()) {
-    formErrors.deadline = 'Deadline is required';
-  }
+
+  const keys = Object.keys(errors);
+  keys.forEach((key) => {
+    if (!state[key].trim()) {
+      errors[key] = `${MODAL_VALUES[key]} is required`;
+    }
+  });
+
   if (!usersTask.filter((user) => user.value).length) {
-    formErrors.users = 'At least one member must be assigned';
+    errors.users = 'At least one member must be assigned';
   }
 
-  if (!isObjectFieldsEmpty(formErrors)) {
-    return formErrors;
+  if (!isObjectFieldsEmpty(errors)) {
+    return errors;
   }
 
-  return false;
+  return null;
 };
 
 export const getEditModalState = (task, users) => {
@@ -69,7 +67,7 @@ export const getEditModalState = (task, users) => {
   const deadline = changeDateFormat(task.deadline);
 
   return {
-    ...initStartModalState,
+    ...taskModalState,
     modalTitle: TASK_MODAL_TITLES.edit,
     title: task.title,
     description: task.description,
@@ -85,7 +83,7 @@ export const getReadModalState = (task, users) => {
   const deadline = changeDateFormat(task.deadline);
 
   return {
-    ...initStartModalState,
+    ...taskModalState,
     modalTitle: TASK_MODAL_TITLES.read,
     readOnly: true,
     title: task.title,
@@ -100,7 +98,7 @@ export const getCreateModalState = (users) => {
   const usersTask = users.map((user) => ({ id: user.id, name: user.name, surname: user.surname, value: false }));
 
   return {
-    ...initStartModalState,
+    ...taskModalState,
     modalTitle: TASK_MODAL_TITLES.create,
     usersTask,
   };

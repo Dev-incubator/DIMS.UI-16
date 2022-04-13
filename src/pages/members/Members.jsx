@@ -1,33 +1,28 @@
 import { PureComponent } from 'react';
-import { createUserWithEmailAndPassword, sendPasswordResetEmail, signOut, deleteUser } from 'firebase/auth';
 import PropTypes from 'prop-types';
 import styles from './Members.module.css';
 import { MemberInfoRow } from './memberInfoRow/MemberInfoRow';
 import { TableHeader } from '../helpers/TableHeader';
-import { DeleteModal } from '../modals/deleteModal/DeleteModal';
-import { createUser, removeUser, getAllUsers, login, getUserById, updateUser } from '../../scripts/api-service';
-import { PageHeader } from '../helpers/PageHeader';
-import { deepEqual, getAge } from '../../scripts/helpers';
-import { DELETE_VALUES, HEADER_VALUES, MODAL_MODES, PAGE_TITLES, USER_ROLES } from '../../scripts/libraries';
-import { UserModal } from '../modals/userModal/UserModal';
-import { auth } from '../../scripts/firebase-config';
-import { cryptId } from '../../scripts/crypt';
 import pageStyles from '../Page.module.css';
+import { getAllUsers, updateUser, createUserAuth, deleteUserAuth } from '../../scripts/api-service';
+import DeleteModal from '../modals/deleteModal/DeleteModal';
+import { PageHeader } from '../helpers/PageHeader';
+import { getAge } from '../../scripts/helpers';
+import UserModal from '../modals/userModal/UserModal';
+import { DELETE_VALUES, HEADER_VALUES, MODAL_MODES, PAGE_TITLES, USER_ROLES } from '../../constants/libraries';
+import { withModal } from '../../HOCs/withModal';
 import { ThemeContext } from '../../providers/ThemeProvider';
-import { Loading } from '../loading/Loading';
+import { AuthContext } from '../../providers/AuthProvider';
 
 const memberTableTitles = ['#', 'Full name', 'Direction', 'Education', 'Start', 'Age', 'Action'];
 
-export class Members extends PureComponent {
+class Members extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       users: [],
-      modalMode: null,
-      actionUserId: null,
     };
     this.isComponentMounted = false;
-    this.isDataSetted = false;
   }
 
   async componentDidMount() {
@@ -35,8 +30,8 @@ export class Members extends PureComponent {
     await this.getData();
   }
 
-  async componentDidUpdate(prevProps, prevState) {
-    if (!deepEqual(prevState, this.state)) {
+  async componentDidUpdate(prevProps) {
+    if (prevProps !== this.props) {
       await this.getData();
     }
   }
@@ -47,128 +42,97 @@ export class Members extends PureComponent {
 
   getData = async () => {
     const users = await getAllUsers();
-    this.isDataSetted = true;
     if (this.isComponentMounted) {
       this.setState((prevState) => ({ ...prevState, users }));
     }
   };
 
-  setModalMode = (modalMode, actionUserId = null) => {
-    this.setState({ modalMode, actionUserId });
-  };
-
-  disableModalMode = () => {
-    this.setState({ modalMode: null, actionUserId: null });
-  };
-
   createUser = async (user) => {
-    try {
-      const { email, password } = await getUserById(auth.currentUser.uid);
-      const newUser = await createUserWithEmailAndPassword(auth, user.email, user.password);
-      await login(user.email, user.password);
-      await sendPasswordResetEmail(auth, user.email, {
-        url: `http://localhost/?uid=${cryptId(newUser.user.uid)}`,
-      });
-      await signOut(auth);
-      await login(email, password);
-      await createUser(newUser.user.uid, user);
-    } catch (error) {
-      console.log(error.message);
-    }
-    this.disableModalMode();
+    const { closeModal } = this.props;
+    await createUserAuth(user);
+    closeModal();
   };
 
   updateUser = async (user) => {
-    const { actionUserId } = this.state;
-    await updateUser(actionUserId, user);
-    this.disableModalMode();
+    const { closeModal, actionId } = this.props;
+    await updateUser(actionId, user);
+    closeModal();
   };
 
   removeUser = async () => {
-    const { actionUserId, users } = this.state;
-    const { email, password } = users.find((item) => item.id === actionUserId);
-    try {
-      const currentUser = await getUserById(auth.currentUser.uid);
-      await login(email, password);
-      await deleteUser(auth.currentUser);
-      await signOut(auth);
-      await login(currentUser.email, currentUser.password);
-      await removeUser(actionUserId);
-    } catch (error) {
-      console.log(error);
-    }
-    this.disableModalMode();
+    const { closeModal, actionId } = this.props;
+    const { users } = this.state;
+    const user = users.find((item) => item.id === actionId);
+    await deleteUserAuth(user);
+    closeModal();
   };
 
   render() {
-    const { users, modalMode, actionUserId } = this.state;
-    const { role } = this.props;
-    const actionUser = users.find((item) => item.id === actionUserId);
-
-    if (!this.isDataSetted) {
-      return <Loading />;
-    }
+    const { users } = this.state;
+    const { mode, actionId, openModal, closeModal } = this.props;
+    const actionUser = users.find((item) => item.id === actionId);
 
     return (
       <ThemeContext.Consumer>
         {({ theme }) => (
-          <div>
-            {role === USER_ROLES.mentor ? (
-              <div className={styles.header} style={{ color: theme.textColor }}>
-                <div className={pageStyles.pageTitle}>{HEADER_VALUES.members}</div>
-              </div>
-            ) : (
-              <PageHeader text={PAGE_TITLES.members} onClick={() => this.setModalMode(MODAL_MODES.create)} />
-            )}
-            <table className={styles.members} style={{ color: theme.textColor }}>
-              <TableHeader titles={memberTableTitles} />
-              <tbody>
-                {users.map((user, index) => {
-                  const setDeleteMode = () => {
-                    this.setModalMode(MODAL_MODES.delete, user.id);
-                  };
-                  const setEditMode = () => {
-                    this.setModalMode(MODAL_MODES.edit, user.id);
-                  };
-                  const setReadMode = () => {
-                    this.setModalMode(MODAL_MODES.read, user.id);
-                  };
+          <AuthContext.Consumer>
+            {({ user: { role } }) => (
+              <div>
+                {role === USER_ROLES.mentor ? (
+                  <div className={styles.header} style={{ color: theme.textColor }}>
+                    <div className={pageStyles.pageTitle}>{HEADER_VALUES.members}</div>
+                  </div>
+                ) : (
+                  <PageHeader text={PAGE_TITLES.members} onClick={openModal} />
+                )}
+                <table className={styles.members} style={{ color: theme.textColor }}>
+                  <TableHeader titles={memberTableTitles} />
+                  <tbody>
+                    {users.map((user, index) => {
+                      const openDeleteModal = () => {
+                        openModal(MODAL_MODES.delete, user.id);
+                      };
+                      const openEditModal = () => {
+                        openModal(MODAL_MODES.edit, user.id);
+                      };
+                      const openReadModal = () => {
+                        openModal(MODAL_MODES.read, user.id);
+                      };
 
-                  return (
-                    <MemberInfoRow
-                      key={user.id}
-                      id={user.id}
-                      direction={user.direction}
-                      name={user.name}
-                      surname={user.surname}
-                      number={index + 1}
-                      role={role}
-                      age={getAge(user.birthDate)}
-                      education={user.education}
-                      startDate={user.startDate}
-                      setEditMode={setEditMode}
-                      setReadMode={setReadMode}
-                      setDeleteMode={setDeleteMode}
-                    />
-                  );
-                })}
-              </tbody>
-            </table>
-            <DeleteModal
-              target={DELETE_VALUES.member}
-              active={modalMode === MODAL_MODES.delete}
-              removeHandler={this.removeUser}
-              cancelHandler={this.disableModalMode}
-            />
-            <UserModal
-              updateUser={this.updateUser}
-              createUser={this.createUser}
-              user={actionUser}
-              disableModalMode={this.disableModalMode}
-              readOnly={modalMode === MODAL_MODES.read}
-              active={!!modalMode && modalMode !== MODAL_MODES.delete}
-            />
-          </div>
+                      return (
+                        <MemberInfoRow
+                          key={user.id}
+                          id={user.id}
+                          direction={user.direction}
+                          name={user.name}
+                          surname={user.surname}
+                          number={index + 1}
+                          age={getAge(user.birthDate)}
+                          education={user.education}
+                          startDate={user.startDate}
+                          openEditModal={openEditModal}
+                          openReadModal={openReadModal}
+                          openDeleteModal={openDeleteModal}
+                        />
+                      );
+                    })}
+                  </tbody>
+                </table>
+                {mode === MODAL_MODES.delete && (
+                  <DeleteModal target={DELETE_VALUES.member} onRemove={this.removeUser} onClose={closeModal} />
+                )}
+                {!!mode && mode !== MODAL_MODES.delete ? (
+                  <UserModal
+                    updateUser={this.updateUser}
+                    createUser={this.createUser}
+                    user={actionUser}
+                    onClose={closeModal}
+                    readOnly={mode === MODAL_MODES.read}
+                  />
+                ) : null}
+              </div>
+            )}
+          </AuthContext.Consumer>
         )}
       </ThemeContext.Consumer>
     );
@@ -176,6 +140,14 @@ export class Members extends PureComponent {
 }
 
 Members.propTypes = {
-  role: PropTypes.string.isRequired,
+  mode: PropTypes.string,
+  actionId: PropTypes.string,
+  closeModal: PropTypes.func.isRequired,
+  openModal: PropTypes.func.isRequired,
 };
-Members.defaultProps = {};
+Members.defaultProps = {
+  mode: null,
+  actionId: null,
+};
+
+export default withModal(Members);

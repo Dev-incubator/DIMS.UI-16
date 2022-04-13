@@ -2,11 +2,14 @@ import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Container, Nav, Navbar } from 'react-bootstrap';
 import styles from './Header.module.css';
-import { HEADER_VALUES, USER_ROLES } from '../../scripts/libraries';
+import { getUserName } from '../../scripts/helpers';
+import { withAuthContext } from '../../HOCs/withAuthContext';
+import { HEADER_VALUES, USER_ROLES } from '../../constants/libraries';
 import { ThemeContext } from '../../providers/ThemeProvider';
 
-export function Header({ user, logout }) {
-  const userName = user && user.email ? user.email.split('@')[0] : '';
+function Header({ context }) {
+  const { logOut, user } = context;
+  const userName = getUserName(user);
 
   return (
     <ThemeContext.Consumer>
@@ -21,53 +24,53 @@ export function Header({ user, logout }) {
           <Container className={styles.container}>
             <Navbar.Brand>DIMS</Navbar.Brand>
             <Navbar.Toggle aria-controls='responsive-navbar-nav' />
-            {user ? (
-              <Navbar.Collapse id='responsive-navbar-nav'>
-                <Nav className={`${styles.links} me-auto`}>
-                  {user.role === USER_ROLES.admin || user.role === USER_ROLES.mentor ? (
-                    <div className={styles.links}>
-                      <NavLink to='/users' activeClassName={styles.active}>
-                        {HEADER_VALUES.members}
-                      </NavLink>
-                      <NavLink to='/tasks' activeClassName={styles.active}>
-                        {HEADER_VALUES.tasks}
-                      </NavLink>
-                    </div>
-                  ) : (
-                    <div className={styles.links}>
-                      <NavLink to={`/tasks/${user.id}`} activeClassName={styles.active}>
-                        {HEADER_VALUES.tasks}
-                      </NavLink>
-                    </div>
-                  )}
-                  <NavLink to='/about' activeClassName={styles.active}>
-                    {HEADER_VALUES.about}
+            <Navbar.Collapse id='responsive-navbar-nav'>
+              <Nav className={`${styles.links} me-auto`}>
+                {user && (
+                  <div className={styles.links}>
+                    {user.role === USER_ROLES.admin || user.role === USER_ROLES.mentor ? (
+                      <>
+                        <NavLink to='/users' activeClassName={styles.active}>
+                          {HEADER_VALUES.members}
+                        </NavLink>
+                        <NavLink to='/tasks' activeClassName={styles.active}>
+                          {HEADER_VALUES.tasks}
+                        </NavLink>
+                        <NavLink to={`/settings/${user.id}`} activeClassName={styles.active}>
+                          {HEADER_VALUES.settings}
+                        </NavLink>
+                      </>
+                    ) : (
+                      <>
+                        <NavLink to={`/tasks/${user.id}`} activeClassName={styles.active}>
+                          {HEADER_VALUES.tasks}
+                        </NavLink>
+                        <NavLink to={`/settings/${user.id}`} activeClassName={styles.active}>
+                          {HEADER_VALUES.settings}
+                        </NavLink>
+                      </>
+                    )}
+                  </div>
+                )}
+                <NavLink to='/about' activeClassName={styles.active}>
+                  About
+                </NavLink>
+              </Nav>
+              <Nav>
+                {user ? (
+                  <div className={styles.auth}>
+                    <Navbar.Text>{userName}</Navbar.Text>
+                    <NavLink to='/login' onClick={logOut} activeClassName={styles.active}>
+                      Log out
+                    </NavLink>
+                  </div>
+                ) : (
+                  <NavLink to='/login' className={styles.logIn} activeClassName={styles.active}>
+                    Log In
                   </NavLink>
-                  <NavLink to={`/settings/${user.id}`} activeClassName={styles.active}>
-                    {HEADER_VALUES.settings}
-                  </NavLink>
-                </Nav>
-                <Nav className={styles.user}>
-                  <Navbar.Text>{userName}</Navbar.Text>
-                  <NavLink to='/login' onClick={logout} activeClassName={styles.active}>
-                    {HEADER_VALUES.logout}
-                  </NavLink>
-                </Nav>
-              </Navbar.Collapse>
-            ) : (
-              <Navbar.Collapse id='responsive-navbar-nav'>
-                <Nav className={`${styles.links} me-auto`}>
-                  <NavLink to='/about' activeClassName={styles.active}>
-                    {HEADER_VALUES.about}
-                  </NavLink>
-                </Nav>
-                <Nav>
-                  <NavLink to='/login' activeClassName={styles.active}>
-                    {HEADER_VALUES.logIn}
-                  </NavLink>
-                </Nav>
-              </Navbar.Collapse>
-            )}
+                )}
+              </Nav>
+            </Navbar.Collapse>
           </Container>
         </Navbar>
       )}
@@ -76,9 +79,17 @@ export function Header({ user, logout }) {
 }
 
 Header.propTypes = {
-  logout: PropTypes.func.isRequired,
-  user: PropTypes.shape({ email: PropTypes.string, role: PropTypes.string, id: PropTypes.string }),
+  context: PropTypes.shape({
+    logOut: PropTypes.func,
+    user: PropTypes.shape({
+      role: PropTypes.string,
+      id: PropTypes.string,
+    }),
+  }),
 };
+
 Header.defaultProps = {
-  user: null,
+  context: null,
 };
+
+export default withAuthContext(Header);
