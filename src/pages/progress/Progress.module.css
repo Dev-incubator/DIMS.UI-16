@@ -28,9 +28,3 @@
     padding-left: 0.8rem;
     text-align: left;
 }
-
-.loading{
-    display: flex;
-    justify-content: center;
-    margin-top: 2rem;
-}

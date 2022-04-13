@@ -1,22 +1,23 @@
 import { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import styles from './Members.module.css';
 import { MemberInfoRow } from './memberInfoRow/MemberInfoRow';
 import { TableHeader } from '../helpers/TableHeader';
+import { getAllUsers, updateUser, createUserAuth, deleteUserAuth } from '../../scripts/api-service';
 import DeleteModal from '../modals/deleteModal/DeleteModal';
-import { deleteUser, getAllUsers } from '../../scripts/api-service';
 import { PageHeader } from '../helpers/PageHeader';
-import { deepEqual } from '../../scripts/helpers';
-import { DELETE_VALUES, PAGE_TITLES } from '../../constants/libraries';
+import { getAge } from '../../scripts/helpers';
+import UserModal from '../modals/userModal/UserModal';
+import { DELETE_VALUES, MODAL_MODES, PAGE_TITLES } from '../../constants/libraries';
+import { withModal } from '../../HOCs/withModal';
 
 const memberTableTitles = ['#', 'Full name', 'Direction', 'Education', 'Start', 'Age', 'Action'];
 
-export class Members extends PureComponent {
+class Members extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       users: [],
-      deleteMode: false,
-      actionUserId: null,
     };
     this.isComponentMounted = false;
   }
@@ -26,8 +27,8 @@ export class Members extends PureComponent {
     await this.getData();
   }
 
-  async componentDidUpdate(prevProps, prevState) {
-    if (!deepEqual(prevState, this.state)) {
+  async componentDidUpdate(prevProps) {
+    if (prevProps !== this.props) {
       await this.getData();
     }
   }
@@ -43,34 +44,46 @@ export class Members extends PureComponent {
     }
   };
 
-  enableDeleteMode = (id) => {
-    this.setState({ deleteMode: true, actionUserId: id });
+  createUser = async (user) => {
+    const { closeModal } = this.props;
+    await createUserAuth(user);
+    closeModal();
+  };
+
+  updateUser = async (user) => {
+    const { closeModal, actionId } = this.props;
+    await updateUser(actionId, user);
+    closeModal();
   };
 
   removeUser = async () => {
-    const { actionUserId } = this.state;
-    await deleteUser(actionUserId);
-    this.disableDeleteMode();
-  };
-
-  disableDeleteMode = () => {
-    setTimeout(() => {
-      this.setState({ deleteMode: false, actionUserId: null });
-    }, 300);
+    const { closeModal, actionId } = this.props;
+    const { users } = this.state;
+    const user = users.find((item) => item.id === actionId);
+    await deleteUserAuth(user);
+    closeModal();
   };
 
   render() {
-    const { users, deleteMode } = this.state;
+    const { users } = this.state;
+    const { mode, actionId, openModal, closeModal } = this.props;
+    const actionUser = users.find((item) => item.id === actionId);
 
     return (
       <div>
-        <PageHeader text={PAGE_TITLES.members} />
+        <PageHeader text={PAGE_TITLES.members} onClick={openModal} />
         <table className={styles.members}>
           <TableHeader titles={memberTableTitles} />
           <tbody>
             {users.map((user, index) => {
-              const enableDeleteMode = () => {
-                this.enableDeleteMode(user.id);
+              const openDeleteModal = () => {
+                openModal(MODAL_MODES.delete, user.id);
+              };
+              const openEditModal = () => {
+                openModal(MODAL_MODES.edit, user.id);
+              };
+              const openReadModal = () => {
+                openModal(MODAL_MODES.read, user.id);
               };
 
               return (
@@ -79,27 +92,45 @@ export class Members extends PureComponent {
                   id={user.id}
                   direction={user.direction}
                   name={user.name}
+                  surname={user.surname}
                   number={index + 1}
-                  age={user.birthDate}
+                  age={getAge(user.birthDate)}
                   education={user.education}
                   startDate={user.startDate}
-                  enableDeleteMode={enableDeleteMode}
+                  openEditModal={openEditModal}
+                  openReadModal={openReadModal}
+                  openDeleteModal={openDeleteModal}
                 />
               );
             })}
           </tbody>
         </table>
-        {deleteMode && (
-          <DeleteModal
-            target={DELETE_VALUES.member}
-            removeHandler={this.removeUser}
-            disableModalMode={this.disableDeleteMode}
-          />
+        {mode === MODAL_MODES.delete && (
+          <DeleteModal target={DELETE_VALUES.member} onRemove={this.removeUser} onClose={closeModal} />
         )}
+        {!!mode && mode !== MODAL_MODES.delete ? (
+          <UserModal
+            updateUser={this.updateUser}
+            createUser={this.createUser}
+            user={actionUser}
+            onClose={closeModal}
+            readOnly={mode === MODAL_MODES.read}
+          />
+        ) : null}
       </div>
     );
   }
 }
 
-Members.propTypes = {};
-Members.defaultProps = {};
+Members.propTypes = {
+  mode: PropTypes.string,
+  actionId: PropTypes.string,
+  closeModal: PropTypes.func.isRequired,
+  openModal: PropTypes.func.isRequired,
+};
+Members.defaultProps = {
+  mode: null,
+  actionId: null,
+};
+
+export default withModal(Members);

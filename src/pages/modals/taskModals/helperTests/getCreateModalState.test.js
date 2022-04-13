@@ -4,7 +4,7 @@ describe('Task modal tests', () => {
   const result = {
     deadline: '',
     description: '',
-    formErrors: { deadline: '', description: '', startDate: '', title: '', users: '' },
+    errors: { deadline: '', description: '', startDate: '', title: '', users: '' },
     modalTitle: 'Create new task',
     readOnly: false,
     startDate: '',

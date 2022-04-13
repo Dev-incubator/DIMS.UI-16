@@ -1,4 +1,5 @@
 import { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import { addTask, deleteTask, deleteTrack, getAllTasks, getAllUsers, updateTask } from '../../scripts/api-service';
 import { PageHeader } from '../helpers/PageHeader';
 import { TableHeader } from '../helpers/TableHeader';
@@ -8,17 +9,16 @@ import { DELETE_VALUES, MODAL_MODES, PAGE_TITLES } from '../../constants/librari
 import { deepEqual } from '../../scripts/helpers';
 import DeleteModal from '../modals/deleteModal/DeleteModal';
 import TaskModal from '../modals/taskModals/taskModal/TaskModal';
+import { withModal } from '../../HOCs/withModal';
 
 const tableTitles = ['#', 'Task name', 'Description', 'Start date', 'Deadline', 'Action'];
 
-export class Tasks extends PureComponent {
+class Tasks extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       tasks: [],
       users: [],
-      modalMode: null,
-      actionTaskId: null,
     };
     this.isComponentMounted = false;
   }
@@ -28,8 +28,8 @@ export class Tasks extends PureComponent {
     await this.getData();
   }
 
-  async componentDidUpdate(prevProps, prevState) {
-    if (!deepEqual(prevState, this.state)) {
+  async componentDidUpdate(prevProps) {
+    if (prevProps !== this.props) {
       await this.getData();
     }
   }
@@ -46,62 +46,61 @@ export class Tasks extends PureComponent {
     }
   };
 
-  updateTask = async (updatedTask) => {
-    const { actionTaskId, tasks } = this.state;
-    const prevTask = tasks.find((task) => task.id === actionTaskId);
-    if (!deepEqual(prevTask, { ...updatedTask, id: actionTaskId })) {
-      const { users } = updatedTask;
-      const prevUsers = prevTask.users;
-      await updateTask(actionTaskId, updatedTask);
+  updateTask = async (data) => {
+    const { closeModal, actionId } = this.props;
+    const { tasks } = this.state;
+    const prevTask = tasks.find((item) => item.id === actionId);
+    const { users } = data;
+    const prevUsers = prevTask.users;
+    const updatedUsers = users.map((user) => {
+      const item = prevUsers.find((el) => el.userId === user.userId);
+
+      return item ? { ...user, status: item.status } : user;
+    });
+    const updatedTask = { ...data, users: updatedUsers };
+    if (!deepEqual(prevTask, { ...updatedTask, id: actionId })) {
+      await updateTask(actionId, updatedTask);
       prevUsers.forEach(async (user) => {
         if (!users.some((item) => item.userId === user.userId)) {
           await deleteTrack(user.userId);
         }
       });
     }
-    this.disableModalMode();
+    closeModal();
   };
 
   addTask = async (task) => {
+    const { closeModal } = this.props;
     await addTask(task);
-    this.disableModalMode();
+    closeModal();
   };
 
   removeTask = async () => {
-    const { actionTaskId } = this.state;
-    await deleteTask(actionTaskId);
-    this.disableModalMode();
-  };
-
-  setModalMode = (modalMode, actionTaskId = null) => {
-    this.setState({ modalMode, actionTaskId });
-  };
-
-  disableModalMode = () => {
-    setTimeout(() => {
-      this.setState({ modalMode: null, actionTaskId: null });
-    }, 300);
+    const { closeModal, actionId } = this.props;
+    await deleteTask(actionId);
+    closeModal();
   };
 
   render() {
-    const { tasks, modalMode, users, actionTaskId } = this.state;
-    const actionTask = tasks.find((task) => task.id === actionTaskId);
+    const { tasks, users } = this.state;
+    const { mode, actionId, openModal, closeModal } = this.props;
+    const actionTask = tasks.find((task) => task.id === actionId);
 
     return (
       <div>
-        <PageHeader text={PAGE_TITLES.tasks} onClick={() => this.setModalMode(MODAL_MODES.create)} />
+        <PageHeader text={PAGE_TITLES.tasks} onClick={openModal} />
         <table className={styles.tasks}>
           <TableHeader titles={tableTitles} />
           <tbody>
             {tasks.map((task, index) => {
-              const setEditMode = () => {
-                this.setModalMode(MODAL_MODES.edit, task.id);
+              const openEditModal = () => {
+                openModal(MODAL_MODES.edit, task.id);
               };
-              const setReadMode = () => {
-                this.setModalMode(MODAL_MODES.read, task.id);
+              const openReadModal = () => {
+                openModal(MODAL_MODES.read, task.id);
               };
-              const setDeleteMode = () => {
-                this.setModalMode(MODAL_MODES.delete, task.id);
+              const openDeleteModal = () => {
+                openModal(MODAL_MODES.delete, task.id);
               };
 
               return (
@@ -113,32 +112,42 @@ export class Tasks extends PureComponent {
                   deadline={task.deadline}
                   startDate={task.startDate}
                   number={index + 1}
-                  setEditMode={setEditMode}
-                  setDeleteMode={setDeleteMode}
-                  setReadMode={setReadMode}
+                  openEditModal={openEditModal}
+                  openDeleteModal={openDeleteModal}
+                  openReadModal={openReadModal}
                 />
               );
             })}
           </tbody>
         </table>
-        {modalMode && modalMode !== MODAL_MODES.delete ? (
+        {mode && mode !== MODAL_MODES.delete ? (
           <TaskModal
             users={users}
             addTask={this.addTask}
             task={actionTask}
-            readOnly={modalMode === MODAL_MODES.read}
+            readOnly={mode === MODAL_MODES.read}
             updateTask={this.updateTask}
-            disableModalMode={this.disableModalMode}
+            onClose={closeModal}
           />
         ) : null}
-        {modalMode === MODAL_MODES.delete && (
-          <DeleteModal
-            removeHandler={this.removeTask}
-            disableModalMode={this.disableModalMode}
-            target={DELETE_VALUES.task}
-          />
+        {mode === MODAL_MODES.delete && (
+          <DeleteModal onRemove={this.removeTask} onClose={closeModal} target={DELETE_VALUES.task} />
         )}
       </div>
     );
   }
 }
+
+Tasks.propTypes = {
+  mode: PropTypes.string,
+  actionId: PropTypes.string,
+  closeModal: PropTypes.func.isRequired,
+  openModal: PropTypes.func.isRequired,
+};
+
+Tasks.defaultProps = {
+  mode: null,
+  actionId: null,
+};
+
+export default withModal(Tasks);

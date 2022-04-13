@@ -14,13 +14,14 @@ export const getModalTaskData = (state) => {
   };
 };
 
-export const initStartModalState = {
+export const taskModalState = {
   title: '',
   description: '',
   startDate: '',
   deadline: '',
   usersTask: [],
-  formErrors: {
+  readOnly: false,
+  errors: {
     title: '',
     startDate: '',
     deadline: '',
@@ -31,25 +32,25 @@ export const initStartModalState = {
 
 export const getTaskModalErrors = (state) => {
   const { usersTask } = state;
-  const formErrors = {
+  const errors = {
     title: '',
     startDate: '',
     deadline: '',
   };
 
-  const keys = Object.keys(formErrors);
+  const keys = Object.keys(errors);
   keys.forEach((key) => {
     if (!state[key].trim()) {
-      formErrors[key] = `${MODAL_VALUES[key]} is required`;
+      errors[key] = `${MODAL_VALUES[key]} is required`;
     }
   });
 
   if (!usersTask.filter((user) => user.value).length) {
-    formErrors.users = 'At least one member must be assigned';
+    errors.users = 'At least one member must be assigned';
   }
 
-  if (!isObjectFieldsEmpty(formErrors)) {
-    return formErrors;
+  if (!isObjectFieldsEmpty(errors)) {
+    return errors;
   }
 
   return null;
@@ -60,14 +61,14 @@ export const getEditModalState = (task, users) => {
     id: user.id,
     value: task.users.some((item) => item.userId === user.id),
     name: user.name,
+    surname: user.surname,
   }));
   const startDate = changeDateFormat(task.startDate);
   const deadline = changeDateFormat(task.deadline);
 
   return {
-    ...initStartModalState,
+    ...taskModalState,
     modalTitle: TASK_MODAL_TITLES.edit,
-    readOnly: false,
     title: task.title,
     description: task.description,
     startDate,
@@ -82,7 +83,7 @@ export const getReadModalState = (task, users) => {
   const deadline = changeDateFormat(task.deadline);
 
   return {
-    ...initStartModalState,
+    ...taskModalState,
     modalTitle: TASK_MODAL_TITLES.read,
     readOnly: true,
     title: task.title,
@@ -94,12 +95,11 @@ export const getReadModalState = (task, users) => {
 };
 
 export const getCreateModalState = (users) => {
-  const usersTask = users.map((user) => ({ id: user.id, name: user.name, value: false }));
+  const usersTask = users.map((user) => ({ id: user.id, name: user.name, surname: user.surname, value: false }));
 
   return {
-    ...initStartModalState,
+    ...taskModalState,
     modalTitle: TASK_MODAL_TITLES.create,
-    readOnly: false,
     usersTask,
   };
 };

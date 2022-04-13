@@ -1,3 +1,6 @@
+import { encryptId } from './crypt';
+import { cryptedIdRegular } from './regulars';
+
 export function changeDateFormat(date) {
   if (date.includes('.')) {
     return date.split('.').reverse().join('-');
@@ -49,6 +52,32 @@ export const isObjectFieldsEmpty = (obj) => {
   return true;
 };
 
+export function getAge(dateString) {
+  const today = new Date();
+  const birthDate = new Date(dateString.split('-').join(','));
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const month = today.getMonth() - birthDate.getMonth();
+  if (month < 0 || (month === 0 && today.getDate() < birthDate.getDate())) {
+    age -= 1;
+  }
+
+  return age;
+}
+
+export function getUid(url) {
+  const cryptedId = url.match(cryptedIdRegular).pop();
+
+  return encryptId(cryptedId);
+}
+
 export const getUserName = (user) => {
   return user?.email.split('@')[0];
+};
+
+export const getFullName = (name, surname) => {
+  return `${name} ${surname}`;
+};
+
+export const isPasswordValid = (password) => {
+  return password.length >= 8 && password.length <= 24;
 };

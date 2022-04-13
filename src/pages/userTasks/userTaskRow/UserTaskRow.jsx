@@ -17,7 +17,7 @@ export function UserTaskRow({ userId, number, title, startDate, status, deadline
     <tr>
       <td>{number}</td>
       <td>
-        <NavLink to={`/track/${userId}/${taskId}`}>{title}</NavLink>
+        <NavLink to={`/track/${userId}/task/${taskId}`}>{title}</NavLink>
       </td>
       <td>{startDate}</td>
       <td>{deadline}</td>

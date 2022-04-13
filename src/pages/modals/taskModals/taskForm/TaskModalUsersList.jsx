@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import styles from '../taskModal/TaskModal.module.css';
 import { Checkbox } from '../../../../components/Checkbox/Checkbox';
+import { getFullName } from '../../../../scripts/helpers';
+import { Error } from '../../../../components/Error/Error';
 
 export function TaskModalUsersList({ usersTask, changeUserValue, error, readOnly }) {
   return (
@@ -9,18 +11,28 @@ export function TaskModalUsersList({ usersTask, changeUserValue, error, readOnly
       <div>
         <div className={styles.layer}>
           {readOnly
-            ? usersTask.map((user) => <div key={user.id}>{user.name}</div>)
+            ? usersTask.map((user) => (
+                <div key={user.id}>
+                  {user.name} {user.surname}
+                </div>
+              ))
             : usersTask.map((user) => {
                 const onChangeHandler = (event) => {
                   changeUserValue(user.id, event.currentTarget.checked);
                 };
 
                 return (
-                  <Checkbox key={user.id} value={user.value} onChange={onChangeHandler} text={user.name} id={user.id} />
+                  <Checkbox
+                    key={user.id}
+                    value={user.value}
+                    onChange={onChangeHandler}
+                    text={getFullName(user.name, user.surname)}
+                    id={user.id}
+                  />
                 );
               })}
         </div>
-        {error && <div className={styles.errorMessage}>{error}</div>}
+        {error && <Error message={error} />}
       </div>
     </div>
   );

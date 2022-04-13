@@ -5,6 +5,7 @@ import { TableHeader } from '../helpers/TableHeader';
 import styles from './UserTasks.module.css';
 import { UserTaskRow } from './userTaskRow/UserTaskRow';
 import { getTaskById, getUserById, getUserTasksById, updateTask } from '../../scripts/api-service';
+import { Loading } from '../../components/Loading/Loading';
 
 const tableTitles = ['#', 'Task name', 'Start date', 'Deadline', 'Status', 'Update status'];
 
@@ -41,7 +42,7 @@ export class UserTasks extends PureComponent {
   render() {
     const { tasks, name } = this.state;
     if (!name) {
-      return <div className={styles.loading}>Loading...</div>;
+      return <Loading />;
     }
 
     return (

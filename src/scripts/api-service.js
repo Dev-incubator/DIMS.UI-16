@@ -1,6 +1,13 @@
-import { collection, doc, getDoc, getDocs, deleteDoc, updateDoc, addDoc } from 'firebase/firestore/lite';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { collection, doc, getDoc, getDocs, deleteDoc, updateDoc, addDoc, setDoc } from 'firebase/firestore/lite';
+import {
+  createUserWithEmailAndPassword,
+  deleteUser,
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+  signOut,
+} from 'firebase/auth';
 import { auth, db } from './firebase-config';
+import { cryptId } from './crypt';
 
 const usersCollectionRef = collection(db, 'users');
 const tasksCollectionRef = collection(db, 'tasks');
@@ -15,6 +22,14 @@ export async function getUserById(userId) {
     console.error(error);
 
     return undefined;
+  }
+}
+
+export async function createUser(id, user) {
+  try {
+    await setDoc(doc(db, 'users', id), user);
+  } catch (error) {
+    console.error(error);
   }
 }
 
@@ -50,7 +65,9 @@ export async function getAllUsers() {
   try {
     const data = await getDocs(usersCollectionRef);
 
-    return data.docs.map((document) => ({ ...document.data(), id: document.id }));
+    return data.docs
+      .map((document) => ({ ...document.data(), id: document.id }))
+      .filter((user) => user.id !== auth.currentUser.uid);
   } catch (error) {
     console.error(error);
 
@@ -124,7 +141,7 @@ export async function getTaskTrack(userId, taskId) {
   }
 }
 
-export async function deleteUser(userId) {
+export async function removeUser(userId) {
   try {
     const userDoc = doc(db, 'users', userId);
     await deleteDoc(userDoc);
@@ -174,7 +191,7 @@ export async function deleteTask(taskId) {
 export async function updateTask(taskId, updatedFields) {
   try {
     const taskDoc = doc(db, 'tasks', taskId);
-    await updateDoc(taskDoc, updatedFields);
+    await updateDoc(taskDoc, { ...updatedFields });
   } catch (error) {
     console.error(error);
   }
@@ -189,6 +206,15 @@ export async function updateTrack(trackId, updatedFields) {
   }
 }
 
+export async function updateUser(userId, updatedFields) {
+  try {
+    const userDoc = doc(db, 'users', userId);
+    await updateDoc(userDoc, { ...updatedFields });
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export async function login(email, password) {
   try {
     await signInWithEmailAndPassword(auth, email, password);
@@ -197,4 +223,34 @@ export async function login(email, password) {
   }
 
   return undefined;
+}
+
+export async function createUserAuth(user) {
+  try {
+    const { email, password } = await getUserById(auth.currentUser.uid);
+    const newUser = await createUserWithEmailAndPassword(auth, user.email, user.password);
+    await login(user.email, user.password);
+    await sendPasswordResetEmail(auth, user.email, {
+      url: `http://localhost/?uid${cryptId(newUser.user.uid)}`,
+    });
+    await signOut(auth);
+    await login(email, password);
+    await createUser(newUser.user.uid, user);
+  } catch (error) {
+    console.error(error.message);
+  }
+}
+
+export async function deleteUserAuth(user) {
+  const { email, password, id } = user;
+  try {
+    const currentUser = await getUserById(auth.currentUser.uid);
+    await login(email, password);
+    await deleteUser(auth.currentUser);
+    await signOut(auth);
+    await login(currentUser.email, currentUser.password);
+    await removeUser(id);
+  } catch (error) {
+    console.error(error);
+  }
 }

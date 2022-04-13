@@ -6,7 +6,7 @@ import {
   getModalTaskData,
   getReadModalState,
   getTaskModalErrors,
-  initStartModalState,
+  taskModalState,
 } from '../taskModalHelpers';
 import { BUTTON_COLORS, TASK_MODAL_TITLES } from '../../../../constants/libraries';
 import { Modal } from '../../../../components/Modal/Modal';
@@ -19,7 +19,7 @@ import { withModalFade } from '../../../../HOCs/withModalFade';
 class TaskModal extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = initStartModalState;
+    this.state = taskModalState;
   }
 
   componentDidMount() {
@@ -64,13 +64,12 @@ class TaskModal extends PureComponent {
   };
 
   submitTask = () => {
-    const { task, addTask } = this.props;
+    const { task, addTask, updateTask } = this.props;
     const formErrors = getTaskModalErrors(this.state);
 
     if (formErrors) {
       this.setState({ formErrors });
     } else {
-      const { updateTask } = this.props;
       const submitTask = getModalTaskData(this.state);
       const { setFade } = this.props;
       setFade();
@@ -83,15 +82,15 @@ class TaskModal extends PureComponent {
   };
 
   resetFieldError = (name) => {
-    this.setState((prevState) => ({ ...prevState, formErrors: { ...prevState.formErrors, [name]: '' } }));
+    this.setState((prevState) => ({ ...prevState, errors: { ...prevState.errors, [name]: '' } }));
   };
 
   render() {
     const { active, onClose } = this.props;
-    const { usersTask, title, description, startDate, deadline, formErrors, readOnly, modalTitle } = this.state;
+    const { usersTask, title, description, startDate, deadline, errors, readOnly, modalTitle } = this.state;
 
     return (
-      <Modal disableModalMode={onClose} active={active}>
+      <Modal onClose={onClose} active={active}>
         <div className={styles.title}>{modalTitle}</div>
         <form className={styles.form}>
           <TaskModalFields
@@ -101,18 +100,18 @@ class TaskModal extends PureComponent {
             description={description}
             deadline={deadline}
             readOnly={readOnly}
-            formErrors={formErrors}
+            errors={errors}
           />
           <TaskModalUsersList
             usersTask={usersTask}
             changeUserValue={this.changeUserValue}
-            error={formErrors.users}
+            error={errors.users}
             readOnly={readOnly}
           />
           <FormSubmit
             onSubmit={this.submitTask}
             readOnly={readOnly}
-            disableModalMode={onClose}
+            onClose={onClose}
             submitButtonColor={modalTitle === TASK_MODAL_TITLES.edit ? BUTTON_COLORS.green : BUTTON_COLORS.blue}
           />
         </form>

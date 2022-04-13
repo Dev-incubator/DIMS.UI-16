@@ -39,12 +39,6 @@
     text-align: left;
 }
 
-.loading {
-    margin-top: 2rem;
-    display: flex;
-    justify-content: center;
-}
-
 .active {
     color: var(--primary);
 }

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { changeDateFormat } from '../../../scripts/helpers';
 import { Modal } from '../../../components/Modal/Modal';
 import styles from './TrackModal.module.css';
-import { FormField } from '../form/formField/FormField';
 import {
   BUTTON_COLORS,
   INPUT_NAMES,
@@ -12,13 +11,14 @@ import {
   TRACK_MODAL_TITLES,
 } from '../../../constants/libraries';
 import { FormSubmit } from '../form/formSubmit/FormSubmit';
-import { gatherTrackModalState, getTrackModalErrors, initTrackModalState } from './trackModalHelpers';
+import { gatherTrackModalState, getTrackModalErrors, trackModalState } from './trackModalHelpers';
 import { withModalFade } from '../../../HOCs/withModalFade';
+import { Input } from '../form/ModalFields/Input';
 
 class TrackModal extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = initTrackModalState;
+    this.state = trackModalState;
   }
 
   componentDidMount() {
@@ -51,42 +51,42 @@ class TrackModal extends PureComponent {
   };
 
   resetFieldError = (name) => {
-    this.setState((prevState) => ({ ...prevState, formErrors: { ...prevState.formErrors, [name]: '' } }));
+    this.setState((prevState) => ({ ...prevState, errors: { ...prevState.errors, [name]: '' } }));
   };
 
   render() {
     const { active, onClose } = this.props;
-    const { modalTitle, note, date, formErrors, taskName, readOnly } = this.state;
+    const { title, note, date, errors, taskName, readOnly } = this.state;
 
     return (
-      <Modal disableModalMode={onClose} active={active}>
-        <div className={styles.title}>{modalTitle}</div>
+      <Modal onClose={onClose} active={active}>
+        <div className={styles.title}>{title}</div>
         <form className={styles.form}>
-          <FormField inputValue={taskName} fieldName={MODAL_VALUES.task} stylingType={INPUT_TYPES.text} readOnly />
-          <FormField
-            inputValue={date}
-            fieldName={MODAL_VALUES.date}
-            stylingType={INPUT_TYPES.date}
+          <Input title={MODAL_VALUES.task} value={taskName} type={INPUT_TYPES.text} readOnly />
+          <Input
+            value={date}
+            title={MODAL_VALUES.date}
+            placeholder={MODAL_VALUES.date}
+            type={INPUT_TYPES.date}
             readOnly={readOnly}
-            inputName={INPUT_NAMES.date}
             onChange={this.onChangeInputValue}
-            error={formErrors.date}
+            fieldName={INPUT_NAMES.date}
+            error={errors.date}
           />
-          <FormField
-            inputValue={note}
-            fieldName={MODAL_VALUES.note}
-            stylingType={INPUT_TYPES.text}
-            readOnly={readOnly}
-            inputName={INPUT_NAMES.note}
-            error={formErrors.note}
+          <Input
+            value={note}
+            title={MODAL_VALUES.note}
             placeholder={MODAL_VALUES.note}
+            type={INPUT_TYPES.text}
+            readOnly={readOnly}
             onChange={this.onChangeInputValue}
-            large
+            fieldName={INPUT_NAMES.note}
+            error={errors.note}
           />
           <FormSubmit
-            disableModalMode={onClose}
+            onClose={onClose}
             onSubmit={this.submitTrack}
-            submitButtonColor={modalTitle === TRACK_MODAL_TITLES.edit ? BUTTON_COLORS.green : BUTTON_COLORS.blue}
+            submitButtonColor={title === TRACK_MODAL_TITLES.edit ? BUTTON_COLORS.green : BUTTON_COLORS.blue}
           />
         </form>
       </Modal>

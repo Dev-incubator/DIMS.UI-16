@@ -1,47 +1,50 @@
 import PropTypes from 'prop-types';
-import { FormField } from '../../form/formField/FormField';
 import { INPUT_NAMES, INPUT_TYPES, MODAL_VALUES } from '../../../../constants/libraries';
 import noop from '../../../../shared/noop';
+import { Input } from '../../form/ModalFields/Input';
 
-export function TaskModalFields({ formErrors, title, description, startDate, deadline, onChangeInputValue, readOnly }) {
+export function TaskModalFields({ errors, title, description, startDate, deadline, onChangeInputValue, readOnly }) {
   return (
     <div>
-      <FormField
-        onChange={onChangeInputValue}
+      <Input
         placeholder={MODAL_VALUES.name}
-        inputValue={title}
-        error={formErrors.title}
+        fieldName={INPUT_NAMES.title}
+        title={MODAL_VALUES.name}
+        type={INPUT_TYPES.text}
         readOnly={readOnly}
-        inputName={INPUT_NAMES.title}
-        fieldName={MODAL_VALUES.name}
-        stylingType={INPUT_TYPES.text}
-      />
-      <FormField
-        fieldName={MODAL_VALUES.description}
+        error={errors.title}
         onChange={onChangeInputValue}
-        inputName={INPUT_NAMES.description}
+        value={title}
+      />
+      <Input
         placeholder={MODAL_VALUES.description}
+        fieldName={INPUT_NAMES.description}
+        title={MODAL_VALUES.description}
+        type={INPUT_TYPES.text}
         readOnly={readOnly}
-        inputValue={description}
-        stylingType={INPUT_TYPES.text}
-      />
-      <FormField
-        fieldName={MODAL_VALUES.startDate}
+        error={errors.title}
         onChange={onChangeInputValue}
-        inputName={INPUT_NAMES.startDate}
-        readOnly={readOnly}
-        error={formErrors.startDate}
-        inputValue={startDate}
-        stylingType={INPUT_TYPES.date}
+        value={description}
       />
-      <FormField
-        fieldName={MODAL_VALUES.deadline}
-        onChange={onChangeInputValue}
-        inputName={INPUT_NAMES.deadline}
+      <Input
+        placeholder={MODAL_VALUES.startDate}
+        fieldName={INPUT_NAMES.startDate}
+        title={MODAL_VALUES.startDate}
+        type={INPUT_TYPES.date}
         readOnly={readOnly}
-        error={formErrors.deadline}
-        inputValue={deadline}
-        stylingType={INPUT_TYPES.date}
+        error={errors.startDate}
+        onChange={onChangeInputValue}
+        value={startDate}
+      />
+      <Input
+        placeholder={MODAL_VALUES.deadline}
+        fieldName={INPUT_NAMES.deadline}
+        title={MODAL_VALUES.deadline}
+        type={INPUT_TYPES.date}
+        readOnly={readOnly}
+        error={errors.deadline}
+        onChange={onChangeInputValue}
+        value={deadline}
       />
     </div>
   );
@@ -54,7 +57,7 @@ TaskModalFields.propTypes = {
   deadline: PropTypes.string.isRequired,
   onChangeInputValue: PropTypes.func,
   readOnly: PropTypes.bool,
-  formErrors: PropTypes.shape({
+  errors: PropTypes.shape({
     title: PropTypes.string,
     startDate: PropTypes.string,
     users: PropTypes.string,
@@ -65,7 +68,7 @@ TaskModalFields.propTypes = {
 TaskModalFields.defaultProps = {
   onChangeInputValue: noop,
   readOnly: false,
-  formErrors: {
+  errors: {
     title: '',
     startDate: '',
     deadline: '',
