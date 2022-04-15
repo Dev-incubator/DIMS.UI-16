@@ -1,7 +1,6 @@
 import { PureComponent } from 'react';
-import { Form } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import Button from '../../components/Buttons/Button/Button';
 import { INPUT_NAMES } from '../../constants/libraries';
 import styles from './LogIn.module.css';
 import { withAuthContext } from '../../HOCs/withAuthContext';

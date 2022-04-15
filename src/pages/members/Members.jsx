@@ -1,75 +1,57 @@
 import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import styles from './Members.module.css';
 import { MemberInfoRow } from './memberInfoRow/MemberInfoRow';
 import { TableHeader } from '../helpers/TableHeader';
 import pageStyles from '../Page.module.css';
-import { getAllUsers, updateUser, createUserAuth, deleteUserAuth } from '../../scripts/api-service';
 import DeleteModal from '../modals/deleteModal/DeleteModal';
 import { PageHeader } from '../helpers/PageHeader';
 import { getAge } from '../../scripts/helpers';
 import UserModal from '../modals/userModal/UserModal';
-import { DELETE_VALUES, HEADER_VALUES, MODAL_MODES, PAGE_TITLES, USER_ROLES } from '../../constants/libraries';
+import {
+  ALERT_MODES,
+  DELETE_VALUES,
+  HEADER_VALUES,
+  MODAL_MODES,
+  PAGE_TITLES,
+  USER_ROLES,
+} from '../../constants/libraries';
 import { withModal } from '../../HOCs/withModal';
 import { ThemeContext } from '../../providers/ThemeProvider';
 import { AuthContext } from '../../providers/AuthProvider';
+import { createUserThunk, getUsersThunk, removeUserThunk, updateUserThunk } from '../../redux/usersThunk/usersThunk';
+import { Loading } from '../loading/Loading';
+import { CustomAlert } from '../../components/Alert/Alert';
 
 const memberTableTitles = ['#', 'Full name', 'Direction', 'Education', 'Start', 'Age', 'Action'];
 
 class Members extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      users: [],
-    };
-    this.isComponentMounted = false;
-  }
-
   async componentDidMount() {
-    this.isComponentMounted = true;
-    await this.getData();
+    const { getUsers } = this.props;
+    getUsers();
   }
-
-  async componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
-      await this.getData();
-    }
-  }
-
-  componentWillUnmount() {
-    this.isComponentMounted = false;
-  }
-
-  getData = async () => {
-    const users = await getAllUsers();
-    if (this.isComponentMounted) {
-      this.setState((prevState) => ({ ...prevState, users }));
-    }
-  };
 
   createUser = async (user) => {
-    const { closeModal } = this.props;
-    await createUserAuth(user);
+    const { createUser, closeModal } = this.props;
+    createUser(user);
     closeModal();
   };
 
   updateUser = async (user) => {
-    const { closeModal, actionId } = this.props;
-    await updateUser(actionId, user);
+    const { closeModal, actionId, updateUser } = this.props;
+    updateUser(actionId, user);
     closeModal();
   };
 
   removeUser = async () => {
-    const { closeModal, actionId } = this.props;
-    const { users } = this.state;
-    const user = users.find((item) => item.id === actionId);
-    await deleteUserAuth(user);
+    const { closeModal, actionId, removeUser } = this.props;
+    removeUser(actionId);
     closeModal();
   };
 
   render() {
-    const { users } = this.state;
-    const { mode, actionId, openModal, closeModal } = this.props;
+    const { mode, actionId, openModal, closeModal, users, error, isFetching } = this.props;
     const actionUser = users.find((item) => item.id === actionId);
 
     return (
@@ -78,6 +60,8 @@ class Members extends PureComponent {
           <AuthContext.Consumer>
             {({ user: { role } }) => (
               <div>
+                {isFetching && <Loading />}
+                <CustomAlert isActive={!!error} variant={ALERT_MODES.fail} text={error} />
                 {role === USER_ROLES.mentor ? (
                   <div className={styles.header} style={{ color: theme.textColor }}>
                     <div className={pageStyles.pageTitle}>{HEADER_VALUES.members}</div>
@@ -139,15 +123,46 @@ class Members extends PureComponent {
   }
 }
 
+function mapStateToProps(state) {
+  return {
+    users: state.users,
+    isFetching: state.fetch.isFetching,
+    error: state.fetch.error,
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    getUsers: () => dispatch(getUsersThunk()),
+    removeUser: (id) => dispatch(removeUserThunk(id)),
+    createUser: (user) => dispatch(createUserThunk(user)),
+    updateUser: (id, user) => dispatch(updateUserThunk(id, user)),
+  };
+}
+
 Members.propTypes = {
-  mode: PropTypes.string,
-  actionId: PropTypes.string,
+  users: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      direction: PropTypes.string,
+      name: PropTypes.string,
+      surname: PropTypes.string,
+      birthDate: PropTypes.string,
+      education: PropTypes.string,
+      startDate: PropTypes.string,
+    }),
+  ).isRequired,
+  isFetching: PropTypes.bool.isRequired,
+  getUsers: PropTypes.func.isRequired,
+  updateUser: PropTypes.func.isRequired,
+  createUser: PropTypes.func.isRequired,
+  removeUser: PropTypes.func.isRequired,
+  error: PropTypes.string.isRequired,
+  store: PropTypes.shape({}).isRequired,
+  mode: PropTypes.string.isRequired,
+  actionId: PropTypes.string.isRequired,
   closeModal: PropTypes.func.isRequired,
   openModal: PropTypes.func.isRequired,
 };
-Members.defaultProps = {
-  mode: null,
-  actionId: null,
-};
 
-export default withModal(Members);
+export default connect(mapStateToProps, mapDispatchToProps)(withModal(Members));

@@ -6,18 +6,18 @@ export const withModal = (Component) => {
     constructor(props) {
       super(props);
       this.state = {
-        mode: null,
-        actionId: null,
+        mode: '',
+        actionId: '',
       };
     }
 
     closeModal = () => {
       setTimeout(() => {
-        this.setState({ mode: null, actionId: null });
+        this.setState({ mode: '', actionId: '' });
       }, 300);
     };
 
-    openModal = (mode = MODAL_MODES.create, actionId = null) => {
+    openModal = (mode = MODAL_MODES.create, actionId = '') => {
       this.setState({ mode, actionId });
     };
 

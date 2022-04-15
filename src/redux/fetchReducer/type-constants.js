@@ -1,0 +1,4 @@
+export const ENABLE_LOADER = 'ENABLE-LOADER';
+export const DISABLE_LOADER = 'DISABLE-LOADER';
+export const SET_ERROR = 'SET-ERROR';
+export const DISABLE_ERROR = 'DISABLE-ERROR';

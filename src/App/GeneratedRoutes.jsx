@@ -10,6 +10,7 @@ import LogIn from '../pages/logIn/LogIn';
 import { SetPassword } from '../pages/setPassword/SetPassword';
 import { Settings } from '../pages/settings/Settings';
 import { USER_ROLES } from '../constants/libraries';
+import store from '../redux/store';
 
 export function GeneratedRoutes() {
   return (
@@ -21,8 +22,8 @@ export function GeneratedRoutes() {
             <>
               {user.role === USER_ROLES.admin || user.role === USER_ROLES.mentor ? (
                 <>
-                  <Route path='/users' exact component={Members} />
-                  <Route path='/tasks' exact component={Tasks} />
+                  <Route path='/users' exact render={() => <Members store={store} />} />
+                  <Route path='/tasks' exact render={() => <Tasks store={store} />} />
                   <Route path='/progress/:id' component={Progress} />
                 </>
               ) : (
