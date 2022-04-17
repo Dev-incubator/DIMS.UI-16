@@ -17,7 +17,7 @@ import { getChangePasswordErrors, initChangePasswordState } from './settingsHelp
 import { auth } from '../../scripts/firebase-config';
 import { ThemeContext } from '../../providers/ThemeProvider';
 import { CustomAlert } from '../../components/Alert/Alert';
-import { Input } from '../modals/form/ModalFields/Input';
+import { Input } from '../modals/form/ModalFields/Input/Input';
 
 export class Settings extends PureComponent {
   constructor(props) {
@@ -78,7 +78,7 @@ export class Settings extends PureComponent {
     return (
       <ThemeContext.Consumer>
         {({ theme, toggleTheme }) => (
-          <div className={styles.settings} style={{ borderColor: theme.borderColor, color: theme.textColor }}>
+          <div className={`${styles.settings} ${styles[theme]}`}>
             <div className={styles.switchTheme}>
               <div className={styles.title}>Switch theme</div>
               <div className={styles.themeButtons}>

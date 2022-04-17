@@ -67,8 +67,8 @@ class LogIn extends PureComponent {
     return (
       <ThemeContext.Consumer>
         {({ theme }) => (
-          <div className={styles.login} style={{ color: theme.textColor }}>
-            <Form className={styles.form} onSubmit={this.submitHandler} style={{ borderColor: theme.borderColor }}>
+          <div className={`${styles.login} ${styles[theme]}`}>
+            <Form className={`${styles.form} ${styles[theme]}`} onSubmit={this.submitHandler}>
               <div className={styles.title}>Log In</div>
               <Form.Group className='mb-3' controlId='formBasicEmail'>
                 <Form.Label>Email address</Form.Label>

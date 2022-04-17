@@ -6,41 +6,8 @@
     justify-content: space-between;
 }
 
-.placeholder {
-    opacity: 0.6;
-}
-
 .title {
     letter-spacing: 1.5px;
     font-size: 0.95rem;
 }
 
-
-.input {
-    box-sizing: border-box;
-    width: 17.5rem;
-    height: 2rem;
-    border-radius: 4px;
-    padding: 0 0.5rem;
-    background-color: transparent;
-    border: 1px solid;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 0.9rem;
-    line-height: 0.9rem;
-    display: flex;
-    outline: none;
-    align-items: center;
-}
-
-.input:focus {
-    border-color: var(--blue);
-}
-
-.input::placeholder {
-    font-size: 0.9rem;
-}
-
-.date::placeholder {
-    opacity: 1;
-}

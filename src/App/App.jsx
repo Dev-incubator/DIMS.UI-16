@@ -18,7 +18,7 @@ class App extends PureComponent {
     return (
       <ThemeContext.Consumer>
         {({ theme }) => (
-          <div className={styles.App} style={{ backgroundColor: theme.backgroundColor }}>
+          <div className={`${styles.App} ${styles[theme]}`}>
             <Header />
             <main>
               <ErrorBoundary>

@@ -63,13 +63,13 @@ class Members extends PureComponent {
                 {isFetching && <Loading />}
                 <CustomAlert isActive={!!error} variant={ALERT_MODES.fail} text={error} />
                 {role === USER_ROLES.mentor ? (
-                  <div className={styles.header} style={{ color: theme.textColor }}>
+                  <div className={`${styles.header} ${styles[theme]}`}>
                     <div className={pageStyles.pageTitle}>{HEADER_VALUES.members}</div>
                   </div>
                 ) : (
                   <PageHeader text={PAGE_TITLES.members} onClick={openModal} />
                 )}
-                <table className={styles.members} style={{ color: theme.textColor }}>
+                <table className={`${styles.members} ${styles[theme]}`}>
                   <TableHeader titles={memberTableTitles} />
                   <tbody>
                     {users.map((user, index) => {

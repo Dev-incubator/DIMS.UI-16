@@ -1,3 +1,11 @@
+.progress.dark {
+    color: var(--gray);
+}
+
+.progress.light {
+    color: var(--black);
+}
+
 .progress td {
     height: 3.6rem;
 }

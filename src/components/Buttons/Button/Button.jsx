@@ -3,10 +3,28 @@ import noop from '../../../shared/noop';
 import styles from './Button.module.css';
 import { withThemeContext } from '../../../HOCs/withThemeContext';
 
+const themeButtonColors = {
+  light: {
+    primary: 'var(--blue)',
+    warning: 'var(--orange)',
+    success: 'var(--green)',
+    secondary: 'var(--secondary)',
+    error: 'var(--red)',
+  },
+  dark: {
+    primary: 'var(--darkBlue)',
+    warning: 'var(--darkOrange)',
+    success: 'var(--darkGreen)',
+    secondary: 'var(--secondary)',
+    error: 'var(--darkRed)',
+  },
+};
+
 function Button({ children, context, onClick, color, readOnly, isBackButton, ...restProps }) {
   const { theme } = context;
+  const buttonColors = themeButtonColors[theme];
   const style = {
-    backgroundColor: theme[color],
+    backgroundColor: buttonColors[color],
   };
 
   return (

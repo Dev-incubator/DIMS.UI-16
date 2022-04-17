@@ -53,7 +53,7 @@ class Tasks extends PureComponent {
             {isFetching && <Loading />}
             <CustomAlert isActive={!!error} variant={ALERT_MODES.fail} text={error} />
             <PageHeader text={PAGE_TITLES.tasks} onClick={openModal} />
-            <table className={styles.tasks} style={{ color: theme.textColor }}>
+            <table className={`${styles.tasks} ${styles[theme]}`}>
               <TableHeader titles={tableTitles} />
               <tbody>
                 {tasks.map((task, index) => {

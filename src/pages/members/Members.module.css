@@ -2,6 +2,14 @@
     margin: 0 0.6rem -0.3rem 0;
 }
 
+.members.light {
+    color: var(--black);
+}
+
+.members.dark {
+    color: var(--gray);
+}
+
 .members td {
     height: 5rem;
 }
@@ -34,8 +42,16 @@
     width: 10rem;
 }
 
-.header{
+.header {
     margin: 2rem auto;
     display: flex;
     justify-content: center;
+}
+
+.header.dark {
+    color: var(--gray);
+}
+
+.header.light {
+    color: var(--black);
 }

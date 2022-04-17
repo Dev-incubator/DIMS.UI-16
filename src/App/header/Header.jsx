@@ -14,13 +14,7 @@ function Header({ context }) {
   return (
     <ThemeContext.Consumer>
       {({ theme }) => (
-        <Navbar
-          collapseOnSelect
-          expand='lg'
-          variant='dark'
-          className={styles.header}
-          style={{ backgroundColor: theme.headerColor }}
-        >
+        <Navbar collapseOnSelect expand='lg' variant='dark' className={`${styles.header} ${styles[theme]}`}>
           <Container className={styles.container}>
             <Navbar.Brand>DIMS</Navbar.Brand>
             <Navbar.Toggle aria-controls='responsive-navbar-nav' />

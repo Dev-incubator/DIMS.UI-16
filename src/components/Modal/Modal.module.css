@@ -1,10 +1,10 @@
-.modal{
+.modal {
     min-height: 100vh;
     width: 100vw;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0, 0, 0, 0.5);
     position: fixed;
-    top:0;
-    left:0;
+    top: 0;
+    left: 0;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -12,20 +12,37 @@
     animation: closing 0.35s forwards;
 }
 
-.modal.active{
+.modal.dark {
+    color: var(--gray);
+}
+
+.modal.light {
+    color: var(--black);
+}
+
+.modal.active {
     animation: starting 0.3s forwards;
 }
 
 
-.modalContent{
-    border:1px solid;
+.modalContent {
+    border: 1px solid;
     border-radius: 0.3rem;
-    background-color: var(--bgColor);
     padding: 1.5rem;
     animation: closing 0.35s forwards;
 }
 
-.modalContent.active{
+.modalContent.light {
+    background-color: var(--bgLight);
+    border-color: var(--borderLight);
+}
+
+.modalContent.dark {
+    background-color: var(--bgDark);
+    border-color: var(--gray);
+}
+
+.modalContent.active {
     animation: opening 0.3s forwards;
 }
 
@@ -54,11 +71,11 @@
 }
 
 @keyframes starting {
-    0%{
+    0% {
         pointer-events: none;
         opacity: 0;
     }
-    100%{
+    100% {
         pointer-events: all;
         opacity: 1;
     }

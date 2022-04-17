@@ -39,7 +39,7 @@ export class Progress extends PureComponent {
         {({ theme }) => (
           <div>
             <PageHeader text={pageTitle} isBackButton />
-            <table className={styles.progress} style={{ color: theme.textColor }}>
+            <table className={`${styles.progress} ${styles[theme]}`}>
               <TableHeader titles={tableTitles} />
               <tbody>
                 {progress.map((task, index) => (

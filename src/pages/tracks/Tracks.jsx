@@ -91,7 +91,7 @@ class Tracks extends PureComponent {
         {({ theme }) => (
           <div>
             <PageHeader text={PAGE_TITLES.tracks} onClick={openModal} />
-            <table className={styles.tracks} style={{ color: theme.textColor }}>
+            <table className={`${styles.tracks} ${styles[theme]}`}>
               <TableHeader titles={tableTitles} />
               <tbody>
                 {tracks.map((track, index) => {

@@ -10,7 +10,7 @@ export function PageHeader({ text, onClick, isBackButton }) {
   return (
     <ThemeContext.Consumer>
       {({ theme }) => (
-        <div className={pageStyles.header} style={{ color: theme.textColor }}>
+        <div className={`${pageStyles.header} ${pageStyles[theme]}`}>
           <div className={pageStyles.pageTitle}>{text}</div>
           {isBackButton ? (
             <NavLink to='/users'>

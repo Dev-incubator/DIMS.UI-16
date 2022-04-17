@@ -7,6 +7,19 @@ import { ThemeContext } from '../../../providers/ThemeProvider';
 import { getStatusColor } from '../userTasksHelper';
 import { AuthContext } from '../../../providers/AuthProvider';
 
+export const statusThemeColors = {
+  light: {
+    primary: 'var(--blue)',
+    success: 'var(--green)',
+    error: 'var(--red)',
+  },
+  dark: {
+    primary: 'var(--darkBlue)',
+    success: 'var(--darkGreen)',
+    error: 'var(--darkRed)',
+  },
+};
+
 export function UserTaskRow({ userId, number, title, startDate, status, deadline, taskId, updateTaskStatus }) {
   const buttonColor = status === TASK_STATUS.active ? BUTTON_COLORS.green : BUTTON_COLORS.blue;
   const buttonValue = status === TASK_STATUS.active ? BUTTON_VALUES.success : BUTTON_VALUES.active;
@@ -27,7 +40,7 @@ export function UserTaskRow({ userId, number, title, startDate, status, deadline
               <td>{number}</td>
               <td>
                 {role === USER_ROLES.user ? (
-                  <NavLink to={`/track/${userId}/task/${taskId}`} style={{ color: theme.primary }}>
+                  <NavLink to={`/track/${userId}/task/${taskId}`} className={`${styles.link} ${styles[theme]}`}>
                     {title}
                   </NavLink>
                 ) : (
@@ -37,7 +50,7 @@ export function UserTaskRow({ userId, number, title, startDate, status, deadline
               <td>{startDate}</td>
               <td>{deadline}</td>
               <td>
-                <div style={{ color: theme[statusColor] }}>{status}</div>
+                <div style={{ color: statusThemeColors[theme][statusColor] }}>{status}</div>
               </td>
               {role !== USER_ROLES.user && (
                 <td>

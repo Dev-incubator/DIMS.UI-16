@@ -12,7 +12,7 @@ export function TaskModalUsersList({ usersTask, changeUserValue, error, readOnly
         <div className={styles.usersList}>
           <div className={styles.fieldName}>Members</div>
           <div>
-            <div className={styles.layer} style={{ borderColor: theme.borderColor }}>
+            <div className={`${styles.layer} ${styles[theme]}`}>
               {readOnly
                 ? usersTask.map((user) => (
                     <div key={user.id}>

@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types';
-import styles from './ModalFields.module.css';
-import noop from '../../../../shared/noop';
-import { INPUT_TYPES } from '../../../../constants/libraries';
-import { Error } from '../../../../components/Error/Error';
-import { ThemeContext } from '../../../../providers/ThemeProvider';
+import styles from './Input.module.css';
+import fieldStyles from '../ModalFields.module.css';
+import noop from '../../../../../shared/noop';
+import { INPUT_TYPES } from '../../../../../constants/libraries';
+import { Error } from '../../../../../components/Error/Error';
+import { ThemeContext } from '../../../../../providers/ThemeProvider';
 
 export function Input({ onChange, value, placeholder, readOnly, fieldName, error, type, title }) {
   const onChangeHandler = ({ target }) => {
@@ -13,15 +14,14 @@ export function Input({ onChange, value, placeholder, readOnly, fieldName, error
   return (
     <ThemeContext.Consumer>
       {({ theme }) => (
-        <div className={styles.formField}>
-          <div className={styles.title}>{title}</div>
+        <div className={fieldStyles.formField}>
+          <div className={fieldStyles.title}>{title}</div>
           <div>
             <input
               type={type}
               disabled={readOnly}
               name={fieldName}
-              className={styles.input}
-              style={{ borderColor: theme.borderColor, color: theme.textColor }}
+              className={`${styles.input} ${styles[theme]}`}
               placeholder={placeholder}
               value={value}
               onChange={onChangeHandler}
@@ -44,6 +44,7 @@ Input.propTypes = {
   readOnly: PropTypes.bool,
   type: PropTypes.string,
 };
+
 Input.defaultProps = {
   error: '',
   fieldName: '',

@@ -5,11 +5,7 @@ import { ThemeContext } from '../../providers/ThemeProvider';
 export function Error({ message }) {
   return (
     <ThemeContext.Consumer>
-      {({ theme }) => (
-        <div className={styles.message} style={{ color: theme.error }}>
-          {message}
-        </div>
-      )}
+      {({ theme }) => <div className={`${styles.message} ${styles[theme]}`}>{message}</div>}
     </ThemeContext.Consumer>
   );
 }

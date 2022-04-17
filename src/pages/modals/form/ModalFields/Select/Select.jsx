@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
-import styles from './ModalFields.module.css';
-import noop from '../../../../shared/noop';
-import { Error } from '../../../../components/Error/Error';
-import { ThemeContext } from '../../../../providers/ThemeProvider';
+import styles from './Select.module.css';
+import fieldStyles from '../ModalFields.module.css';
+import noop from '../../../../../shared/noop';
+import { Error } from '../../../../../components/Error/Error';
+import { ThemeContext } from '../../../../../providers/ThemeProvider';
 
 export function Select({ defaultValue, onChange, value, title, readOnly, fieldName, error, items }) {
   const onChangeHandler = ({ target }) => {
@@ -12,13 +13,12 @@ export function Select({ defaultValue, onChange, value, title, readOnly, fieldNa
   return (
     <ThemeContext.Consumer>
       {({ theme }) => (
-        <div className={styles.formField}>
-          <div className={styles.title}>{title}</div>
+        <div className={fieldStyles.formField}>
+          <div className={fieldStyles.title}>{title}</div>
           <div>
             <select
               value={value}
-              className={`${styles.input} ${!value ? styles.placeholder : ''}`}
-              style={{ borderColor: theme.borderColor, color: theme.textColor, backgroundColor: theme.tableHeader }}
+              className={`${styles.select} ${styles[theme]} ${!value ? styles.placeholder : ''}`}
               disabled={readOnly}
               name={fieldName}
               onChange={onChangeHandler}

@@ -65,13 +65,13 @@ export class UserTasks extends PureComponent {
             {({ user: { role } }) => (
               <div>
                 {role === USER_ROLES.user ? (
-                  <div className={styles.header} style={{ color: theme.textColor }}>
+                  <div className={`${styles.header} ${styles[theme]}`}>
                     <div className={pageStyles.pageTitle}>Hi {name}! There are your current tasks</div>
                   </div>
                 ) : (
                   <PageHeader text={`${name}'s current tasks`} isBackButton />
                 )}
-                <table className={styles.userTasks} style={{ color: theme.textColor }}>
+                <table className={`${styles.userTasks} ${styles[theme]}`}>
                   <TableHeader titles={role === USER_ROLES.user ? userTableTitles : adminTableTitles} />
                   <tbody>
                     {tasks.map((task, index) => (

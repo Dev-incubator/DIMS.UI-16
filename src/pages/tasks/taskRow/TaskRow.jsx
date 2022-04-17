@@ -20,7 +20,7 @@ export function TaskRow({
         <tr>
           <td>{number}</td>
           <td>
-            <button type='button' className={styles.taskTitle} onClick={openReadModal} style={{ color: theme.primary }}>
+            <button type='button' className={`${styles.taskTitle} ${styles[theme]}`} onClick={openReadModal}>
               {title}
             </button>
           </td>

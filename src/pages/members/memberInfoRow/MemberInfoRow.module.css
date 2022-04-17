@@ -15,3 +15,11 @@
     font-size: 1rem;
     text-align: left;
 }
+
+.userName.light{
+    color: var(--blue);
+}
+
+.userName.dark{
+    color: var(--darkBlue);
+}

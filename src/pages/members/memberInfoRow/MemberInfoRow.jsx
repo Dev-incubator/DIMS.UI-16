@@ -28,12 +28,7 @@ export function MemberInfoRow({
             <tr>
               <td>{number}</td>
               <td>
-                <button
-                  type='button'
-                  className={styles.userName}
-                  onClick={openReadModal}
-                  style={{ color: theme.primary }}
-                >
+                <button type='button' className={`${styles.userName} ${styles[theme]}`} onClick={openReadModal}>
                   {getFullName(name, surname)}
                 </button>
               </td>

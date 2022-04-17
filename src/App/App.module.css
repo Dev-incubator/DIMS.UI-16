@@ -4,6 +4,12 @@
     display: flex;
 }
 
+.App.dark{
+    background-color:var(--bgDark);
+}
+.App.light{
+    background-color: var(--bgLight);
+}
 
 footer {
     display: flex;

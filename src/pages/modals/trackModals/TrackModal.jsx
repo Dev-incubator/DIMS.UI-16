@@ -13,7 +13,7 @@ import {
 import { FormSubmit } from '../form/formSubmit/FormSubmit';
 import { gatherTrackModalState, getTrackModalErrors, trackModalState } from './trackModalHelpers';
 import { withModalFade } from '../../../HOCs/withModalFade';
-import { Input } from '../form/ModalFields/Input';
+import { Input } from '../form/ModalFields/Input/Input';
 
 class TrackModal extends PureComponent {
   constructor(props) {

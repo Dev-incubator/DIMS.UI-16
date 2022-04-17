@@ -25,15 +25,13 @@ export class Modal extends PureComponent {
       <ThemeContext.Consumer>
         {({ theme }) => (
           <div
-            className={`${styles.modal} ${active && styles.active}`}
+            className={`${styles.modal} ${styles[theme]} ${active && styles.active}`}
             onClick={onClose}
             aria-hidden='true'
-            style={{ color: theme.textColor }}
           >
             <div
-              className={`${styles.modalContent} ${active && styles.active}`}
+              className={`${styles.modalContent} ${styles[theme]} ${active && styles.active}`}
               onClick={(event) => event.stopPropagation()}
-              style={{ backgroundColor: theme.backgroundColor, borderColor: theme.borderColor }}
               aria-hidden='true'
             >
               {children}
