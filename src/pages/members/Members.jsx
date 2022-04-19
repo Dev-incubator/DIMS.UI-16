@@ -1,6 +1,7 @@
 import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import styles from './Members.module.css';
 import { MemberInfoRow } from './memberInfoRow/MemberInfoRow';
 import { TableHeader } from '../helpers/TableHeader';
@@ -126,18 +127,16 @@ class Members extends PureComponent {
 function mapStateToProps(state) {
   return {
     users: state.users,
-    isFetching: state.fetch.isFetching,
-    error: state.fetch.error,
+    isFetching: state.usersLoader,
+    error: state.usersError,
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  return {
-    getUsers: () => dispatch(getUsersThunk()),
-    removeUser: (id) => dispatch(removeUserThunk(id)),
-    createUser: (user) => dispatch(createUserThunk(user)),
-    updateUser: (id, user) => dispatch(updateUserThunk(id, user)),
-  };
+  return bindActionCreators(
+    { getUsers: getUsersThunk, removeUser: removeUserThunk, updateUser: updateUserThunk, createUser: createUserThunk },
+    dispatch,
+  );
 }
 
 Members.propTypes = {
@@ -158,7 +157,6 @@ Members.propTypes = {
   createUser: PropTypes.func.isRequired,
   removeUser: PropTypes.func.isRequired,
   error: PropTypes.string.isRequired,
-  store: PropTypes.shape({}).isRequired,
   mode: PropTypes.string.isRequired,
   actionId: PropTypes.string.isRequired,
   closeModal: PropTypes.func.isRequired,

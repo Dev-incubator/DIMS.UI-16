@@ -1,19 +1,20 @@
-import { disableErrorAC, disableLoaderAC, enableLoaderAC, setErrorAC } from '../fetchReducer/fetchReducer';
 import { addTask, deleteTask, deleteTrack, getAllTasks, updateTask } from '../../scripts/api-service';
-import { addTaskAC, getTasksAC, removeTaskAC, updateTaskAC } from '../tasksReducer/tasksReducer';
+import { addTaskAction, getTasksAction, removeTaskAction, updateTaskAction } from '../tasksReducers/tasksReducer';
+import { enableTasksLoaderAction, disableTasksLoaderAction } from '../tasksReducers/tasksLoaderReducer';
+import { disableTasksErrorAction, setTasksErrorAction } from '../tasksReducers/tasksErrorReducer';
 
 export const getTasksThunk = () => {
   return async (dispatch) => {
-    dispatch(enableLoaderAC());
+    dispatch(enableTasksLoaderAction());
     const tasks = await getAllTasks();
-    dispatch(getTasksAC(tasks));
-    dispatch(disableLoaderAC());
+    dispatch(getTasksAction(tasks));
+    dispatch(disableTasksLoaderAction());
   };
 };
 
 export const updateTaskThunk = (id, updatedTask) => {
   return async (dispatch, getState) => {
-    dispatch(enableLoaderAC());
+    dispatch(enableTasksLoaderAction());
     try {
       const { tasks } = getState();
       const prevTask = tasks.find((task) => task.id === id);
@@ -31,37 +32,38 @@ export const updateTaskThunk = (id, updatedTask) => {
         }
       });
 
-      dispatch(updateTaskAC(id, { ...updatedTask, users: updatedUsers }));
+      dispatch(updateTaskAction(id, { ...updatedTask, users: updatedUsers }));
     } catch (error) {
-      dispatch(setErrorAC(error.message));
+      dispatch(setTasksErrorAction(error.message));
       setTimeout(() => {
-        dispatch(disableErrorAC());
+        dispatch(disableTasksErrorAction());
       }, 3500);
     }
-    dispatch(disableLoaderAC());
+    dispatch(disableTasksLoaderAction());
   };
 };
 
 export const addTaskThunk = (task) => {
-  return (dispatch) => {
-    dispatch(enableLoaderAC());
-    addTask(task)
-      .then((doc) => dispatch(addTaskAC(doc.id, task)))
-      .catch((error) => {
-        dispatch(setErrorAC(error.message));
-        setTimeout(() => {
-          dispatch(disableErrorAC());
-        }, 3500);
-      });
-    dispatch(disableLoaderAC());
+  return async (dispatch) => {
+    dispatch(enableTasksLoaderAction());
+    try {
+      const doc = await addTask(task);
+      dispatch(addTaskAction(doc.id, task));
+    } catch (error) {
+      dispatch(setTasksErrorAction(error.message));
+      setTimeout(() => {
+        dispatch(disableTasksErrorAction());
+      }, 3500);
+    }
+    dispatch(disableTasksLoaderAction());
   };
 };
 
 export const removeTaskThunk = (id) => {
   return async (dispatch) => {
-    dispatch(enableLoaderAC());
+    dispatch(enableTasksLoaderAction());
     await deleteTask(id);
-    dispatch(removeTaskAC(id));
-    dispatch(disableLoaderAC());
+    dispatch(removeTaskAction(id));
+    dispatch(disableTasksLoaderAction());
   };
 };

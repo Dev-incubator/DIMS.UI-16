@@ -7,8 +7,8 @@ import { Error } from '../../../../../components/Error/Error';
 import { ThemeContext } from '../../../../../providers/ThemeProvider';
 
 export function Input({ onChange, value, placeholder, readOnly, fieldName, error, type, title }) {
-  const onChangeHandler = ({ target }) => {
-    onChange(target.name, target.value);
+  const onChangeHandler = ({ target: { name, value: inputValue } }) => {
+    onChange(name, inputValue);
   };
 
   return (

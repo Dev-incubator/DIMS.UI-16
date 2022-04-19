@@ -33,7 +33,7 @@ export async function createUser(id, user) {
   }
 }
 
-export async function addTask(task) {
+export function addTask(task) {
   return addDoc(tasksCollectionRef, task);
 }
 

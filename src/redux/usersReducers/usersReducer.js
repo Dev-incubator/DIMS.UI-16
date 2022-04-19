@@ -2,8 +2,7 @@ import { ADD_USER, GET_USERS, REMOVE_USER, UPDATE_USER } from './type-constants'
 
 const initialState = [];
 
-// eslint-disable-next-line default-param-last
-export const usersReducer = (state = initialState, action) => {
+export const usersReducer = (state = initialState, action = {}) => {
   switch (action.type) {
     case GET_USERS: {
       return action.payload.users;
@@ -23,7 +22,7 @@ export const usersReducer = (state = initialState, action) => {
   }
 };
 
-export const getUsersAC = (users) => ({ type: GET_USERS, payload: { users } });
-export const removeUserAC = (id) => ({ type: REMOVE_USER, payload: { id } });
-export const addUserAC = (user, id) => ({ type: ADD_USER, payload: { user, id } });
-export const updateUserAC = (user, id) => ({ type: UPDATE_USER, payload: { user, id } });
+export const getUsersAction = (users) => ({ type: GET_USERS, payload: { users } });
+export const removeUserAction = (id) => ({ type: REMOVE_USER, payload: { id } });
+export const addUserAction = (user, id) => ({ type: ADD_USER, payload: { user, id } });
+export const updateUserAction = (user, id) => ({ type: UPDATE_USER, payload: { user, id } });

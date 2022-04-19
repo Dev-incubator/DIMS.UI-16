@@ -1,5 +1,6 @@
 import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import { PageHeader } from '../helpers/PageHeader';
 import { TableHeader } from '../helpers/TableHeader';
 import styles from './UserTasks.module.css';
@@ -14,7 +15,7 @@ import { Loading } from '../loading/Loading';
 const adminTableTitles = ['#', 'Task name', 'Start date', 'Deadline', 'Status', 'Update status'];
 const userTableTitles = adminTableTitles.slice(0, adminTableTitles.length - 1);
 
-export class UserTasks extends PureComponent {
+class UserTasks extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -101,3 +102,5 @@ export class UserTasks extends PureComponent {
 UserTasks.propTypes = {
   match: PropTypes.shape({ params: PropTypes.shape({ id: PropTypes.string.isRequired }) }).isRequired,
 };
+
+export default withRouter(UserTasks);

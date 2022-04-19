@@ -1,53 +1,54 @@
-import { disableErrorAC, disableLoaderAC, enableLoaderAC, setErrorAC } from '../fetchReducer/fetchReducer';
 import { createUserAuth, deleteUserAuth, getAllUsers, updateUser } from '../../scripts/api-service';
-import { addUserAC, getUsersAC, removeUserAC, updateUserAC } from '../usersReducer/usersReducer';
+import { addUserAction, getUsersAction, removeUserAction, updateUserAction } from '../usersReducers/usersReducer';
+import { disableUsersLoaderAction, enableUsersLoaderAction } from '../usersReducers/usersLoaderReducer';
+import { disableUsersErrorAction, setUsersErrorAction } from '../usersReducers/usersErrorReducer';
 
 export const getUsersThunk = () => {
   return async (dispatch) => {
-    dispatch(enableLoaderAC());
+    dispatch(enableUsersLoaderAction());
     const users = await getAllUsers();
-    dispatch(getUsersAC(users));
-    dispatch(disableLoaderAC());
+    dispatch(getUsersAction(users));
+    dispatch(disableUsersLoaderAction());
   };
 };
 
 export const updateUserThunk = (id, user) => {
   return async (dispatch) => {
-    dispatch(enableLoaderAC());
+    dispatch(enableUsersLoaderAction());
     await updateUser(id, user);
-    dispatch(updateUserAC(user, id));
-    dispatch(disableLoaderAC());
+    dispatch(updateUserAction(user, id));
+    dispatch(disableUsersLoaderAction());
   };
 };
 
 export const createUserThunk = (user) => {
   return async (dispatch) => {
-    dispatch(enableLoaderAC());
+    dispatch(enableUsersLoaderAction());
     try {
       const newUserId = await createUserAuth(user);
-      dispatch(addUserAC(user, newUserId));
+      dispatch(addUserAction(user, newUserId));
     } catch (error) {
-      dispatch(setErrorAC(error.message));
+      dispatch(setUsersErrorAction(error.message));
       setTimeout(() => {
-        dispatch(disableErrorAC());
+        dispatch(disableUsersErrorAction());
       }, 3500);
     }
-    dispatch(disableLoaderAC());
+    dispatch(disableUsersLoaderAction());
   };
 };
 
 export const removeUserThunk = (id) => {
   return async (dispatch) => {
-    dispatch(enableLoaderAC());
+    dispatch(enableUsersLoaderAction());
     try {
       await deleteUserAuth(id);
-      dispatch(removeUserAC(id));
+      dispatch(removeUserAction(id));
     } catch (error) {
-      dispatch(setErrorAC(error.message));
+      dispatch(setUsersErrorAction(error.message));
       setTimeout(() => {
-        dispatch(disableErrorAC());
+        dispatch(disableUsersErrorAction());
       }, 3500);
     }
-    dispatch(disableLoaderAC());
+    dispatch(disableUsersLoaderAction());
   };
 };

@@ -1,13 +1,19 @@
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
 import thunk from 'redux-thunk';
-import { usersReducer } from './usersReducer/usersReducer';
-import { fetchReducer } from './fetchReducer/fetchReducer';
-import { tasksReducer } from './tasksReducer/tasksReducer';
+import { usersReducer } from './usersReducers/usersReducer';
+import { tasksReducer } from './tasksReducers/tasksReducer';
+import { usersLoaderReducer } from './usersReducers/usersLoaderReducer';
+import { tasksLoaderReducer } from './tasksReducers/tasksLoaderReducer';
+import { usersErrorReducer } from './usersReducers/usersErrorReducer';
+import { tasksErrorReducer } from './tasksReducers/tasksErrorReducer';
 
 const reducers = combineReducers({
-  fetch: fetchReducer,
   users: usersReducer,
   tasks: tasksReducer,
+  usersLoader: usersLoaderReducer,
+  tasksLoader: tasksLoaderReducer,
+  usersError: usersErrorReducer,
+  tasksError: tasksErrorReducer,
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

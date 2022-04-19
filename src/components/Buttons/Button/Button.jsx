@@ -3,35 +3,15 @@ import noop from '../../../shared/noop';
 import styles from './Button.module.css';
 import { withThemeContext } from '../../../HOCs/withThemeContext';
 
-const themeButtonColors = {
-  light: {
-    primary: 'var(--blue)',
-    warning: 'var(--orange)',
-    success: 'var(--green)',
-    secondary: 'var(--secondary)',
-    error: 'var(--red)',
-  },
-  dark: {
-    primary: 'var(--darkBlue)',
-    warning: 'var(--darkOrange)',
-    success: 'var(--darkGreen)',
-    secondary: 'var(--secondary)',
-    error: 'var(--darkRed)',
-  },
-};
-
 function Button({ children, context, onClick, color, readOnly, isBackButton, ...restProps }) {
   const { theme } = context;
-  const buttonColors = themeButtonColors[theme];
-  const style = {
-    backgroundColor: buttonColors[color],
-  };
 
   return (
     <button
       type='button'
-      style={style}
-      className={`${isBackButton ? styles.buttonBack : styles.button} ${readOnly && styles.disabledButton}`}
+      className={`${isBackButton ? styles.buttonBack : styles.button}
+       ${readOnly && styles.disabledButton} 
+      ${styles[color]} ${styles[theme]}`}
       onClick={onClick}
       disabled={readOnly}
       {...restProps}
@@ -47,7 +27,7 @@ Button.propTypes = {
   color: PropTypes.string,
   readOnly: PropTypes.bool,
   context: PropTypes.shape({
-    theme: PropTypes.shape({}),
+    theme: PropTypes.string,
   }).isRequired,
   isBackButton: PropTypes.bool,
 };

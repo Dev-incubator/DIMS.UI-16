@@ -1,10 +1,12 @@
 import { BrowserRouter as Router } from 'react-router-dom';
 import './index.css';
 import { createRoot } from 'react-dom/client';
+import { Provider } from 'react-redux';
 import App from './App/App';
 import reportWebVitals from './reportWebVitals';
 import AuthProvider from './providers/AuthProvider';
 import { ThemeProvider } from './providers/ThemeProvider';
+import store from './redux/store';
 
 const container = document.getElementById('root');
 const root = createRoot(container);
@@ -12,7 +14,9 @@ root.render(
   <Router>
     <ThemeProvider>
       <AuthProvider>
-        <App />
+        <Provider store={store}>
+          <App />
+        </Provider>
       </AuthProvider>
     </ThemeProvider>
   </Router>,

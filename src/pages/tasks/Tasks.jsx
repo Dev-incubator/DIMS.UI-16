@@ -1,6 +1,7 @@
 import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { PageHeader } from '../helpers/PageHeader';
 import { TableHeader } from '../helpers/TableHeader';
 import styles from './Tasks.module.css';
@@ -108,19 +109,22 @@ function mapStateToProps(state) {
   return {
     users: state.users,
     tasks: state.tasks,
-    isFetching: state.fetch.isFetching,
-    error: state.fetch.error,
+    isFetching: state.tasksLoader,
+    error: state.tasksError,
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  return {
-    getUsers: () => dispatch(getUsersThunk()),
-    getTasks: () => dispatch(getTasksThunk()),
-    updateTask: (id, updatedTask) => dispatch(updateTaskThunk(id, updatedTask)),
-    removeTask: (id) => dispatch(removeTaskThunk(id)),
-    addTask: (task) => dispatch(addTaskThunk(task)),
-  };
+  return bindActionCreators(
+    {
+      getUsers: getUsersThunk,
+      getTasks: getTasksThunk,
+      updateTask: updateTaskThunk,
+      removeTask: removeTaskThunk,
+      addTask: addTaskThunk,
+    },
+    dispatch,
+  );
 }
 
 Tasks.propTypes = {
