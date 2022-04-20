@@ -9,11 +9,7 @@ export function TableHeader({ titles }) {
         <thead>
           <tr>
             {titles.map((title, index) => (
-              <th
-                key={title + index.toString()}
-                className={pageStyles.tableTitle}
-                style={{ backgroundColor: theme.tableHeader, color: theme.textColor }}
-              >
+              <th key={title + index.toString()} className={`${pageStyles.tableTitle} ${pageStyles[theme]}`}>
                 {title}
               </th>
             ))}

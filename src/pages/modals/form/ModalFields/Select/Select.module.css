@@ -1,0 +1,30 @@
+.select{
+    box-sizing: border-box;
+    width: 17.5rem;
+    height: 2rem;
+    border-radius: 4px;
+    padding: 0 0.5rem;
+    border: 1px solid;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 0.9rem;
+    line-height: 0.9rem;
+    display: flex;
+    outline: none;
+    align-items: center;
+}
+
+.select.dark{
+    border-color: var(--gray);
+    color: var(--gray);
+    background-color: var(--darkGray);
+}
+.select.light{
+    border-color: var(--borderLight);
+    color: var(--black);
+    background-color: var(--gray);
+}
+
+.placeholder {
+    opacity: 0.6;
+}

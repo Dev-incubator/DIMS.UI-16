@@ -1,53 +1,58 @@
-import { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import { useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { PageHeader } from '../helpers/PageHeader';
 import { TableHeader } from '../helpers/TableHeader';
 import styles from './Tasks.module.css';
 import { TaskRow } from './taskRow/TaskRow';
-import { ALERT_MODES, DELETE_VALUES, MODAL_MODES, PAGE_TITLES } from '../../scripts/libraries';
-import { DeleteModal } from '../modals/deleteModal/DeleteModal';
-import { TaskModal } from '../modals/taskModals/taskModal/TaskModal';
+import { ALERT_MODES, DELETE_VALUES, MODAL_MODES, PAGE_TITLES } from '../../constants/libraries';
+import DeleteModal from '../modals/deleteModal/DeleteModal';
+import TaskModal from '../modals/taskModals/taskModal/TaskModal';
+import { withModal } from '../../HOCs/withModal';
 import { ThemeContext } from '../../providers/ThemeProvider';
-import { Loading } from '../loading/Loading';
-import { getUsersThunk } from '../../redux/usersThunk/userThunks';
-import { CustomAlert } from '../../components/Alert/Alert';
+import { getUsersThunk } from '../../redux/usersThunk/usersThunk';
 import { addTaskThunk, getTasksThunk, removeTaskThunk, updateTaskThunk } from '../../redux/tasksThunk/tasksThunk';
+import { Loading } from '../loading/Loading';
+import { CustomAlert } from '../../components/Alert/Alert';
 
 const tableTitles = ['#', 'Task name', 'Description', 'Start date', 'Deadline', 'Action'];
 
-function Tasks({ addTask, getTasks, getUsers, updateTask, removeTask, users, tasks, isFetching, error }) {
-  const [modalValues, setModalValues] = useState({ mode: null, actionId: null });
-
+function Tasks({
+  mode,
+  actionId,
+  openModal,
+  closeModal,
+  tasks,
+  users,
+  isFetching,
+  error,
+  addTask,
+  removeTask,
+  updateTask,
+  getTasks,
+  getUsers,
+}) {
   useEffect(() => {
     getTasks();
     getUsers();
   }, []);
 
-  const updateTaskHandler = (updatedTask) => {
-    updateTask(modalValues.actionId, updatedTask);
-    disableModalMode();
+  const updateTaskHandler = (data) => {
+    updateTask(actionId, data);
+    closeModal();
   };
 
   const addTaskHandler = (task) => {
     addTask(task);
-    disableModalMode();
+    closeModal();
   };
 
   const removeTaskHandler = () => {
-    removeTask(modalValues.actionId);
-    disableModalMode();
+    removeTask(actionId);
+    closeModal();
   };
-
-  const setModalMode = (mode, actionId = null) => {
-    setModalValues({ mode, actionId });
-  };
-
-  const disableModalMode = () => {
-    setModalValues({ mode: null, actionId: null });
-  };
-
-  const actionTask = tasks.find((task) => task.id === modalValues.actionId);
+  const actionTask = tasks.find((task) => task.id === actionId);
 
   return (
     <ThemeContext.Consumer>
@@ -55,19 +60,19 @@ function Tasks({ addTask, getTasks, getUsers, updateTask, removeTask, users, tas
         <div>
           {isFetching && <Loading />}
           <CustomAlert isActive={!!error} variant={ALERT_MODES.fail} text={error} />
-          <PageHeader text={PAGE_TITLES.tasks} onClick={() => setModalMode(MODAL_MODES.create)} />
-          <table className={styles.tasks} style={{ color: theme.textColor }}>
+          <PageHeader text={PAGE_TITLES.tasks} onClick={openModal} />
+          <table className={`${styles.tasks} ${styles[theme]}`}>
             <TableHeader titles={tableTitles} />
             <tbody>
               {tasks.map((task, index) => {
-                const setEditMode = () => {
-                  setModalMode(MODAL_MODES.edit, task.id);
+                const openEditModal = () => {
+                  openModal(MODAL_MODES.edit, task.id);
                 };
-                const setReadMode = () => {
-                  setModalMode(MODAL_MODES.read, task.id);
+                const openReadModal = () => {
+                  openModal(MODAL_MODES.read, task.id);
                 };
-                const setDeleteMode = () => {
-                  setModalMode(MODAL_MODES.delete, task.id);
+                const openDeleteModal = () => {
+                  openModal(MODAL_MODES.delete, task.id);
                 };
 
                 return (
@@ -79,29 +84,27 @@ function Tasks({ addTask, getTasks, getUsers, updateTask, removeTask, users, tas
                     deadline={task.deadline}
                     startDate={task.startDate}
                     number={index + 1}
-                    setEditMode={setEditMode}
-                    setDeleteMode={setDeleteMode}
-                    setReadMode={setReadMode}
+                    openEditModal={openEditModal}
+                    openDeleteModal={openDeleteModal}
+                    openReadModal={openReadModal}
                   />
                 );
               })}
             </tbody>
           </table>
-          <TaskModal
-            users={users}
-            addTask={addTaskHandler}
-            task={actionTask}
-            readOnly={modalValues.mode === MODAL_MODES.read}
-            updateTask={updateTaskHandler}
-            disableModalMode={disableModalMode}
-            active={!!modalValues.mode && modalValues.mode !== MODAL_MODES.delete}
-          />
-          <DeleteModal
-            active={modalValues.mode === MODAL_MODES.delete}
-            removeHandler={removeTaskHandler}
-            cancelHandler={disableModalMode}
-            target={DELETE_VALUES.task}
-          />
+          {mode && mode !== MODAL_MODES.delete ? (
+            <TaskModal
+              users={users}
+              addTask={addTaskHandler}
+              task={actionTask}
+              readOnly={mode === MODAL_MODES.read}
+              updateTask={updateTaskHandler}
+              onClose={closeModal}
+            />
+          ) : null}
+          {mode === MODAL_MODES.delete && (
+            <DeleteModal onRemove={removeTaskHandler} onClose={closeModal} target={DELETE_VALUES.task} />
+          )}
         </div>
       )}
     </ThemeContext.Consumer>
@@ -112,19 +115,22 @@ function mapStateToProps(state) {
   return {
     users: state.users,
     tasks: state.tasks,
-    isFetching: state.fetch.isFetching,
-    error: state.fetch.error,
+    isFetching: state.tasksLoader,
+    error: state.tasksError,
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  return {
-    getUsers: () => dispatch(getUsersThunk()),
-    getTasks: () => dispatch(getTasksThunk()),
-    updateTask: (id, updatedTask) => dispatch(updateTaskThunk(id, updatedTask)),
-    removeTask: (id) => dispatch(removeTaskThunk(id)),
-    addTask: (task) => dispatch(addTaskThunk(task)),
-  };
+  return bindActionCreators(
+    {
+      getUsers: getUsersThunk,
+      getTasks: getTasksThunk,
+      updateTask: updateTaskThunk,
+      removeTask: removeTaskThunk,
+      addTask: addTaskThunk,
+    },
+    dispatch,
+  );
 }
 
 Tasks.propTypes = {
@@ -155,6 +161,10 @@ Tasks.propTypes = {
       startDate: PropTypes.string,
     }),
   ).isRequired,
+  mode: PropTypes.string.isRequired,
+  actionId: PropTypes.string.isRequired,
+  closeModal: PropTypes.func.isRequired,
+  openModal: PropTypes.func.isRequired,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Tasks);
+export default connect(mapStateToProps, mapDispatchToProps)(withModal(Tasks));

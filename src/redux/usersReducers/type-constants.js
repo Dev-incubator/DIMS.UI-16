@@ -1,0 +1,8 @@
+export const GET_USERS = 'GET-USERS';
+export const REMOVE_USER = 'REMOVE-USER';
+export const ADD_USER = 'ADD-USER';
+export const UPDATE_USER = 'UPDATE-USER';
+export const ENABLE_USERS_LOADER = 'ENABLE-USERS-LOADER';
+export const DISABLE_USERS_LOADER = 'DISABLE-USERS-LOADER';
+export const SET_USERS_ERROR = 'SET-ERROR';
+export const DISABLE_USERS_ERROR = 'DISABLE-ERROR';

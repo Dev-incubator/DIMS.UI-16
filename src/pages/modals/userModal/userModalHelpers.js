@@ -1,8 +1,8 @@
-import { changeDateFormat, getAge, isObjectFieldsEmpty } from '../../../scripts/helpers';
+import { getAge, isObjectFieldsEmpty, isPasswordValid } from '../../../scripts/helpers';
 import { emailRegular, phoneRegular } from '../../../scripts/regulars';
-import { MODAL_VALUES, USER_MODAL_TITLES } from '../../../scripts/libraries';
+import { MODAL_VALUES, USER_TITLES } from '../../../constants/libraries';
 
-const formFields = {
+const fields = {
   name: '',
   surname: '',
   email: '',
@@ -21,64 +21,69 @@ const formFields = {
   mathScore: '',
 };
 
-export const initStartUserModalState = {
-  ...formFields,
-  modalTitle: '',
+export const userModalState = {
+  ...fields,
+  title: '',
   readOnly: false,
-  formErrors: {
-    ...formFields,
+  errors: {
+    ...fields,
   },
 };
 
 export const getUserModalErrors = (state) => {
   const { email, password, confirmPassword, birthDate, phone } = state;
-  const formErrors = { ...formFields };
-  const keys = Object.keys(formErrors);
+  const errors = { ...fields };
+  const keys = Object.keys(errors);
   keys.forEach((key) => {
     if (!state[key].trim()) {
-      formErrors[key] = `${MODAL_VALUES[key]} is required`;
+      errors[key] = `${MODAL_VALUES[key]} is required`;
     }
   });
 
   if (!emailRegular.test(email)) {
-    formErrors.email = 'Email is incorrect';
+    errors.email = 'Email is incorrect';
   }
-  if (password.length < 8 || password.length > 24) {
-    formErrors.password = 'Password should contains 8-24 symbols';
+  if (!isPasswordValid(password)) {
+    errors.password = 'Password should contains 8-24 symbols';
   } else if (password !== confirmPassword) {
-    formErrors.confirmPassword = 'Passwords are not equal';
+    errors.confirmPassword = 'Passwords are not equal';
   }
   if (!phoneRegular.test(phone)) {
-    formErrors.phone = 'Mobile phone is incorrect';
+    errors.phone = 'Mobile phone is incorrect';
   }
   if (birthDate) {
-    const age = getAge(changeDateFormat(birthDate));
+    const age = getAge(birthDate);
     if (age < 18) {
-      formErrors.birthDate = 'User age is lower than 18';
+      errors.birthDate = 'User age is lower than 18';
     }
   }
 
-  if (!isObjectFieldsEmpty(formErrors)) {
-    return formErrors;
+  if (!isObjectFieldsEmpty(errors)) {
+    return errors;
   }
 
-  return false;
+  return null;
 };
 
-export const getReadUserModalState = (user) => {
-  return { ...initStartUserModalState, ...user, modalTitle: USER_MODAL_TITLES.read, readOnly: true };
+const getModalTitle = (user, readOnly) => {
+  if (readOnly && user) {
+    return USER_TITLES.read;
+  }
+  if (user) {
+    return USER_TITLES.edit;
+  }
+
+  return USER_TITLES.read;
 };
 
-export const getEditUserModalState = (user) => {
-  return { ...initStartUserModalState, ...user, modalTitle: USER_MODAL_TITLES.edit, readOnly: false };
-};
+export const getUserModalState = (user = null, readOnly = false) => {
+  const title = getModalTitle(user, readOnly);
 
-export const getCreateUserModalState = () => {
-  return { ...initStartUserModalState, modalTitle: USER_MODAL_TITLES.create, readOnly: false };
+  return { ...userModalState, ...user, title, readOnly };
 };
 
 export const getModalUserData = (state) => {
-  const keys = Object.keys(formFields);
+  const keys = Object.keys(fields);
   const data = {};
   keys.forEach((key) => {
     data[key] = state[key].trim();

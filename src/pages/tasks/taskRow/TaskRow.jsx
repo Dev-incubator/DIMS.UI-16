@@ -1,17 +1,26 @@
 import PropTypes from 'prop-types';
 import styles from '../Tasks.module.css';
-import { Button } from '../../../components/Buttons/Button/Button';
-import { BUTTON_COLORS, BUTTON_VALUES } from '../../../scripts/libraries';
+import Button from '../../../components/Buttons/Button/Button';
 import { ThemeContext } from '../../../providers/ThemeProvider';
+import { BUTTON_COLORS, BUTTON_VALUES } from '../../../constants/libraries';
 
-export function TaskRow({ number, title, description, startDate, deadline, setEditMode, setReadMode, setDeleteMode }) {
+export function TaskRow({
+  number,
+  title,
+  description,
+  startDate,
+  deadline,
+  openEditModal,
+  openReadModal,
+  openDeleteModal,
+}) {
   return (
     <ThemeContext.Consumer>
       {({ theme }) => (
         <tr>
           <td>{number}</td>
           <td>
-            <button type='button' className={styles.taskTitle} onClick={setReadMode} style={{ color: theme.primary }}>
+            <button type='button' className={`${styles.taskTitle} ${styles[theme]}`} onClick={openReadModal}>
               {title}
             </button>
           </td>
@@ -20,10 +29,10 @@ export function TaskRow({ number, title, description, startDate, deadline, setEd
           <td>{deadline}</td>
           <td>
             <div className={styles.buttonGroup}>
-              <Button color={BUTTON_COLORS.orange} onClick={setEditMode}>
+              <Button color={BUTTON_COLORS.orange} onClick={openEditModal}>
                 {BUTTON_VALUES.edit}
               </Button>
-              <Button color={BUTTON_COLORS.red} onClick={setDeleteMode}>
+              <Button color={BUTTON_COLORS.red} onClick={openDeleteModal}>
                 {BUTTON_VALUES.delete}
               </Button>
             </div>
@@ -40,7 +49,7 @@ TaskRow.propTypes = {
   description: PropTypes.string.isRequired,
   startDate: PropTypes.string.isRequired,
   deadline: PropTypes.string.isRequired,
-  setEditMode: PropTypes.func.isRequired,
-  setReadMode: PropTypes.func.isRequired,
-  setDeleteMode: PropTypes.func.isRequired,
+  openEditModal: PropTypes.func.isRequired,
+  openReadModal: PropTypes.func.isRequired,
+  openDeleteModal: PropTypes.func.isRequired,
 };

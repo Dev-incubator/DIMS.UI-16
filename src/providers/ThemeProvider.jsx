@@ -1,51 +1,24 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
-export const themes = {
-  light: {
-    borderColor: 'var(--borderLight)',
-    backgroundColor: 'var(--bgLight)',
-    headerColor: 'var(--blue)',
-    tableHeader: 'var(--gray)',
-    textColor: 'var(--black)',
-    primary: 'var(--blue)',
-    warning: 'var(--orange)',
-    success: 'var(--green)',
-    secondary: 'var(--secondary)',
-    error: 'var(--red)',
-  },
-  dark: {
-    borderColor: 'var(--gray)',
-    backgroundColor: 'var(--bgDark)',
-    headerColor: 'var(--borderDark)',
-    tableHeader: 'var(--darkGray)',
-    textColor: 'var(--gray)',
-    primary: 'var(--darkBlue)',
-    warning: 'var(--darkOrange)',
-    success: 'var(--darkGreen)',
-    secondary: 'var(--secondary)',
-    error: 'var(--darkRed)',
-  },
-};
-
 export const ThemeContext = React.createContext({
-  theme: themes.dark,
-  changeTheme: () => {},
+  theme: 'dark',
+  toggleTheme: () => {},
 });
 
 export class ThemeProvider extends PureComponent {
   constructor(props) {
     super(props);
-    this.toggleTheme = (value) => {
-      localStorage.setItem('theme', value);
+    this.toggleTheme = (theme) => {
+      localStorage.setItem('theme', theme);
       this.setState((prevState) => ({
-        themeContext: { ...prevState.themeContext, theme: themes[value] },
+        themeContext: { ...prevState.themeContext, theme },
       }));
     };
 
     this.state = {
       themeContext: {
-        theme: themes.light,
+        theme: 'dark',
         toggleTheme: this.toggleTheme,
       },
     };
@@ -59,7 +32,7 @@ export class ThemeProvider extends PureComponent {
     const theme = localStorage.getItem('theme');
     if (theme) {
       this.setState((prevState) => ({
-        themeContext: { ...prevState.themeContext, theme: themes[theme] },
+        themeContext: { ...prevState.themeContext, theme },
       }));
     }
   };

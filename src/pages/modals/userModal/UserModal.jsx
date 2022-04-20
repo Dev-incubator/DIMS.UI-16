@@ -1,71 +1,35 @@
 import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { deepEqual } from '../../../scripts/helpers';
 import { Modal } from '../../../components/Modal/Modal';
 import styles from './UserModal.module.css';
-import { FormField } from '../form/formField/FormField';
-import {
-  BUTTON_COLORS,
-  INPUT_NAMES,
-  INPUT_TYPES,
-  MODAL_VALUES,
-  USER_MODAL_TITLES,
-  USER_ROLES,
-} from '../../../scripts/libraries';
-import {
-  getCreateUserModalState,
-  getEditUserModalState,
-  getModalUserData,
-  getReadUserModalState,
-  getUserModalErrors,
-  initStartUserModalState,
-} from './userModalHelpers';
+import { BUTTON_COLORS, INPUT_NAMES, INPUT_TYPES, MODAL_VALUES, USER_TITLES } from '../../../constants/libraries';
+import { getModalUserData, getUserModalErrors, getUserModalState, userModalState } from './userModalHelpers';
 import { FormSubmit } from '../form/formSubmit/FormSubmit';
+import { withModalFade } from '../../../HOCs/withModalFade';
+import { Input } from '../form/ModalFields/Input/Input';
+import { Select } from '../form/ModalFields/Select/Select';
 
-export class UserModal extends PureComponent {
+class UserModal extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = initStartUserModalState;
+    this.state = userModalState;
   }
 
-  componentDidUpdate(prevProps) {
-    const { active } = this.props;
-    if (!deepEqual(prevProps, this.props) && active) {
-      const { user, readOnly } = this.props;
-      if (readOnly && user) {
-        this.setReadData();
-      } else if (user) {
-        this.setEditData();
-      } else {
-        this.setCreateData();
-      }
-    }
+  componentDidMount() {
+    const { user, readOnly } = this.props;
+    const data = getUserModalState(user, readOnly);
+    this.setState(data);
   }
-
-  setReadData = () => {
-    const { user } = this.props;
-    const data = getReadUserModalState(user);
-    this.setState(data);
-  };
-
-  setEditData = () => {
-    const { user } = this.props;
-    const data = getEditUserModalState(user);
-    this.setState(data);
-  };
-
-  setCreateData = () => {
-    const data = getCreateUserModalState();
-    this.setState(data);
-  };
 
   submitUser = () => {
     const { user, createUser, updateUser } = this.props;
-    const formErrors = getUserModalErrors(this.state);
-    if (formErrors) {
-      this.setState({ formErrors });
+    const errors = getUserModalErrors(this.state);
+    if (errors) {
+      this.setState({ errors });
     } else {
       const submitUser = getModalUserData(this.state);
+      const { setFade } = this.props;
+      setFade();
       if (user) {
         updateUser(submitUser);
       } else {
@@ -80,13 +44,13 @@ export class UserModal extends PureComponent {
   };
 
   resetFieldError = (name) => {
-    this.setState((prevState) => ({ ...prevState, formErrors: { ...prevState.formErrors, [name]: '' } }));
+    this.setState((prevState) => ({ ...prevState, errors: { ...prevState.errors, [name]: '' } }));
   };
 
   render() {
-    const { disableModalMode, active, user } = this.props;
+    const { onClose, active, user } = this.props;
     const {
-      modalTitle,
+      title,
       name,
       surname,
       email,
@@ -103,159 +67,183 @@ export class UserModal extends PureComponent {
       education,
       averageScore,
       mathScore,
-      formErrors,
+      errors,
       readOnly,
     } = this.state;
 
     return (
-      <Modal disableModalMode={disableModalMode} active={active}>
-        <div className={styles.title}>{modalTitle}</div>
+      <Modal onClose={onClose} active={active}>
+        <div className={styles.title}>{title}</div>
         <div className={styles.form}>
-          <FormField
-            inputValue={name}
+          <Input
+            value={name}
             onChange={this.onChangeInputValue}
-            inputName={INPUT_NAMES.name}
-            error={formErrors.name}
+            fieldName={INPUT_NAMES.name}
+            error={errors.name}
             readOnly={readOnly}
-            fieldName={MODAL_VALUES.name}
-            stylingType={INPUT_TYPES.text}
+            title={MODAL_VALUES.name}
+            type={INPUT_TYPES.text}
+            placeholder={MODAL_VALUES.name}
           />
-          <FormField
-            inputValue={surname}
+          <Input
+            value={surname}
             onChange={this.onChangeInputValue}
-            inputName={INPUT_NAMES.surname}
-            error={formErrors.surname}
+            fieldName={INPUT_NAMES.surname}
+            error={errors.surname}
             readOnly={readOnly}
-            fieldName={MODAL_VALUES.surname}
+            title={MODAL_VALUES.surname}
+            type={INPUT_TYPES.text}
+            placeholder={MODAL_VALUES.surname}
           />
-          <FormField
-            inputValue={email}
+          <Input
+            value={email}
             onChange={this.onChangeInputValue}
-            inputName={INPUT_NAMES.email}
-            error={formErrors.email}
+            fieldName={INPUT_NAMES.email}
+            error={errors.email}
             readOnly={!!user}
-            fieldName={MODAL_VALUES.email}
+            title={MODAL_VALUES.email}
+            type={INPUT_TYPES.text}
+            placeholder={MODAL_VALUES.email}
           />
-          <FormField
-            inputValue={direction}
+          <Select
+            value={direction}
             onChange={this.onChangeInputValue}
-            inputName={INPUT_NAMES.direction}
-            error={formErrors.direction}
+            fieldName={INPUT_NAMES.direction}
+            error={errors.direction}
             readOnly={readOnly}
-            selectValues={['Java', '.Net', 'Frontend', 'Data Science']}
-            fieldName={MODAL_VALUES.direction}
+            title={MODAL_VALUES.direction}
+            items={['Java', '.Net', 'Frontend', 'Data Science']}
+            defaultValue={MODAL_VALUES.direction}
           />
-          <FormField
-            inputValue={sex}
+          <Select
+            value={sex}
             onChange={this.onChangeInputValue}
-            inputName={INPUT_NAMES.sex}
-            error={formErrors.sex}
+            defaultValue={MODAL_VALUES.sex}
+            fieldName={INPUT_NAMES.sex}
+            title={MODAL_VALUES.sex}
+            items={['Male', 'Female', 'Undefined']}
             readOnly={readOnly}
-            selectValues={['Male', 'Female', 'Undefined']}
-            fieldName={MODAL_VALUES.sex}
+            error={errors.sex}
           />
-          <FormField
-            inputValue={role}
+          <Select
+            value={role}
             onChange={this.onChangeInputValue}
-            inputName={INPUT_NAMES.role}
-            error={formErrors.role}
+            defaultValue={MODAL_VALUES.role}
+            fieldName={INPUT_NAMES.role}
+            title={MODAL_VALUES.role}
+            items={['Admin', 'Mentor', 'User']}
             readOnly={readOnly}
-            selectValues={[USER_ROLES.admin, USER_ROLES.mentor, USER_ROLES.user]}
-            fieldName={MODAL_VALUES.role}
+            error={errors.role}
           />
           {!user && (
             <div>
-              <FormField
-                inputValue={password}
+              <Input
+                value={password}
                 onChange={this.onChangeInputValue}
-                inputName={INPUT_NAMES.password}
-                error={formErrors.password}
+                fieldName={INPUT_NAMES.password}
+                error={errors.password}
                 readOnly={readOnly}
-                stylingType={INPUT_TYPES.password}
-                fieldName={MODAL_VALUES.password}
+                title={MODAL_VALUES.password}
+                type={INPUT_TYPES.password}
+                placeholder={MODAL_VALUES.password}
               />
-              <FormField
-                inputValue={confirmPassword}
+              <Input
+                value={confirmPassword}
                 onChange={this.onChangeInputValue}
-                inputName={INPUT_NAMES.confirmPassword}
-                error={formErrors.confirmPassword}
+                fieldName={INPUT_NAMES.confirmPassword}
+                error={errors.confirmPassword}
                 readOnly={readOnly}
-                stylingType={INPUT_TYPES.password}
-                fieldName={MODAL_VALUES.confirmPassword}
+                title={MODAL_VALUES.confirmPassword}
+                type={INPUT_TYPES.password}
+                placeholder={MODAL_VALUES.confirmPassword}
               />
             </div>
           )}
-          <FormField
-            inputValue={birthDate}
+          <Input
+            value={birthDate}
             onChange={this.onChangeInputValue}
-            inputName={INPUT_NAMES.birthDate}
-            error={formErrors.birthDate}
-            stylingType={INPUT_TYPES.date}
+            fieldName={INPUT_NAMES.birthDate}
+            error={errors.birthDate}
             readOnly={readOnly}
-            fieldName={MODAL_VALUES.birthDate}
+            title={MODAL_VALUES.birthDate}
+            type={INPUT_TYPES.date}
+            placeholder={MODAL_VALUES.birthDate}
           />
-          <FormField
-            inputValue={address}
+          <Input
+            value={address}
             onChange={this.onChangeInputValue}
-            inputName={INPUT_NAMES.address}
-            error={formErrors.address}
+            fieldName={INPUT_NAMES.address}
+            error={errors.address}
             readOnly={readOnly}
-            fieldName={MODAL_VALUES.address}
+            title={MODAL_VALUES.address}
+            type={INPUT_TYPES.text}
+            placeholder={MODAL_VALUES.address}
           />
-          <FormField
-            inputValue={phone}
+          <Input
+            value={phone}
             onChange={this.onChangeInputValue}
-            inputName={INPUT_NAMES.phone}
-            error={formErrors.phone}
+            fieldName={INPUT_NAMES.phone}
+            error={errors.phone}
             readOnly={readOnly}
-            fieldName={MODAL_VALUES.phone}
+            title={MODAL_VALUES.phone}
+            type={INPUT_TYPES.text}
+            placeholder={MODAL_VALUES.phone}
           />
-          <FormField
-            inputValue={skype}
+          <Input
+            value={skype}
             onChange={this.onChangeInputValue}
-            inputName={INPUT_NAMES.skype}
-            error={formErrors.skype}
+            fieldName={INPUT_NAMES.skype}
+            error={errors.skype}
             readOnly={readOnly}
-            fieldName={MODAL_VALUES.skype}
+            title={MODAL_VALUES.skype}
+            type={INPUT_TYPES.text}
+            placeholder={MODAL_VALUES.skype}
           />
-          <FormField
-            inputValue={startDate}
+          <Input
+            value={startDate}
             onChange={this.onChangeInputValue}
-            inputName={INPUT_NAMES.startDate}
-            error={formErrors.startDate}
-            stylingType={INPUT_TYPES.date}
+            fieldName={INPUT_NAMES.startDate}
+            error={errors.startDate}
             readOnly={readOnly}
-            fieldName={MODAL_VALUES.startDate}
+            title={MODAL_VALUES.startDate}
+            type={INPUT_TYPES.date}
+            placeholder={MODAL_VALUES.startDate}
           />
-          <FormField
-            inputValue={education}
+          <Input
+            value={education}
             onChange={this.onChangeInputValue}
-            inputName={INPUT_NAMES.education}
-            error={formErrors.education}
+            fieldName={INPUT_NAMES.education}
+            error={errors.education}
             readOnly={readOnly}
-            fieldName={MODAL_VALUES.education}
+            title={MODAL_VALUES.education}
+            type={INPUT_TYPES.text}
+            placeholder={MODAL_VALUES.education}
           />
-          <FormField
-            inputValue={averageScore}
+          <Input
+            value={averageScore}
             onChange={this.onChangeInputValue}
-            inputName={INPUT_NAMES.averageScore}
-            error={formErrors.averageScore}
+            fieldName={INPUT_NAMES.averageScore}
+            error={errors.averageScore}
             readOnly={readOnly}
-            fieldName={MODAL_VALUES.averageScore}
+            title={MODAL_VALUES.averageScore}
+            type={INPUT_TYPES.text}
+            placeholder={MODAL_VALUES.averageScore}
           />
-          <FormField
-            inputValue={mathScore}
+          <Input
+            value={mathScore}
             onChange={this.onChangeInputValue}
-            inputName={INPUT_NAMES.mathScore}
-            error={formErrors.mathScore}
+            fieldName={INPUT_NAMES.mathScore}
+            error={errors.mathScore}
             readOnly={readOnly}
-            fieldName={MODAL_VALUES.mathScore}
+            title={MODAL_VALUES.mathScore}
+            type={INPUT_TYPES.text}
+            placeholder={MODAL_VALUES.mathScore}
           />
         </div>
         <FormSubmit
-          disableModalMode={disableModalMode}
+          onClose={onClose}
           onSubmit={this.submitUser}
-          submitButtonColor={modalTitle === USER_MODAL_TITLES.edit ? BUTTON_COLORS.green : BUTTON_COLORS.blue}
+          submitButtonColor={title === USER_TITLES.edit ? BUTTON_COLORS.green : BUTTON_COLORS.blue}
           readOnly={readOnly}
         />
       </Modal>
@@ -265,7 +253,8 @@ export class UserModal extends PureComponent {
 
 UserModal.propTypes = {
   active: PropTypes.bool.isRequired,
-  disableModalMode: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
+  setFade: PropTypes.func.isRequired,
   readOnly: PropTypes.bool.isRequired,
   createUser: PropTypes.func.isRequired,
   user: PropTypes.objectOf(PropTypes.string),
@@ -275,3 +264,5 @@ UserModal.propTypes = {
 UserModal.defaultProps = {
   user: null,
 };
+
+export default withModalFade(UserModal);

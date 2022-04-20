@@ -1,3 +1,11 @@
+.tracks.dark {
+    color: var(--gray);
+}
+
+.tracks.light {
+    color: var(--black);
+}
+
 .tracks td {
     height: 3.6rem;
 }

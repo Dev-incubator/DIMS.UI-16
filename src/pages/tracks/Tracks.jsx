@@ -4,19 +4,27 @@ import styles from './Tracks.module.css';
 import { TableHeader } from '../helpers/TableHeader';
 import { TrackRow } from './trackRow/TrackRow';
 import { addTrack, deleteTrack, getTaskById, getTaskTrack, updateTrack } from '../../scripts/api-service';
-import { DeleteModal } from '../modals/deleteModal/DeleteModal';
+import DeleteModal from '../modals/deleteModal/DeleteModal';
 import { deepEqual } from '../../scripts/helpers';
 import { PageHeader } from '../helpers/PageHeader';
-import { DELETE_VALUES, MODAL_MODES } from '../../scripts/libraries';
-import { TrackModal } from '../modals/trackModals/TrackModal';
+import { ALERT_MODES, DELETE_VALUES, MODAL_MODES, PAGE_TITLES } from '../../constants/libraries';
+import TrackModal from '../modals/trackModals/TrackModal';
+import { withModal } from '../../HOCs/withModal';
 import { ThemeContext } from '../../providers/ThemeProvider';
 import { Loading } from '../loading/Loading';
-import { addTrackAC, removeTrackAC, setTracksAC, tracksReducer, updateTrackAC } from './tracksReducer/tracksReducer';
+import {
+  addTrackAction,
+  removeTrackAction,
+  setTracksAction,
+  tracksReducer,
+  updateTrackAction,
+} from './tracksReducer/tracksReducer';
+import { CustomAlert } from '../../components/Alert/Alert';
 
 const tableTitles = ['#', 'Task', 'Note', 'Date', 'Action'];
 
-export function Tracks({ match }) {
-  const [modalValues, setModalValues] = useState({ mode: null, actionId: null });
+function Tracks({ match, mode, actionId, openModal, closeModal }) {
+  const [error, setError] = useState('');
   const [taskName, setTaskName] = useState('');
   const [tracks, dispatch] = useReducer(tracksReducer, []);
 
@@ -24,50 +32,46 @@ export function Tracks({ match }) {
     const { userId, taskId } = match.params;
     (async function fetchData() {
       const data = await getTaskTrack(userId, taskId);
-      dispatch(setTracksAC(data));
+      dispatch(setTracksAction(data));
       const task = await getTaskById(taskId);
       setTaskName(task.title);
     })();
   }, []);
 
-  const addTrackHandler = (track) => {
+  const addTrackHandler = async (track) => {
     const { userId, taskId } = match.params;
     const newTrack = { ...track, userId, taskId };
-    addTrack(newTrack).then((doc) => {
-      dispatch(addTrackAC(newTrack, doc.id));
-    });
-    disableModalMode();
+    try {
+      const doc = await addTrack(newTrack);
+      dispatch(addTrackAction(newTrack, doc.id));
+    } catch (e) {
+      console.error(e);
+      setError('Something went wrong');
+      setTimeout(() => {
+        setError('');
+      }, 3000);
+    }
+    closeModal();
   };
 
   const updateTrackHandler = async (track) => {
     const { userId, taskId } = match.params;
-    const { actionId } = modalValues;
     const updatedTrack = { ...track, userId, taskId };
     const prevTrack = tracks.find((task) => task.id === actionId);
     if (!deepEqual(prevTrack, { ...updatedTrack, id: actionId })) {
       await updateTrack(actionId, updatedTrack);
-      dispatch(updateTrackAC(updatedTrack, actionId));
+      dispatch(updateTrackAction(updatedTrack, actionId));
     }
-    disableModalMode();
+    closeModal();
   };
 
   const removeTrackHandler = async () => {
-    const { actionId } = modalValues;
     await deleteTrack(actionId);
-    dispatch(removeTrackAC(actionId));
-    disableModalMode();
+    dispatch(removeTrackAction(actionId));
+    closeModal();
   };
 
-  const setModalMode = (mode, actionId = null) => {
-    setModalValues({ mode, actionId });
-  };
-
-  const disableModalMode = () => {
-    setModalValues({ mode: null, actionId: null });
-  };
-
-  const actionTrack = tracks.find((task) => task.id === modalValues.actionId);
-
+  const actionTrack = tracks.find((task) => task.id === actionId);
   if (!taskName) {
     return <Loading />;
   }
@@ -76,48 +80,52 @@ export function Tracks({ match }) {
     <ThemeContext.Consumer>
       {({ theme }) => (
         <div>
-          <PageHeader text={`"${taskName}" tracks`} onClick={() => setModalMode(MODAL_MODES.create)} />
-          <table className={styles.tracks} style={{ color: theme.textColor }}>
+          <CustomAlert isActive={!!error} variant={ALERT_MODES.fail} text={error} />
+          <PageHeader text={PAGE_TITLES.tracks} onClick={openModal} />
+          <table className={`${styles.tracks} ${styles[theme]}`}>
             <TableHeader titles={tableTitles} />
             <tbody>
               {tracks.map((track, index) => {
-                const setEditMode = () => {
-                  setModalMode(MODAL_MODES.edit, track.id);
+                const openEditModal = () => {
+                  openModal(MODAL_MODES.edit, track.id);
                 };
-                const setDeleteMode = () => {
-                  setModalMode(MODAL_MODES.delete, track.id);
+                const openDeleteModal = () => {
+                  openModal(MODAL_MODES.delete, track.id);
                 };
 
                 return (
                   <TrackRow
                     key={track.id}
-                    title={taskName}
+                    title={track.taskTitle}
                     note={track.note}
                     date={track.date}
                     number={index + 1}
                     taskId={track.taskId}
                     userId={track.userId}
-                    setEditMode={setEditMode}
-                    setDeleteMode={setDeleteMode}
+                    openEditModal={openEditModal}
+                    openDeleteModal={openDeleteModal}
                   />
                 );
               })}
             </tbody>
           </table>
-          <TrackModal
-            addTrack={addTrackHandler}
-            updateTrack={updateTrackHandler}
-            disableModalMode={disableModalMode}
-            active={!!modalValues.mode && modalValues.mode !== MODAL_MODES.delete}
-            track={actionTrack}
-            taskName={taskName}
-          />
-          <DeleteModal
-            target={DELETE_VALUES.track}
-            active={modalValues.mode === MODAL_MODES.delete}
-            removeHandler={removeTrackHandler}
-            cancelHandler={disableModalMode}
-          />
+          {mode && mode !== MODAL_MODES.delete ? (
+            <TrackModal
+              addTrack={addTrackHandler}
+              updateTrack={updateTrackHandler}
+              onClose={closeModal}
+              track={actionTrack}
+              taskName={taskName}
+            />
+          ) : null}
+          {mode === MODAL_MODES.delete && (
+            <DeleteModal
+              target={DELETE_VALUES.track}
+              active={mode === MODAL_MODES.delete}
+              onRemove={removeTrackHandler}
+              onClose={closeModal}
+            />
+          )}
         </div>
       )}
     </ThemeContext.Consumer>
@@ -131,4 +139,15 @@ Tracks.propTypes = {
       taskId: PropTypes.string.isRequired,
     }),
   }).isRequired,
+  mode: PropTypes.string,
+  actionId: PropTypes.string,
+  closeModal: PropTypes.func.isRequired,
+  openModal: PropTypes.func.isRequired,
 };
+
+Tracks.defaultProps = {
+  mode: null,
+  actionId: null,
+};
+
+export default withModal(Tracks);

@@ -2,6 +2,8 @@ import PropTypes from 'prop-types';
 import styles from '../taskModal/TaskModal.module.css';
 import { Checkbox } from '../../../../components/Checkbox/Checkbox';
 import { ThemeContext } from '../../../../providers/ThemeProvider';
+import { getFullName } from '../../../../scripts/helpers';
+import { Error } from '../../../../components/Error/Error';
 
 export function TaskModalUsersList({ usersTask, changeUserValue, error, readOnly }) {
   return (
@@ -10,7 +12,7 @@ export function TaskModalUsersList({ usersTask, changeUserValue, error, readOnly
         <div className={styles.usersList}>
           <div className={styles.fieldName}>Members</div>
           <div>
-            <div className={styles.layer} style={{ borderColor: theme.borderColor }}>
+            <div className={`${styles.layer} ${styles[theme]}`}>
               {readOnly
                 ? usersTask.map((user) => (
                     <div key={user.id}>
@@ -27,17 +29,13 @@ export function TaskModalUsersList({ usersTask, changeUserValue, error, readOnly
                         key={user.id}
                         value={user.value}
                         onChange={onChangeHandler}
-                        text={`${user.name} ${user.surname}`}
+                        text={getFullName(user.name, user.surname)}
                         id={user.id}
                       />
                     );
                   })}
             </div>
-            {error && (
-              <div className={styles.errorMessage} style={{ color: theme.error }}>
-                {error}
-              </div>
-            )}
+            {error && <Error message={error} />}
           </div>
         </div>
       )}

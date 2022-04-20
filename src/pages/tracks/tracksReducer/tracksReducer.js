@@ -20,7 +20,7 @@ export function tracksReducer(state, action) {
   }
 }
 
-export const setTracksAC = (tracks) => ({ type: SET_TRACKS, payload: { tracks } });
-export const addTrackAC = (track, id) => ({ type: ADD_TRACK, payload: { track, id } });
-export const updateTrackAC = (track, id) => ({ type: UPDATE_TRACK, payload: { track, id } });
-export const removeTrackAC = (id) => ({ type: REMOVE_TRACK, payload: { id } });
+export const setTracksAction = (tracks) => ({ type: SET_TRACKS, payload: { tracks } });
+export const addTrackAction = (track, id) => ({ type: ADD_TRACK, payload: { track, id } });
+export const updateTrackAction = (track, id) => ({ type: UPDATE_TRACK, payload: { track, id } });
+export const removeTrackAction = (id) => ({ type: REMOVE_TRACK, payload: { id } });

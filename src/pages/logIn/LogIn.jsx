@@ -1,12 +1,14 @@
 import { PureComponent } from 'react';
 import { Button, Form } from 'react-bootstrap';
-import { INPUT_NAMES } from '../../scripts/libraries';
+import PropTypes from 'prop-types';
+import { INPUT_NAMES } from '../../constants/libraries';
 import styles from './LogIn.module.css';
+import { withAuthContext } from '../../HOCs/withAuthContext';
 import { emailRegular } from '../../scripts/regulars';
 import { ThemeContext } from '../../providers/ThemeProvider';
-import { AuthContext } from '../../providers/AuthProvider';
+import { isPasswordValid } from '../../scripts/helpers';
 
-export class LogIn extends PureComponent {
+class LogIn extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -22,10 +24,8 @@ export class LogIn extends PureComponent {
   isFormValid = () => {
     const { email, password } = this.state;
     let formValid = false;
-    if (password.length < 8) {
-      this.setError(INPUT_NAMES.password, 'Password should contains 8 or more symbols');
-    } else if (password.length > 24) {
-      this.setError(INPUT_NAMES.password, 'Password is too long');
+    if (!isPasswordValid(password)) {
+      this.setError(INPUT_NAMES.password, 'Password should contains 8-24 symbols');
     } else {
       formValid = true;
     }
@@ -41,7 +41,7 @@ export class LogIn extends PureComponent {
   submitHandler = async (event) => {
     event.preventDefault();
     event.stopPropagation();
-    const { context } = this;
+    const { context } = this.props;
     const { logIn } = context;
     const { email, password } = this.state;
     if (this.isFormValid()) {
@@ -67,8 +67,8 @@ export class LogIn extends PureComponent {
     return (
       <ThemeContext.Consumer>
         {({ theme }) => (
-          <div className={styles.login} style={{ color: theme.textColor }}>
-            <Form className={styles.form} onSubmit={this.submitHandler} style={{ borderColor: theme.borderColor }}>
+          <div className={`${styles.login} ${styles[theme]}`}>
+            <Form className={`${styles.form} ${styles[theme]}`} onSubmit={this.submitHandler}>
               <div className={styles.title}>Log In</div>
               <Form.Group className='mb-3' controlId='formBasicEmail'>
                 <Form.Label>Email address</Form.Label>
@@ -106,4 +106,11 @@ export class LogIn extends PureComponent {
   }
 }
 
-LogIn.contextType = AuthContext;
+LogIn.propTypes = {
+  history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
+  context: PropTypes.shape({
+    logIn: PropTypes.func,
+  }).isRequired,
+};
+
+export default withAuthContext(LogIn);

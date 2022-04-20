@@ -14,5 +14,5 @@ export const userTaskReducer = (state, action) => {
   }
 };
 
-export const setTasksAC = (tasks) => ({ type: SET_TASKS, payload: { tasks } });
-export const updateTaskStatusAC = (id, value) => ({ type: UPDATE_STATUS, payload: { id, value } });
+export const setTasksAction = (tasks) => ({ type: SET_TASKS, payload: { tasks } });
+export const updateTaskStatusAction = (id, value) => ({ type: UPDATE_STATUS, payload: { id, value } });

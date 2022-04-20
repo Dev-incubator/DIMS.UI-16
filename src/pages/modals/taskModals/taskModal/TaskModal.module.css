@@ -35,6 +35,14 @@
     opacity: 0.9;
 }
 
+.layer.dark{
+    border-color: var(--gray);
+}
+
+.layer.light{
+    border-color: var(--borderLight);
+}
+
 .errorMessage{
     margin-top: 0.2rem;
     font-size: 0.75rem;

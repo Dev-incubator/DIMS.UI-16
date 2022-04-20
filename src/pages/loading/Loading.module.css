@@ -1,7 +1,7 @@
-.loading{
+.loading {
     width: 100vw;
     height: 100vh;
-    background:rgba(0,0,0,0.45);
+    background: rgba(0, 0, 0, 0.45);
     position: fixed;
     z-index: 10;
     top: 0;
