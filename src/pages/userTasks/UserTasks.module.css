@@ -5,6 +5,13 @@
     column-gap: 0.3rem;
 }
 
+.userTasks.dark {
+    color: var(--gray);
+}
+
+.userTasks.light {
+    color: var(--black);
+}
 
 .userTasks td {
     height: 3.6rem;
@@ -40,17 +47,39 @@
 }
 
 .active {
-    color: var(--primary);
+    color: var(--blue);
 }
 
 .fail {
-    color: var(--error);
+    color: var(--red);
 }
 
 .success {
-    color: var(--success);
+    color: var(--green);
 }
 
-.buttonDisabled{
+.buttonDisabled {
     opacity: 0.6;
+}
+
+.header {
+    margin: 2rem auto;
+    display: flex;
+    justify-content: center;
+}
+
+.header.dark {
+    color: var(--gray);
+}
+
+.header.light {
+    color: var(--black);
+}
+
+.link.dark {
+    color: var(--darkBlue);
+}
+
+.link.light {
+    color: var(--blue);
 }

@@ -4,10 +4,12 @@ import { About } from '../pages/about/About';
 import Members from '../pages/members/Members';
 import Tasks from '../pages/tasks/Tasks';
 import { Progress } from '../pages/progress/Progress';
-import { UserTasks } from '../pages/userTasks/UserTasks';
+import UserTasks from '../pages/userTasks/UserTasks';
 import Tracks from '../pages/tracks/Tracks';
 import LogIn from '../pages/logIn/LogIn';
 import { SetPassword } from '../pages/setPassword/SetPassword';
+import { Settings } from '../pages/settings/Settings';
+import { USER_ROLES } from '../constants/libraries';
 
 export function GeneratedRoutes() {
   return (
@@ -17,11 +19,17 @@ export function GeneratedRoutes() {
           <Route path='/about' exact component={About} />
           {user ? (
             <>
-              <Route path='/users' exact component={Members} />
-              <Route path='/tasks' exact component={Tasks} />
-              <Route path='/progress/:id' component={Progress} />
+              {user.role === USER_ROLES.admin || user.role === USER_ROLES.mentor ? (
+                <>
+                  <Route path='/users' exact component={Members} />
+                  <Route path='/tasks' exact component={Tasks} />
+                  <Route path='/progress/:id' component={Progress} />
+                </>
+              ) : (
+                <Route path='/track/:userId/task/:taskId' component={Tracks} />
+              )}
               <Route path='/tasks/:id' component={UserTasks} />
-              <Route path='/track/:userId/task/:taskId' component={Tracks} />
+              <Route path='/settings/:id' component={Settings} />
             </>
           ) : (
             <>

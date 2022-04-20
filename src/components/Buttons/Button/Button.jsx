@@ -1,17 +1,17 @@
 import PropTypes from 'prop-types';
 import noop from '../../../shared/noop';
 import styles from './Button.module.css';
+import { withThemeContext } from '../../../HOCs/withThemeContext';
 
-export const Button = ({ children, onClick, color, readOnly, isBackButton, ...restProps }) => {
-  const style = {
-    backgroundColor: `var(--${color})`,
-  };
+function Button({ children, context, onClick, color, readOnly, isBackButton, ...restProps }) {
+  const { theme } = context;
 
   return (
     <button
       type='button'
-      style={style}
-      className={`${isBackButton ? styles.buttonBack : styles.button} ${readOnly && styles.disabledButton}`}
+      className={`${isBackButton ? styles.buttonBack : styles.button}
+       ${readOnly && styles.disabledButton} 
+      ${styles[color]} ${styles[theme]}`}
       onClick={onClick}
       disabled={readOnly}
       {...restProps}
@@ -19,13 +19,16 @@ export const Button = ({ children, onClick, color, readOnly, isBackButton, ...re
       {children}
     </button>
   );
-};
+}
 
 Button.propTypes = {
   onClick: PropTypes.func,
   children: PropTypes.node,
   color: PropTypes.string,
   readOnly: PropTypes.bool,
+  context: PropTypes.shape({
+    theme: PropTypes.string,
+  }).isRequired,
   isBackButton: PropTypes.bool,
 };
 Button.defaultProps = {
@@ -35,3 +38,5 @@ Button.defaultProps = {
   isBackButton: false,
   readOnly: false,
 };
+
+export default withThemeContext(Button);

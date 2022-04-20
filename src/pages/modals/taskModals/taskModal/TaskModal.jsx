@@ -65,10 +65,10 @@ class TaskModal extends PureComponent {
 
   submitTask = () => {
     const { task, addTask, updateTask } = this.props;
-    const formErrors = getTaskModalErrors(this.state);
+    const errors = getTaskModalErrors(this.state);
 
-    if (formErrors) {
-      this.setState({ formErrors });
+    if (errors) {
+      this.setState({ errors });
     } else {
       const submitTask = getModalTaskData(this.state);
       const { setFade } = this.props;

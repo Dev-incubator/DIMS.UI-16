@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import styles from './FormSubmit.module.css';
-import { Button } from '../../../../components/Buttons/Button/Button';
+import Button from '../../../../components/Buttons/Button/Button';
 import { BUTTON_VALUES } from '../../../../constants/libraries';
 
 export function FormSubmit({ onClose, onSubmit, submitButtonColor, readOnly, submitButtonValue }) {

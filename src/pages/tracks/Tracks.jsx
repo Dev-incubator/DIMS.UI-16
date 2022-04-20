@@ -10,6 +10,8 @@ import { PageHeader } from '../helpers/PageHeader';
 import { DELETE_VALUES, MODAL_MODES, PAGE_TITLES } from '../../constants/libraries';
 import TrackModal from '../modals/trackModals/TrackModal';
 import { withModal } from '../../HOCs/withModal';
+import { ThemeContext } from '../../providers/ThemeProvider';
+import { Loading } from '../loading/Loading';
 
 const tableTitles = ['#', 'Task', 'Note', 'Date', 'Action'];
 
@@ -80,54 +82,62 @@ class Tracks extends PureComponent {
     const { mode, actionId, openModal, closeModal } = this.props;
     const actionTrack = tracks.find((task) => task.id === actionId);
 
-    return (
-      <div>
-        <PageHeader text={PAGE_TITLES.tracks} onClick={openModal} />
-        <table className={styles.tracks}>
-          <TableHeader titles={tableTitles} />
-          <tbody>
-            {tracks.map((track, index) => {
-              const openEditModal = () => {
-                openModal(MODAL_MODES.edit, track.id);
-              };
-              const openDeleteModal = () => {
-                openModal(MODAL_MODES.delete, track.id);
-              };
+    if (!taskName) {
+      return <Loading />;
+    }
 
-              return (
-                <TrackRow
-                  key={track.id}
-                  title={track.taskTitle}
-                  note={track.note}
-                  date={track.date}
-                  number={index + 1}
-                  taskId={track.taskId}
-                  userId={track.userId}
-                  openEditModal={openEditModal}
-                  openDeleteModal={openDeleteModal}
-                />
-              );
-            })}
-          </tbody>
-        </table>
-        {mode && mode !== MODAL_MODES.delete ? (
-          <TrackModal
-            addTrack={this.addTrack}
-            updateTrack={this.updateTrack}
-            onClose={closeModal}
-            track={actionTrack}
-            taskName={taskName}
-          />
-        ) : null}
-        {mode === MODAL_MODES.delete && (
-          <DeleteModal
-            target={DELETE_VALUES.track}
-            active={mode === MODAL_MODES.delete}
-            onRemove={this.removeTrack}
-            onClose={closeModal}
-          />
+    return (
+      <ThemeContext.Consumer>
+        {({ theme }) => (
+          <div>
+            <PageHeader text={PAGE_TITLES.tracks} onClick={openModal} />
+            <table className={`${styles.tracks} ${styles[theme]}`}>
+              <TableHeader titles={tableTitles} />
+              <tbody>
+                {tracks.map((track, index) => {
+                  const openEditModal = () => {
+                    openModal(MODAL_MODES.edit, track.id);
+                  };
+                  const openDeleteModal = () => {
+                    openModal(MODAL_MODES.delete, track.id);
+                  };
+
+                  return (
+                    <TrackRow
+                      key={track.id}
+                      title={track.taskTitle}
+                      note={track.note}
+                      date={track.date}
+                      number={index + 1}
+                      taskId={track.taskId}
+                      userId={track.userId}
+                      openEditModal={openEditModal}
+                      openDeleteModal={openDeleteModal}
+                    />
+                  );
+                })}
+              </tbody>
+            </table>
+            {mode && mode !== MODAL_MODES.delete ? (
+              <TrackModal
+                addTrack={this.addTrack}
+                updateTrack={this.updateTrack}
+                onClose={closeModal}
+                track={actionTrack}
+                taskName={taskName}
+              />
+            ) : null}
+            {mode === MODAL_MODES.delete && (
+              <DeleteModal
+                target={DELETE_VALUES.track}
+                active={mode === MODAL_MODES.delete}
+                onRemove={this.removeTrack}
+                onClose={closeModal}
+              />
+            )}
+          </div>
         )}
-      </div>
+      </ThemeContext.Consumer>
     );
   }
 }

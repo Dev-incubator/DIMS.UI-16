@@ -13,9 +13,27 @@
     font-weight: 500;
 }
 
+.tableTitle.dark {
+    background-color: var(--darkGray);
+    color: var(--gray);
+}
+
+.tableTitle.light {
+    background-color: var(--gray);
+    color: var(--black);
+}
+
 .header {
-    margin: 1rem auto;
+    margin: 1.5rem auto;
     width: 50.6rem;
     display: flex;
     justify-content: space-between;
+}
+
+.header.dark {
+    color: var(--gray);
+}
+
+.header.light {
+    color: var(--black);
 }

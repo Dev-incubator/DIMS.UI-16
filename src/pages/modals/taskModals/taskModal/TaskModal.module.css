@@ -30,13 +30,20 @@
     height: 8rem;
     overflow-y: auto;
     padding: 0.5rem;
-    border: 1px solid var(--borderColor);
+    border: 1px solid;
     border-radius: 5px;
     opacity: 0.9;
 }
 
+.layer.dark{
+    border-color: var(--gray);
+}
+
+.layer.light{
+    border-color: var(--borderLight);
+}
+
 .errorMessage{
     margin-top: 0.2rem;
-    color: var(--error);
     font-size: 0.75rem;
 }

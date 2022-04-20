@@ -1,12 +1,21 @@
 :root {
-    --primary: #0275D8;
-    --warning: #F0AD4E;
-    --error: #D9534F;
+    --blue: #0275D8;
+    --orange: #F0AD4E;
+    --red: #D9534F;
     --secondary: #F2F2F2;
     --gray: #E5E5E5;
-    --success: #28A745;
-    --bgColor: white;
-    --borderColor: #CCCCCC;
+    --green: #28A745;
+    --bgLight: white;
+    --borderLight: #CCCCCC;
+    --bgDark:#393E46;
+    --borderDark: #313131;
+    --darkBlue:#3282B8;
+    --darkRed:#CA3E47;
+    --darkGray: #494949;
+    --darkOrange:#C87941;
+    --darkGreen:#519872;
+    --white:white;
+    --black:black;
 }
 
 html {
@@ -30,7 +39,6 @@ td {
 }
 
 th {
-    background-color: var(--gray);
     box-sizing: border-box;
     border: 1px solid;
 }

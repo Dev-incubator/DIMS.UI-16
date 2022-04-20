@@ -1,25 +1,37 @@
 import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import { PageHeader } from '../helpers/PageHeader';
 import { TableHeader } from '../helpers/TableHeader';
 import styles from './UserTasks.module.css';
 import { UserTaskRow } from './userTaskRow/UserTaskRow';
 import { getTaskById, getUserById, getUserTasksById, updateTask } from '../../scripts/api-service';
-import { Loading } from '../../components/Loading/Loading';
+import { USER_ROLES } from '../../constants/libraries';
+import pageStyles from '../Page.module.css';
+import { ThemeContext } from '../../providers/ThemeProvider';
+import { AuthContext } from '../../providers/AuthProvider';
+import { Loading } from '../loading/Loading';
 
-const tableTitles = ['#', 'Task name', 'Start date', 'Deadline', 'Status', 'Update status'];
+const adminTableTitles = ['#', 'Task name', 'Start date', 'Deadline', 'Status', 'Update status'];
+const userTableTitles = adminTableTitles.slice(0, adminTableTitles.length - 1);
 
-export class UserTasks extends PureComponent {
+class UserTasks extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       tasks: [],
       name: null,
     };
+    this.isComponentMounted = false;
   }
 
   async componentDidMount() {
+    this.isComponentMounted = true;
     await this.updateData();
+  }
+
+  componentWillUnmount() {
+    this.isComponentMounted = false;
   }
 
   updateData = async () => {
@@ -27,7 +39,9 @@ export class UserTasks extends PureComponent {
     const userId = match.params.id;
     const user = await getUserById(userId);
     const tasks = await getUserTasksById(userId);
-    this.setState((prevState) => ({ ...prevState, name: user.name, tasks }));
+    if (this.isComponentMounted) {
+      this.setState((prevState) => ({ ...prevState, name: user.name, tasks }));
+    }
   };
 
   updateTaskStatus = async (taskId, userId, status) => {
@@ -46,27 +60,41 @@ export class UserTasks extends PureComponent {
     }
 
     return (
-      <div>
-        <PageHeader text={`${name}'s current tasks`} isBackButton />
-        <table className={styles.userTasks}>
-          <TableHeader titles={tableTitles} />
-          <tbody>
-            {tasks.map((task, index) => (
-              <UserTaskRow
-                key={task.id}
-                updateTaskStatus={this.updateTaskStatus}
-                userId={task.userId}
-                taskId={task.id}
-                title={task.title}
-                deadline={task.deadline}
-                startDate={task.startDate}
-                number={index + 1}
-                status={task.status}
-              />
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <ThemeContext.Consumer>
+        {({ theme }) => (
+          <AuthContext.Consumer>
+            {({ user: { role } }) => (
+              <div>
+                {role === USER_ROLES.user ? (
+                  <div className={`${styles.header} ${styles[theme]}`}>
+                    <div className={pageStyles.pageTitle}>Hi {name}! There are your current tasks</div>
+                  </div>
+                ) : (
+                  <PageHeader text={`${name}'s current tasks`} isBackButton />
+                )}
+                <table className={`${styles.userTasks} ${styles[theme]}`}>
+                  <TableHeader titles={role === USER_ROLES.user ? userTableTitles : adminTableTitles} />
+                  <tbody>
+                    {tasks.map((task, index) => (
+                      <UserTaskRow
+                        key={task.id}
+                        updateTaskStatus={this.updateTaskStatus}
+                        userId={task.userId}
+                        taskId={task.id}
+                        title={task.title}
+                        deadline={task.deadline}
+                        startDate={task.startDate}
+                        number={index + 1}
+                        status={task.status}
+                      />
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </AuthContext.Consumer>
+        )}
+      </ThemeContext.Consumer>
     );
   }
 }
@@ -74,3 +102,5 @@ export class UserTasks extends PureComponent {
 UserTasks.propTypes = {
   match: PropTypes.shape({ params: PropTypes.shape({ id: PropTypes.string.isRequired }) }).isRequired,
 };
+
+export default withRouter(UserTasks);

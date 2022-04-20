@@ -1,0 +1,43 @@
+.settings {
+    margin: 2rem auto;
+    box-sizing: border-box;
+    width: 51rem;
+    border: 2px solid;
+    border-radius: 0.3rem;
+    padding: 2rem;
+}
+
+.settings.dark {
+    border-color: var(--gray);
+    color: var(--gray);
+}
+
+.settings.light {
+    border-color: var(--borderLight);
+    color: var(--black);
+}
+
+.title {
+    text-align: center;
+    font-size: 1.4rem;
+}
+
+.changePassword {
+    margin-top: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.8rem;
+    align-items: center;
+}
+
+.switchTheme {
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.4rem;
+    align-items: center;
+}
+
+.themeButtons {
+    display: flex;
+    column-gap: 0.3rem;
+}

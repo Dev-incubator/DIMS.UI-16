@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { auth } from '../scripts/firebase-config';
 import { getUserById, login } from '../scripts/api-service';
+import { Loading } from '../pages/loading/Loading';
 
 onAuthStateChanged(auth, (currentUser) => {
   localStorage.setItem('user', JSON.stringify(currentUser));
@@ -61,7 +62,7 @@ class AuthProvider extends PureComponent {
     const { userContext, isAuth } = this.state;
     const { children } = this.props;
     if (!isAuth) {
-      return null;
+      return <Loading />;
     }
 
     return <AuthContext.Provider value={userContext}>{children}</AuthContext.Provider>;

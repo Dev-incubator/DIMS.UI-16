@@ -1,40 +1,45 @@
 import PropTypes from 'prop-types';
 import styles from '../taskModal/TaskModal.module.css';
 import { Checkbox } from '../../../../components/Checkbox/Checkbox';
+import { ThemeContext } from '../../../../providers/ThemeProvider';
 import { getFullName } from '../../../../scripts/helpers';
 import { Error } from '../../../../components/Error/Error';
 
 export function TaskModalUsersList({ usersTask, changeUserValue, error, readOnly }) {
   return (
-    <div className={styles.usersList}>
-      <div className={styles.fieldName}>Members</div>
-      <div>
-        <div className={styles.layer}>
-          {readOnly
-            ? usersTask.map((user) => (
-                <div key={user.id}>
-                  {user.name} {user.surname}
-                </div>
-              ))
-            : usersTask.map((user) => {
-                const onChangeHandler = (event) => {
-                  changeUserValue(user.id, event.currentTarget.checked);
-                };
+    <ThemeContext.Consumer>
+      {({ theme }) => (
+        <div className={styles.usersList}>
+          <div className={styles.fieldName}>Members</div>
+          <div>
+            <div className={`${styles.layer} ${styles[theme]}`}>
+              {readOnly
+                ? usersTask.map((user) => (
+                    <div key={user.id}>
+                      {user.name} {user.surname}
+                    </div>
+                  ))
+                : usersTask.map((user) => {
+                    const onChangeHandler = (event) => {
+                      changeUserValue(user.id, event.currentTarget.checked);
+                    };
 
-                return (
-                  <Checkbox
-                    key={user.id}
-                    value={user.value}
-                    onChange={onChangeHandler}
-                    text={getFullName(user.name, user.surname)}
-                    id={user.id}
-                  />
-                );
-              })}
+                    return (
+                      <Checkbox
+                        key={user.id}
+                        value={user.value}
+                        onChange={onChangeHandler}
+                        text={getFullName(user.name, user.surname)}
+                        id={user.id}
+                      />
+                    );
+                  })}
+            </div>
+            {error && <Error message={error} />}
+          </div>
         </div>
-        {error && <Error message={error} />}
-      </div>
-    </div>
+      )}
+    </ThemeContext.Consumer>
   );
 }
 

@@ -33,12 +33,8 @@ export async function createUser(id, user) {
   }
 }
 
-export async function addTask(task) {
-  try {
-    await addDoc(tasksCollectionRef, task);
-  } catch (error) {
-    console.error(error);
-  }
+export function addTask(task) {
+  return addDoc(tasksCollectionRef, task);
 }
 
 export async function addTrack(track) {
@@ -226,31 +222,28 @@ export async function login(email, password) {
 }
 
 export async function createUserAuth(user) {
-  try {
-    const { email, password } = await getUserById(auth.currentUser.uid);
-    const newUser = await createUserWithEmailAndPassword(auth, user.email, user.password);
-    await login(user.email, user.password);
-    await sendPasswordResetEmail(auth, user.email, {
-      url: `http://localhost/?uid${cryptId(newUser.user.uid)}`,
-    });
-    await signOut(auth);
-    await login(email, password);
-    await createUser(newUser.user.uid, user);
-  } catch (error) {
-    console.error(error.message);
-  }
+  const { email, password } = await getUserById(auth.currentUser.uid);
+  const newUser = await createUserWithEmailAndPassword(auth, user.email, user.password);
+  const newUserId = newUser.user.uid;
+  await login(user.email, user.password);
+  await sendPasswordResetEmail(auth, user.email, {
+    url: `http://localhost/?uid${cryptId(newUserId)}`,
+  });
+  await signOut(auth);
+  await login(email, password);
+  await createUser(newUserId, user);
+
+  return newUserId;
 }
 
-export async function deleteUserAuth(user) {
-  const { email, password, id } = user;
-  try {
-    const currentUser = await getUserById(auth.currentUser.uid);
-    await login(email, password);
-    await deleteUser(auth.currentUser);
-    await signOut(auth);
-    await login(currentUser.email, currentUser.password);
-    await removeUser(id);
-  } catch (error) {
-    console.error(error);
-  }
+export async function deleteUserAuth(id) {
+  const user = await getUserById(id);
+  const { email, password } = user;
+
+  const currentUser = await getUserById(auth.currentUser.uid);
+  await login(email, password);
+  await deleteUser(auth.currentUser);
+  await signOut(auth);
+  await login(currentUser.email, currentUser.password);
+  await removeUser(id);
 }

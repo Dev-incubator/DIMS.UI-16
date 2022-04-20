@@ -6,8 +6,8 @@ import { BUTTON_COLORS, INPUT_NAMES, INPUT_TYPES, MODAL_VALUES, USER_TITLES } fr
 import { getModalUserData, getUserModalErrors, getUserModalState, userModalState } from './userModalHelpers';
 import { FormSubmit } from '../form/formSubmit/FormSubmit';
 import { withModalFade } from '../../../HOCs/withModalFade';
-import { Input } from '../form/ModalFields/Input';
-import { Select } from '../form/ModalFields/Select';
+import { Input } from '../form/ModalFields/Input/Input';
+import { Select } from '../form/ModalFields/Select/Select';
 
 class UserModal extends PureComponent {
   constructor(props) {

@@ -4,6 +4,14 @@
     column-gap: 0.4rem;
 }
 
+.tasks.dark {
+    color: var(--gray);
+}
+
+.tasks.light {
+    color: var(--black);
+}
+
 .tasks td {
     height: 3.6rem;
 }
@@ -48,7 +56,14 @@
     background-color: transparent;
     font-size: 0.93rem;
     text-align: left;
-    color: var(--primary);
+}
+
+.taskTitle.dark {
+    color: var(--darkBlue);
+}
+
+.taskTitle.light {
+    color: var(--blue);
 }
 
 .taskTitle:hover {

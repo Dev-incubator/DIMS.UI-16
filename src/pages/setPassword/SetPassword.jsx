@@ -2,13 +2,13 @@ import { PureComponent } from 'react';
 import { signOut, updatePassword } from 'firebase/auth';
 import PropTypes from 'prop-types';
 import { auth } from '../../scripts/firebase-config';
-import { Loading } from '../../components/Loading/Loading';
 import { getUid, isPasswordValid } from '../../scripts/helpers';
 import { getUserById, login, updateUser } from '../../scripts/api-service';
 import styles from './SetPassword.module.css';
-import { Button } from '../../components/Buttons/Button/Button';
+import Button from '../../components/Buttons/Button/Button';
 import { BUTTON_COLORS, BUTTON_VALUES, INPUT_TYPES } from '../../constants/libraries';
 import { Error } from '../../components/Error/Error';
+import { Loading } from '../loading/Loading';
 
 export class SetPassword extends PureComponent {
   constructor(props) {

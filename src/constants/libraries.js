@@ -1,4 +1,4 @@
-export const COPYRIGHT = '© Dev Incubator';
+export const COPYRIGHT = '© Oleg Yanusik';
 
 export const BUTTON_COLORS = {
   blue: 'primary',
@@ -6,6 +6,27 @@ export const BUTTON_COLORS = {
   red: 'error',
   gray: 'secondary',
   green: 'success',
+};
+
+export const THEMES = {
+  light: 'light',
+  dark: 'dark',
+};
+
+export const ALERT_MODES = {
+  success: 'success',
+  fail: 'danger',
+};
+
+export const FIELD_NAMES = {
+  pastPassword: 'Past password',
+  newPassword: 'New password',
+};
+
+export const USER_ROLES = {
+  user: 'User',
+  admin: 'Admin',
+  mentor: 'Mentor',
 };
 
 export const TASK_STATUS = {
@@ -87,6 +108,7 @@ export const INPUT_NAMES = {
   note: 'note',
   email: 'email',
   password: 'password',
+  newPassword: 'newPassword',
   name: 'name',
   surname: 'surname',
   sex: 'sex',
@@ -116,4 +138,13 @@ export const PAGE_TITLES = {
   tasks: 'Tasks',
   members: 'Members',
   tracks: 'Current task tracks',
+};
+
+export const HEADER_VALUES = {
+  tasks: 'Tasks',
+  logIn: 'Log In',
+  logout: 'Log out',
+  about: 'About',
+  members: 'Members',
+  settings: 'Settings',
 };

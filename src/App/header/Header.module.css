@@ -1,7 +1,6 @@
-.header{
+.header {
     width: 100vw;
     height: 3rem;
-    background-color: var(--primary);
     display: flex;
     column-gap: 2rem;
     z-index: 1;
@@ -9,42 +8,49 @@
     justify-content: center;
 }
 
-.container{
+.header.dark {
+    background-color: var(--borderDark);
+}
+
+.header.light {
+    background-color: var(--blue);
+}
+
+.container {
     width: 52.2rem;
 }
 
-.header a{
+.header a {
     font-size: 1.1rem;
-    color: var(--bgColor);
+    color: var(--bgLight);
 }
 
-.header a:hover{
+.header a:hover {
     transition: 200ms;
-    color: var(--warning);
+    color: var(--orange);
 }
 
-a.active{
-    color: var(--warning);
+a.active {
+    color: var(--orange);
 }
 
-.auth{
+.auth {
     display: flex;
     align-items: center;
     column-gap: 0.8rem;
 }
 
-.userName{
+.userName {
     color: var(--gray);
     font-size: 1rem;
 }
 
-.links{
-    margin-left: 1rem;
+.links {
     display: flex;
     align-items: center;
     column-gap: 1.5rem;
 }
 
-.logIn{
+.logIn {
     margin-left: -4rem;
 }
