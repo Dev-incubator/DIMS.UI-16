@@ -49,6 +49,9 @@ function Header({ context }) {
                 <NavLink to='/about' activeClassName={styles.active}>
                   About
                 </NavLink>
+                <NavLink to='/api' activeClassName={styles.active}>
+                  Test api
+                </NavLink>
               </Nav>
               <Nav>
                 {user ? (

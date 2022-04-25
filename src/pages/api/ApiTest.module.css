@@ -1,0 +1,18 @@
+.content {
+    width: 54rem;
+    margin: 2rem auto;
+}
+
+.buttonGroup {
+    display: flex;
+    column-gap: 0.5rem;
+    justify-content: center;
+}
+
+.result {
+    word-wrap: break-word;
+    margin-top: 1.5rem;
+    border: 1px solid;
+    border-radius: 0.3rem;
+    padding: 1rem;
+}
