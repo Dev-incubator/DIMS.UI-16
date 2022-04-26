@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { getTask, getToken, getUsers, getUserTask, logIn } from './api';
+import { createUser, getTask, getToken, getUsers, getUserTask, logIn } from './api';
 import styles from './ApiTest.module.css';
 import Button from '../../components/Buttons/Button/Button';
 import { BUTTON_COLORS } from '../../constants/libraries';
@@ -41,6 +41,22 @@ const ApiTest = ({ mode, closeModal, openModal, history }) => {
     const task = await getTask(taskId);
     setData(task);
     closeModal();
+  };
+
+  const createUserHandler = async (formData) => {
+    const userData = {
+      ...formData,
+      roles: [formData.roles],
+      mathScore: Number(formData.mathScore),
+      universityAverageScore: Number(formData.universityAverageScore),
+    };
+    const user = await createUser(userData);
+    if (user) {
+      setData(user);
+      closeModal();
+    } else {
+      setError('Something went wrong, is all fields are valid?');
+    }
   };
 
   const clearData = () => {
@@ -92,7 +108,7 @@ const ApiTest = ({ mode, closeModal, openModal, history }) => {
       {mode === MODAL_TYPES.getUserTask && <GetUserTaskModal onClose={closeModal} getUserTask={getUserTaskHandler} />}
       {mode === MODAL_TYPES.login && <LoginModal onClose={leavePage} logIn={logInHandler} error={error} />}
       {mode === MODAL_TYPES.getTask && <GetTaskModal onClose={closeModal} getTask={getTaskHandler} />}
-      {mode === MODAL_TYPES.addUser && <AddUserModal addUser={(d) => console.log(d)} onClose={closeModal} />}
+      {mode === MODAL_TYPES.addUser && <AddUserModal addUser={createUserHandler} onClose={closeModal} error={error} />}
     </div>
   );
 };

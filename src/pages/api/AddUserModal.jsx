@@ -8,6 +8,7 @@ import { BUTTON_COLORS, INPUT_TYPES } from '../../constants/libraries';
 import { getDirections } from './api';
 import { Select } from '../modals/form/ModalFields/Select/Select';
 import { Loading } from '../loading/Loading';
+import { Error } from '../../components/Error/Error';
 
 const fields = {
   firstName: '',
@@ -44,10 +45,10 @@ const getInputType = (fieldName) => {
   return INPUT_TYPES.text;
 };
 
-const AddUserModal = ({ active, onClose, addUser, setFade }) => {
+const AddUserModal = ({ active, onClose, addUser, error }) => {
   const [selectValues, setSelectValues] = useState({
-    sex: ['Male', 'Female'],
-    roles: ['Admin', 'Mentor', 'User'],
+    sex: ['male', 'female'],
+    roles: ['admin', 'mentor', 'user'],
     directionName: [],
   });
   useEffect(() => {
@@ -59,9 +60,7 @@ const AddUserModal = ({ active, onClose, addUser, setFade }) => {
   const [inputValues, setInputValues] = useState({ ...fields });
 
   const onSubmit = () => {
-    console.log(inputValues);
     addUser(inputValues);
-    setFade();
   };
 
   const onInputChange = (name, value) => {
@@ -103,6 +102,7 @@ const AddUserModal = ({ active, onClose, addUser, setFade }) => {
           );
         })}
       </div>
+      {error && <Error message={error} />}
       <FormSubmit
         onClose={onClose}
         onSubmit={onSubmit}
@@ -117,7 +117,7 @@ const AddUserModal = ({ active, onClose, addUser, setFade }) => {
 AddUserModal.propTypes = {
   active: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  setFade: PropTypes.func.isRequired,
+  error: PropTypes.string.isRequired,
   addUser: PropTypes.func.isRequired,
 };
 

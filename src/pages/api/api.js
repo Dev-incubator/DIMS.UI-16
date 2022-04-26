@@ -22,6 +22,18 @@ instance.interceptors.request.use(async (req) => {
   return req;
 });
 
+export const createUser = async (data) => {
+  try {
+    const res = await instance.post('users', data);
+
+    return res.data;
+  } catch (error) {
+    console.error(error);
+
+    return undefined;
+  }
+};
+
 export const getUsers = async () => {
   try {
     const res = await instance.get('users');
@@ -79,7 +91,6 @@ export const getDirections = async () => {
     return res.data.map((item) => item.name);
   } catch (error) {
     console.error(error);
-    console.log('my name');
 
     return undefined;
   }
