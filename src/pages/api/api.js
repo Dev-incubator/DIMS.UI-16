@@ -34,9 +34,21 @@ export const getUsers = async () => {
   }
 };
 
-export const getTask = async (userId, taskId) => {
+export const getUserTask = async (userId, taskId) => {
   try {
     const res = await instance.get(`users/${userId}/user-tasks/${taskId}`);
+
+    return res.data;
+  } catch (error) {
+    console.error(error);
+
+    return undefined;
+  }
+};
+
+export const getTask = async (taskId) => {
+  try {
+    const res = await instance.get(`tasks/${taskId}`);
 
     return res.data;
   } catch (error) {
@@ -55,6 +67,19 @@ export const logIn = async (email, password) => {
     return token;
   } catch (error) {
     console.error(error);
+
+    return undefined;
+  }
+};
+
+export const getDirections = async () => {
+  try {
+    const res = await instance.get('directions');
+
+    return res.data.map((item) => item.name);
+  } catch (error) {
+    console.error(error);
+    console.log('my name');
 
     return undefined;
   }
