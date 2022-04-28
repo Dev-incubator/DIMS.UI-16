@@ -1,6 +1,19 @@
 import { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { createUser, getTask, getToken, getUsers, getUserTask, logIn, removeUser } from './api';
+import {
+  createTask,
+  createUser,
+  getCurrentUserId,
+  getTask,
+  getTasks,
+  getToken,
+  getUser,
+  getUsers,
+  getUserTask,
+  logIn,
+  removeUser,
+  updateTask,
+} from './api';
 import styles from './ApiTest.module.css';
 import Button from '../../components/Buttons/Button/Button';
 import { BUTTON_COLORS } from '../../constants/libraries';
@@ -11,10 +24,11 @@ import LoginModal from './LoginModal';
 import { ErrorToast } from '../../components/Toasts/ErrorToast';
 import { MODAL_TYPES, FIELDS, defaultErrorValue, BUTTON_TITLES, STORAGE_KEYS } from './constants';
 import { ThemeContext } from '../../providers/ThemeProvider';
+import TaskModal from './TaskModal';
 
-const ApiTest = ({ mode, closeModal, openModal, history }) => {
+const ApiTest = ({ mode, closeModal, openModal, history, actionId }) => {
   useEffect(() => {
-    if (!getToken()) {
+    if (!getToken() || !getCurrentUserId()) {
       openModal(MODAL_TYPES.login);
     }
   }, []);
@@ -52,12 +66,32 @@ const ApiTest = ({ mode, closeModal, openModal, history }) => {
   const getTaskHandler = async (values) => {
     const { taskId } = values;
     const task = await getTask(taskId);
-    if (task?.length) {
+    if (task) {
       setData(task);
     } else {
       setToast('Nothing found');
     }
     closeModal();
+  };
+
+  const createTaskHandler = async (taskData) => {
+    const addedTask = await createTask(taskData);
+    if (addedTask) {
+      setData(addedTask);
+      closeModal();
+    } else {
+      setError(defaultErrorValue);
+    }
+  };
+
+  const updateTaskHandler = async (taskData) => {
+    const updatedTask = await updateTask(actionId, taskData);
+    if (updatedTask) {
+      setData(updatedTask);
+      closeModal();
+    } else {
+      setError(defaultErrorValue);
+    }
   };
 
   const createUserHandler = async (formData) => {
@@ -76,9 +110,36 @@ const ApiTest = ({ mode, closeModal, openModal, history }) => {
     }
   };
 
+  const getUserHandler = async (values) => {
+    const { userId } = values;
+    const user = await getUser(userId);
+    if (user) {
+      setData(user);
+    } else {
+      setToast('No such user');
+    }
+    closeModal();
+  };
+
+  const setTaskIdHandler = async (values) => {
+    const { taskId } = values;
+    const task = await getTask(taskId);
+    if (task) {
+      openModal(MODAL_TYPES.updateTask, taskId);
+    } else {
+      setToast('No such task');
+      closeModal();
+    }
+  };
+
+  const getTasksHandler = async () => {
+    const tasks = await getTasks();
+    setData(tasks);
+  };
+
   const removeUserHandler = async (values) => {
     const { userId } = values;
-    if (userId !== localStorage.getItem(STORAGE_KEYS.userId)) {
+    if (userId !== getCurrentUserId()) {
       const removedUser = await removeUser(userId);
       if (removedUser) {
         setData(removedUser);
@@ -126,11 +187,23 @@ const ApiTest = ({ mode, closeModal, openModal, history }) => {
         <Button onClick={getUsersHandler} color={BUTTON_COLORS.blue}>
           {BUTTON_TITLES.getUsers}
         </Button>
+        <Button onClick={() => openModal(MODAL_TYPES.getUser)} color={BUTTON_COLORS.blue}>
+          {BUTTON_TITLES.getUser}
+        </Button>
         <Button onClick={() => openModal(MODAL_TYPES.removeUser)} color={BUTTON_COLORS.blue}>
           {BUTTON_TITLES.removeUser}
         </Button>
+        <Button onClick={getTasksHandler} color={BUTTON_COLORS.blue}>
+          {BUTTON_TITLES.getTasks}
+        </Button>
+        <Button onClick={() => openModal(MODAL_TYPES.addTask)} color={BUTTON_COLORS.blue}>
+          {BUTTON_TITLES.addTask}
+        </Button>
         <Button onClick={() => openModal(MODAL_TYPES.getTask)} color={BUTTON_COLORS.blue}>
           {BUTTON_TITLES.getTask}
+        </Button>
+        <Button onClick={() => openModal(MODAL_TYPES.setTaskId)} color={BUTTON_COLORS.blue}>
+          {BUTTON_TITLES.updateTask}
         </Button>
         <Button onClick={() => openModal(MODAL_TYPES.getUserTask)} color={BUTTON_COLORS.blue}>
           {BUTTON_TITLES.getUserTask}
@@ -161,6 +234,9 @@ const ApiTest = ({ mode, closeModal, openModal, history }) => {
         />
       )}
       {mode === MODAL_TYPES.addUser && <AddUserModal addUser={createUserHandler} onClose={closeModal} error={error} />}
+      {mode === MODAL_TYPES.addTask && (
+        <TaskModal title={BUTTON_TITLES.addTask} submitTask={createTaskHandler} onClose={closeModal} error={error} />
+      )}
       {mode === MODAL_TYPES.removeUser && (
         <UniversalModal
           title={BUTTON_TITLES.removeUser}
@@ -169,11 +245,37 @@ const ApiTest = ({ mode, closeModal, openModal, history }) => {
           onSubmit={removeUserHandler}
         />
       )}
+      {mode === MODAL_TYPES.getUser && (
+        <UniversalModal
+          title={BUTTON_TITLES.getUser}
+          onClose={closeModal}
+          onSubmit={getUserHandler}
+          fields={[FIELDS.userId]}
+        />
+      )}
+      {mode === MODAL_TYPES.setTaskId && (
+        <UniversalModal
+          title={BUTTON_TITLES.setTaskId}
+          onClose={closeModal}
+          onSubmit={setTaskIdHandler}
+          fields={[FIELDS.taskId]}
+        />
+      )}
+      {mode === MODAL_TYPES.updateTask && (
+        <TaskModal
+          title={BUTTON_TITLES.updateTask}
+          taskId={Number(actionId)}
+          onClose={closeModal}
+          error={error}
+          submitTask={updateTaskHandler}
+        />
+      )}
     </div>
   );
 };
 
 ApiTest.propTypes = {
+  actionId: PropTypes.string.isRequired,
   mode: PropTypes.string.isRequired,
   openModal: PropTypes.func.isRequired,
   closeModal: PropTypes.func.isRequired,

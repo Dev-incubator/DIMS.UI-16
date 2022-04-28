@@ -5,6 +5,10 @@ export const getToken = () => {
   return localStorage.getItem(STORAGE_KEYS.token);
 };
 
+export const getCurrentUserId = () => {
+  return localStorage.getItem(STORAGE_KEYS.userId);
+};
+
 const authToken = getToken();
 
 export const instance = axios.create({
@@ -74,6 +78,54 @@ export const getUserTask = async (userId, taskId) => {
 export const getTask = async (taskId) => {
   try {
     const res = await instance.get(`tasks/${taskId}`);
+
+    return res.data;
+  } catch (error) {
+    console.error(error);
+
+    return undefined;
+  }
+};
+
+export const getTasks = async () => {
+  try {
+    const res = await instance.get('tasks');
+
+    return res.data;
+  } catch (error) {
+    console.error(error);
+
+    return undefined;
+  }
+};
+
+export const getUser = async (userId) => {
+  try {
+    const res = await instance.get(`users/${userId}`);
+
+    return res.data;
+  } catch (error) {
+    console.error(error);
+
+    return undefined;
+  }
+};
+
+export const createTask = async (task) => {
+  try {
+    const res = await instance.post('tasks', task);
+
+    return res.data;
+  } catch (error) {
+    console.error(error);
+
+    return undefined;
+  }
+};
+
+export const updateTask = async (taskId, task) => {
+  try {
+    const res = await instance.patch(`tasks/${taskId}`, task);
 
     return res.data;
   } catch (error) {

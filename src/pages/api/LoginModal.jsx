@@ -6,11 +6,7 @@ import { Input } from '../modals/form/ModalFields/Input/Input';
 import { FormSubmit } from '../modals/form/formSubmit/FormSubmit';
 import { BUTTON_COLORS, INPUT_TYPES } from '../../constants/libraries';
 import { Error } from '../../components/Error/Error';
-
-const INPUT_NAMES = {
-  login: 'login',
-  password: 'password',
-};
+import { FIELDS } from './constants';
 
 const LoginModal = ({ active, onClose, logIn, error }) => {
   const [login, setLogin] = useState('');
@@ -21,7 +17,7 @@ const LoginModal = ({ active, onClose, logIn, error }) => {
   };
 
   const onInputChange = (name, value) => {
-    if (name === INPUT_NAMES.login) {
+    if (name === FIELDS.login) {
       setLogin(value);
     } else {
       setPassword(value);
@@ -35,7 +31,7 @@ const LoginModal = ({ active, onClose, logIn, error }) => {
         <Input
           value={login}
           title='Login'
-          fieldName={INPUT_NAMES.login}
+          fieldName={FIELDS.login}
           onChange={onInputChange}
           autoComplete='off'
           placeholder='Type login'
@@ -44,7 +40,7 @@ const LoginModal = ({ active, onClose, logIn, error }) => {
           value={password}
           title='Password'
           type={INPUT_TYPES.password}
-          fieldName={INPUT_NAMES.password}
+          fieldName={FIELDS.password}
           autoComplete='off'
           onChange={onInputChange}
           placeholder='Type password'
