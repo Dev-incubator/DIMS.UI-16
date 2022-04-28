@@ -44,7 +44,7 @@ Input.propTypes = {
   fieldName: PropTypes.string,
   readOnly: PropTypes.bool,
   type: PropTypes.string,
-  autoComplete: PropTypes.string,
+  autoComplete: PropTypes.oneOf(['on', 'off']),
 };
 
 Input.defaultProps = {

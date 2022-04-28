@@ -3,6 +3,22 @@
     margin: 2rem auto;
 }
 
+.content.light{
+    color: var(--black);
+}
+
+.content.dark{
+    color: var(--gray);
+}
+
+.result.dark{
+    border-color: var(--gray);
+}
+
+.result.light{
+    border-color: var(--borderLight);
+}
+
 .buttonGroup {
     display: flex;
     column-gap: 0.5rem;

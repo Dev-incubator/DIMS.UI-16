@@ -1,21 +1,16 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { createUser, getTask, getToken, getUsers, getUserTask, logIn } from './api';
+import { createUser, getTask, getToken, getUsers, getUserTask, logIn, removeUser } from './api';
 import styles from './ApiTest.module.css';
 import Button from '../../components/Buttons/Button/Button';
 import { BUTTON_COLORS } from '../../constants/libraries';
 import { withModal } from '../../HOCs/withModal';
-import LoginModal from './LoginModal';
-import GetUserTaskModal from './GetUserTaskModal';
-import GetTaskModal from './GetTaskModal';
 import AddUserModal from './AddUserModal';
-
-const MODAL_TYPES = {
-  login: 'login',
-  getUserTask: 'get user task',
-  getTask: 'get task',
-  addUser: 'add user',
-};
+import UniversalModal from './UniversalModal';
+import LoginModal from './LoginModal';
+import { ErrorToast } from '../../components/Toasts/ErrorToast';
+import { MODAL_TYPES, FIELDS, defaultErrorValue, BUTTON_TITLES, STORAGE_KEYS } from './constants';
+import { ThemeContext } from '../../providers/ThemeProvider';
 
 const ApiTest = ({ mode, closeModal, openModal, history }) => {
   useEffect(() => {
@@ -23,23 +18,45 @@ const ApiTest = ({ mode, closeModal, openModal, history }) => {
       openModal(MODAL_TYPES.login);
     }
   }, []);
+  useEffect(() => {
+    setError('');
+    if (mode) {
+      closeToast();
+    }
+  }, [mode]);
+  const { theme } = useContext(ThemeContext);
   const [data, setData] = useState();
   const [error, setError] = useState('');
+  const [toast, setToast] = useState('');
+
+  const closeToast = () => {
+    setToast('');
+  };
 
   const getUsersHandler = async () => {
     const users = await getUsers();
     setData(users);
   };
 
-  const getUserTaskHandler = async (userId, taskId) => {
+  const getUserTaskHandler = async (values) => {
+    const { userId, taskId } = values;
     const task = await getUserTask(userId, taskId);
-    setData(task);
+    if (task) {
+      setData(task);
+    } else {
+      setToast('Nothing found');
+    }
     closeModal();
   };
 
-  const getTaskHandler = async (taskId) => {
+  const getTaskHandler = async (values) => {
+    const { taskId } = values;
     const task = await getTask(taskId);
-    setData(task);
+    if (task?.length) {
+      setData(task);
+    } else {
+      setToast('Nothing found');
+    }
     closeModal();
   };
 
@@ -55,8 +72,23 @@ const ApiTest = ({ mode, closeModal, openModal, history }) => {
       setData(user);
       closeModal();
     } else {
-      setError('Something went wrong, is all fields are valid?');
+      setError(defaultErrorValue);
     }
+  };
+
+  const removeUserHandler = async (values) => {
+    const { userId } = values;
+    if (userId !== localStorage.getItem(STORAGE_KEYS.userId)) {
+      const removedUser = await removeUser(userId);
+      if (removedUser) {
+        setData(removedUser);
+      } else {
+        setToast('No such user');
+      }
+    } else {
+      setToast("You can't remove yourself");
+    }
+    closeModal();
   };
 
   const clearData = () => {
@@ -69,46 +101,74 @@ const ApiTest = ({ mode, closeModal, openModal, history }) => {
       setData(token);
       closeModal();
     } else {
-      setError('Data is incorrect');
+      setError(defaultErrorValue);
     }
-  };
-
-  const removeToken = () => {
-    localStorage.removeItem('token');
-    history.push('/about');
   };
 
   const leavePage = () => {
     history.push('/about');
   };
 
+  const logOutHandler = () => {
+    clearData();
+    localStorage.removeItem(STORAGE_KEYS.token);
+    localStorage.removeItem(STORAGE_KEYS.userId);
+    openModal(MODAL_TYPES.login);
+  };
+
   return (
-    <div className={styles.content}>
+    <div className={`${styles.content} ${styles[theme]}`}>
+      <ErrorToast onClose={closeToast} active={!!toast} message={toast} delay={3000} />
       <div className={styles.buttonGroup}>
         <Button onClick={() => openModal(MODAL_TYPES.addUser)} color={BUTTON_COLORS.blue}>
-          Add user
+          {BUTTON_TITLES.addUser}
         </Button>
         <Button onClick={getUsersHandler} color={BUTTON_COLORS.blue}>
-          Get users
+          {BUTTON_TITLES.getUsers}
+        </Button>
+        <Button onClick={() => openModal(MODAL_TYPES.removeUser)} color={BUTTON_COLORS.blue}>
+          {BUTTON_TITLES.removeUser}
         </Button>
         <Button onClick={() => openModal(MODAL_TYPES.getTask)} color={BUTTON_COLORS.blue}>
-          Get task
+          {BUTTON_TITLES.getTask}
         </Button>
         <Button onClick={() => openModal(MODAL_TYPES.getUserTask)} color={BUTTON_COLORS.blue}>
-          Get user task
+          {BUTTON_TITLES.getUserTask}
         </Button>
         <Button onClick={clearData} color={BUTTON_COLORS.blue}>
-          Clear
+          {BUTTON_TITLES.clear}
         </Button>
-        <Button onClick={removeToken} color={BUTTON_COLORS.red}>
-          Remove token
+        <Button onClick={logOutHandler} color={BUTTON_COLORS.red}>
+          {BUTTON_TITLES.logOut}
         </Button>
       </div>
-      <div className={styles.result}>{JSON.stringify(data)}</div>
-      {mode === MODAL_TYPES.getUserTask && <GetUserTaskModal onClose={closeModal} getUserTask={getUserTaskHandler} />}
-      {mode === MODAL_TYPES.login && <LoginModal onClose={leavePage} logIn={logInHandler} error={error} />}
-      {mode === MODAL_TYPES.getTask && <GetTaskModal onClose={closeModal} getTask={getTaskHandler} />}
+      <div className={`${styles.result} ${styles[theme]}`}>{JSON.stringify(data)}</div>
+      {mode === MODAL_TYPES.getUserTask && (
+        <UniversalModal
+          title={BUTTON_TITLES.getUserTask}
+          fields={[FIELDS.taskId, FIELDS.userId]}
+          onClose={closeModal}
+          onSubmit={getUserTaskHandler}
+        />
+      )}
+      {mode === MODAL_TYPES.login && <LoginModal logIn={logInHandler} onClose={leavePage} error={error} />}
+      {mode === MODAL_TYPES.getTask && (
+        <UniversalModal
+          title={BUTTON_TITLES.getTask}
+          fields={[FIELDS.taskId]}
+          onClose={closeModal}
+          onSubmit={getTaskHandler}
+        />
+      )}
       {mode === MODAL_TYPES.addUser && <AddUserModal addUser={createUserHandler} onClose={closeModal} error={error} />}
+      {mode === MODAL_TYPES.removeUser && (
+        <UniversalModal
+          title={BUTTON_TITLES.removeUser}
+          fields={[FIELDS.userId]}
+          onClose={closeModal}
+          onSubmit={removeUserHandler}
+        />
+      )}
     </div>
   );
 };

@@ -1,7 +1,8 @@
 import axios from 'axios';
+import { STORAGE_KEYS } from './constants';
 
 export const getToken = () => {
-  return localStorage.getItem('token');
+  return localStorage.getItem(STORAGE_KEYS.token);
 };
 
 const authToken = getToken();
@@ -46,6 +47,18 @@ export const getUsers = async () => {
   }
 };
 
+export const removeUser = async (userId) => {
+  try {
+    const res = await instance.delete(`users/${userId}`);
+
+    return res.data;
+  } catch (error) {
+    console.error(error);
+
+    return undefined;
+  }
+};
+
 export const getUserTask = async (userId, taskId) => {
   try {
     const res = await instance.get(`users/${userId}/user-tasks/${taskId}`);
@@ -74,7 +87,12 @@ export const logIn = async (email, password) => {
   try {
     const res = await instance.post('auth/login', { email, password });
     const { token } = res.data;
-    localStorage.setItem('token', token);
+    localStorage.setItem(STORAGE_KEYS.token, token);
+    const users = await getUsers();
+    const { userId } = users.find((el) => el.email === email);
+    if (userId) {
+      localStorage.setItem(STORAGE_KEYS.userId, userId);
+    }
 
     return token;
   } catch (error) {

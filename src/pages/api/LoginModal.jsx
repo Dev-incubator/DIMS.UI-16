@@ -30,6 +30,7 @@ const LoginModal = ({ active, onClose, logIn, error }) => {
 
   return (
     <Modal active={active} onClose={onClose}>
+      <h2>Login</h2>
       <div>
         <Input
           value={login}

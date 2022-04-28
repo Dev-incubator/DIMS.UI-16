@@ -96,7 +96,7 @@ function Tracks({ match, mode, actionId, openModal, closeModal }) {
                 return (
                   <TrackRow
                     key={track.id}
-                    title={track.taskTitle}
+                    title={taskName}
                     note={track.note}
                     date={track.date}
                     number={index + 1}
@@ -139,15 +139,10 @@ Tracks.propTypes = {
       taskId: PropTypes.string.isRequired,
     }),
   }).isRequired,
-  mode: PropTypes.string,
-  actionId: PropTypes.string,
+  mode: PropTypes.string.isRequired,
+  actionId: PropTypes.string.isRequired,
   closeModal: PropTypes.func.isRequired,
   openModal: PropTypes.func.isRequired,
-};
-
-Tracks.defaultProps = {
-  mode: null,
-  actionId: null,
 };
 
 export default withModal(Tracks);
