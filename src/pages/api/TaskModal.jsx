@@ -26,7 +26,7 @@ const TaskModal = ({ active, submitTask, error, onClose, taskId, title }) => {
         setInputValues(getCreateTaskState(allUsers));
       }
     })();
-  }, []);
+  }, [taskId]);
 
   const onInputChange = (name, value) => {
     setInputValues((prevState) => ({ ...prevState, [name]: value }));

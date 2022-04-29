@@ -31,7 +31,7 @@ const ApiTest = ({ mode, closeModal, openModal, history, actionId }) => {
     if (!getToken() || !getCurrentUserId()) {
       openModal(MODAL_TYPES.login);
     }
-  }, []);
+  }, [openModal]);
   useEffect(() => {
     setError('');
     if (mode) {

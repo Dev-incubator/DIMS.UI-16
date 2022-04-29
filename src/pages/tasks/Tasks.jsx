@@ -36,7 +36,7 @@ function Tasks({
   useEffect(() => {
     getTasks();
     getUsers();
-  }, []);
+  }, [getTasks, getUsers]);
 
   const updateTaskHandler = (data) => {
     updateTask(actionId, data);

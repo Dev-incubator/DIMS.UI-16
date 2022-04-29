@@ -28,7 +28,7 @@ function UserTasks({ match }) {
       const data = await getUserTasksById(id);
       dispatch(setTasksAction(data));
     })();
-  }, []);
+  }, [match.params]);
 
   const updateTaskStatus = async (taskId, userId, status) => {
     const task = await getTaskById(taskId);

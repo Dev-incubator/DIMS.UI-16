@@ -42,7 +42,7 @@ function Members({
 }) {
   useEffect(() => {
     getUsers();
-  }, []);
+  }, [getUsers]);
 
   const createUserHandler = (user) => {
     createUser(user);

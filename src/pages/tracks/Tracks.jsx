@@ -36,7 +36,7 @@ function Tracks({ match, mode, actionId, openModal, closeModal }) {
       const task = await getTaskById(taskId);
       setTaskName(task.title);
     })();
-  }, []);
+  }, [match.params]);
 
   const addTrackHandler = async (track) => {
     const { userId, taskId } = match.params;
