@@ -125,7 +125,7 @@
     "eslint-config-react-app": "^7.0.1",
     "eslint-plugin-prettier": "4.0.0",
     "husky": "7.0.4",
-    "lint-staged": "12.3.3",
+    "lint-staged": "12.4.1",
     "prettier": "2.5.1"
   },
   "repository": {
