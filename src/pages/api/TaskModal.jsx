@@ -10,7 +10,7 @@ import { FormSubmit } from '../modals/form/formSubmit/FormSubmit';
 import { Error } from '../../components/Error/Error';
 import { withModalFade } from '../../HOCs/withModalFade';
 import { Loading } from '../loading/Loading';
-import { getCreateTaskState, getUpdateTaskState, initTaskState } from './helpers';
+import { getCreateTaskState, getUpdateTaskState, initTaskState } from './helpers/helpers';
 
 const TaskModal = ({ active, submitTask, error, onClose, taskId, title }) => {
   const [inputValues, setInputValues] = useState(initTaskState);

@@ -1,31 +1,5 @@
-import axios from 'axios';
+import { instance } from './instance';
 import { STORAGE_KEYS } from './constants';
-
-export const getToken = () => {
-  return localStorage.getItem(STORAGE_KEYS.token);
-};
-
-export const getCurrentUserId = () => {
-  return localStorage.getItem(STORAGE_KEYS.userId);
-};
-
-const authToken = getToken();
-
-export const instance = axios.create({
-  baseURL: 'https://dims-core-api.herokuapp.com/api/',
-  headers: {
-    Authorization: `Bearer ${authToken}`,
-  },
-});
-
-instance.interceptors.request.use(async (req) => {
-  if (!authToken) {
-    const token = getToken();
-    req.headers.Authorization = `Bearer ${token}`;
-  }
-
-  return req;
-});
 
 export const createUser = async (data) => {
   try {
@@ -141,9 +115,9 @@ export const logIn = async (email, password) => {
     const { token } = res.data;
     localStorage.setItem(STORAGE_KEYS.token, token);
     const users = await getUsers();
-    const { userId } = users.find((el) => el.email === email);
-    if (userId) {
-      localStorage.setItem(STORAGE_KEYS.userId, userId);
+    const { id } = users.find((el) => el.email === email);
+    if (id) {
+      localStorage.setItem(STORAGE_KEYS.userId, id);
     }
 
     return token;

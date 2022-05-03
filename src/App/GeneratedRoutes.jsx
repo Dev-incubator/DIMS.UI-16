@@ -10,7 +10,7 @@ import LogIn from '../pages/logIn/LogIn';
 import { SetPassword } from '../pages/setPassword/SetPassword';
 import { Settings } from '../pages/settings/Settings';
 import { USER_ROLES } from '../constants/libraries';
-import ApiTest from '../pages/api/ApiTest';
+import Swagger from '../pages/api/Swagger';
 
 export function GeneratedRoutes() {
   return (
@@ -18,7 +18,7 @@ export function GeneratedRoutes() {
       {({ user }) => (
         <>
           <Route path='/about' exact component={About} />
-          <Route path='/api' exact component={ApiTest} />
+          <Route path='/api' exact component={Swagger} />
           {user ? (
             <>
               {user.role === USER_ROLES.admin || user.role === USER_ROLES.mentor ? (

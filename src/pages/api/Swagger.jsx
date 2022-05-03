@@ -3,10 +3,8 @@ import PropTypes from 'prop-types';
 import {
   createTask,
   createUser,
-  getCurrentUserId,
   getTask,
   getTasks,
-  getToken,
   getUser,
   getUsers,
   getUserTask,
@@ -25,8 +23,9 @@ import { ErrorToast } from '../../components/Toasts/ErrorToast';
 import { MODAL_TYPES, FIELDS, defaultErrorValue, BUTTON_TITLES, STORAGE_KEYS } from './constants';
 import { ThemeContext } from '../../providers/ThemeProvider';
 import TaskModal from './TaskModal';
+import { getCurrentUserId, getToken } from './storage';
 
-const ApiTest = ({ mode, closeModal, openModal, history, actionId }) => {
+const Swagger = ({ mode, closeModal, openModal, history, actionId }) => {
   useEffect(() => {
     if (!getToken() || !getCurrentUserId()) {
       openModal(MODAL_TYPES.login);
@@ -274,7 +273,7 @@ const ApiTest = ({ mode, closeModal, openModal, history, actionId }) => {
   );
 };
 
-ApiTest.propTypes = {
+Swagger.propTypes = {
   actionId: PropTypes.string.isRequired,
   mode: PropTypes.string.isRequired,
   openModal: PropTypes.func.isRequired,
@@ -282,4 +281,4 @@ ApiTest.propTypes = {
   history: PropTypes.shape({ push: PropTypes.func }).isRequired,
 };
 
-export default withModal(ApiTest);
+export default withModal(Swagger);

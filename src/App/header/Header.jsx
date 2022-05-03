@@ -50,7 +50,7 @@ function Header({ context }) {
                   About
                 </NavLink>
                 <NavLink to='/api' activeClassName={styles.active}>
-                  Test api
+                  Swagger
                 </NavLink>
               </Nav>
               <Nav>

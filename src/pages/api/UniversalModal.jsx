@@ -16,7 +16,7 @@ const toInitialObject = (array) => {
 };
 
 const UniversalModal = ({ active, onClose, onSubmit, fields, title, setFade }) => {
-  const [inputValues, setInputValues] = useState(toInitialObject(fields));
+  const [inputValues, setInputValues] = useState(() => toInitialObject(fields));
   const onSubmitHandler = () => {
     onSubmit(inputValues);
     setFade();

@@ -23,9 +23,8 @@ function UserTasks({ match }) {
   useEffect(() => {
     const { id } = match.params;
     (async function fetchData() {
-      const user = await getUserById(id);
+      const [user, data] = await Promise.all([getUserById(id), getUserTasksById(id)]);
       setUserName(user.name);
-      const data = await getUserTasksById(id);
       dispatch(setTasksAction(data));
     })();
   }, [match.params]);
