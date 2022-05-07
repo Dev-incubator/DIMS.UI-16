@@ -6,6 +6,7 @@
 
 .App.dark{
     background-color:var(--bgDark);
+    color: var(--gray);
 }
 .App.light{
     background-color: var(--bgLight);

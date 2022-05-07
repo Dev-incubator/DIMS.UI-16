@@ -38,7 +38,7 @@ export function MemberInfoRow({
               <td>{age}</td>
               <td>
                 <div className={styles.buttonGroup}>
-                  <NavLink to={`/tasks/${id}`}>
+                  <NavLink to={`/user-tasks/${id}`}>
                     <Button color={BUTTON_COLORS.green}>{BUTTON_VALUES.tasks}</Button>
                   </NavLink>
                   <NavLink to={`/progress/${id}`}>

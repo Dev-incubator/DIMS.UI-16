@@ -30,7 +30,7 @@ export function GeneratedRoutes() {
               ) : (
                 <Route path='/track/:userId/task/:taskId' component={Tracks} />
               )}
-              <Route path='/tasks/:id' component={UserTasks} />
+              <Route path='/user-tasks/:id' component={UserTasks} />
               <Route path='/settings/:id' component={Settings} />
             </>
           ) : (

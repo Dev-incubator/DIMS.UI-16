@@ -6,13 +6,13 @@ describe('Update task modal tests', () => {
     assignedUsers: [1, 2],
   };
   const users = [
-    { userId: 1, firstName: 'Ryan', lastName: 'Gosling' },
+    { id: 1, firstName: 'Ryan', lastName: 'Gosling' },
     {
-      userId: 2,
+      id: 2,
       firstName: 'Cristiano',
       lastName: 'Ronaldo',
     },
-    { userId: 3, firstName: 'React', lastName: 'Reduxov' },
+    { id: 3, firstName: 'React', lastName: 'Reduxov' },
   ];
 
   const result = {

@@ -6,17 +6,8 @@ import { Input } from '../modals/form/ModalFields/Input/Input';
 import { FormSubmit } from '../modals/form/formSubmit/FormSubmit';
 import { BUTTON_COLORS } from '../../constants/libraries';
 
-const toInitialObject = (array) => {
-  const resultObject = {};
-  array.forEach((item) => {
-    resultObject[item] = '';
-  });
-
-  return resultObject;
-};
-
-const UniversalModal = ({ active, onClose, onSubmit, fields, title, setFade }) => {
-  const [inputValues, setInputValues] = useState(() => toInitialObject(fields));
+const UniversalModal = ({ active, onClose, onSubmit, formValues, title, setFade }) => {
+  const [inputValues, setInputValues] = useState(formValues);
   const onSubmitHandler = () => {
     onSubmit(inputValues);
     setFade();
@@ -29,7 +20,7 @@ const UniversalModal = ({ active, onClose, onSubmit, fields, title, setFade }) =
   return (
     <Modal active={active} onClose={onClose}>
       <h2>{title}</h2>
-      {fields.map((item, index) => (
+      {Object.keys(formValues).map((item, index) => (
         <Input
           key={`${item}${index.toString()}`}
           value={inputValues[item]}
@@ -51,6 +42,6 @@ UniversalModal.propTypes = {
   active: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
-  fields: PropTypes.arrayOf(PropTypes.string).isRequired,
+  formValues: PropTypes.objectOf(PropTypes.string).isRequired,
 };
 export default withModalFade(UniversalModal);

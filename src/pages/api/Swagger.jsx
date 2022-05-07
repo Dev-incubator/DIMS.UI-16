@@ -24,6 +24,7 @@ import { MODAL_TYPES, FIELDS, defaultErrorValue, BUTTON_TITLES, STORAGE_KEYS } f
 import { ThemeContext } from '../../providers/ThemeProvider';
 import TaskModal from './TaskModal';
 import { getCurrentUserId, getToken } from './storage';
+import { toInitialFormObject } from './helpers/helpers';
 
 const Swagger = ({ mode, closeModal, openModal, history, actionId }) => {
   useEffect(() => {
@@ -218,7 +219,7 @@ const Swagger = ({ mode, closeModal, openModal, history, actionId }) => {
       {mode === MODAL_TYPES.getUserTask && (
         <UniversalModal
           title={BUTTON_TITLES.getUserTask}
-          fields={[FIELDS.taskId, FIELDS.userId]}
+          formValues={toInitialFormObject([FIELDS.taskId, FIELDS.userId])}
           onClose={closeModal}
           onSubmit={getUserTaskHandler}
         />
@@ -227,6 +228,7 @@ const Swagger = ({ mode, closeModal, openModal, history, actionId }) => {
       {mode === MODAL_TYPES.getTask && (
         <UniversalModal
           title={BUTTON_TITLES.getTask}
+          formValues={toInitialFormObject([FIELDS.taskId])}
           fields={[FIELDS.taskId]}
           onClose={closeModal}
           onSubmit={getTaskHandler}
@@ -239,7 +241,7 @@ const Swagger = ({ mode, closeModal, openModal, history, actionId }) => {
       {mode === MODAL_TYPES.removeUser && (
         <UniversalModal
           title={BUTTON_TITLES.removeUser}
-          fields={[FIELDS.userId]}
+          formValues={toInitialFormObject([FIELDS.userId])}
           onClose={closeModal}
           onSubmit={removeUserHandler}
         />
@@ -249,7 +251,7 @@ const Swagger = ({ mode, closeModal, openModal, history, actionId }) => {
           title={BUTTON_TITLES.getUser}
           onClose={closeModal}
           onSubmit={getUserHandler}
-          fields={[FIELDS.userId]}
+          formValues={toInitialFormObject([FIELDS.userId])}
         />
       )}
       {mode === MODAL_TYPES.setTaskId && (
@@ -257,7 +259,7 @@ const Swagger = ({ mode, closeModal, openModal, history, actionId }) => {
           title={BUTTON_TITLES.setTaskId}
           onClose={closeModal}
           onSubmit={setTaskIdHandler}
-          fields={[FIELDS.taskId]}
+          formValues={toInitialFormObject([FIELDS.taskId])}
         />
       )}
       {mode === MODAL_TYPES.updateTask && (
