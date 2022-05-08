@@ -12,14 +12,9 @@ import TrackModal from '../modals/trackModals/TrackModal';
 import { withModal } from '../../HOCs/withModal';
 import { ThemeContext } from '../../providers/ThemeProvider';
 import { Loading } from '../loading/Loading';
-import {
-  addTrackAction,
-  removeTrackAction,
-  setTracksAction,
-  tracksReducer,
-  updateTrackAction,
-} from './tracksReducer/tracksReducer';
+import { addTrackAction, removeTrackAction, setTracksAction, updateTrackAction } from './tracksReducer/trackActions';
 import { CustomAlert } from '../../components/Alert/Alert';
+import { tracksReducer } from './tracksReducer/tracksReducer';
 
 const tableTitles = ['#', 'Task', 'Note', 'Date', 'Action'];
 

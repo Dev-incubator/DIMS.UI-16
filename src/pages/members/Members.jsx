@@ -21,7 +21,7 @@ import {
 import { withModal } from '../../HOCs/withModal';
 import { ThemeContext } from '../../providers/ThemeProvider';
 import { AuthContext } from '../../providers/AuthProvider';
-import { createUserThunk, getUsersThunk, removeUserThunk, updateUserThunk } from '../../redux/usersThunk/usersThunk';
+import { createUserThunk, getUsersThunk, removeUserThunk, updateUserThunk } from '../../redux/users/thunks/usersThunk';
 import { Loading } from '../loading/Loading';
 import { CustomAlert } from '../../components/Alert/Alert';
 

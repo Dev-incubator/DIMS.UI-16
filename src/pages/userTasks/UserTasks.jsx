@@ -11,7 +11,8 @@ import pageStyles from '../Page.module.css';
 import { ThemeContext } from '../../providers/ThemeProvider';
 import { Loading } from '../loading/Loading';
 import { AuthContext } from '../../providers/AuthProvider';
-import { setTasksAction, updateTaskStatusAction, userTaskReducer } from './userTaskReducer/userTaskReducer';
+import { setTasksAction, updateTaskStatusAction } from './userTaskReducer/userTaskActions';
+import { userTaskReducer } from './userTaskReducer/userTaskReducer';
 
 const adminTableTitles = ['#', 'Task name', 'Start date', 'Deadline', 'Status', 'Update status'];
 const userTableTitles = adminTableTitles.slice(0, adminTableTitles.length - 1);

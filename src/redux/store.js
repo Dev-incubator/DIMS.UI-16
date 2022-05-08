@@ -1,11 +1,11 @@
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
 import thunk from 'redux-thunk';
-import { usersReducer } from './usersReducers/usersReducer';
-import { tasksReducer } from './tasksReducers/tasksReducer';
-import { usersLoaderReducer } from './usersReducers/usersLoaderReducer';
-import { tasksLoaderReducer } from './tasksReducers/tasksLoaderReducer';
-import { usersErrorReducer } from './usersReducers/usersErrorReducer';
-import { tasksErrorReducer } from './tasksReducers/tasksErrorReducer';
+import { usersReducer } from './users/reducers/usersReducer';
+import { tasksReducer } from './tasks/reducers/tasksReducer';
+import { usersLoaderReducer } from './users/reducers/usersLoaderReducer';
+import { tasksLoaderReducer } from './tasks/reducers/tasksLoaderReducer';
+import { usersErrorReducer } from './users/reducers/usersErrorReducer';
+import { tasksErrorReducer } from './tasks/reducers/tasksErrorReducer';
 
 const reducers = combineReducers({
   users: usersReducer,

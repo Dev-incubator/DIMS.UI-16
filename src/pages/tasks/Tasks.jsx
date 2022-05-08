@@ -11,8 +11,8 @@ import DeleteModal from '../modals/deleteModal/DeleteModal';
 import TaskModal from '../modals/taskModals/taskModal/TaskModal';
 import { withModal } from '../../HOCs/withModal';
 import { ThemeContext } from '../../providers/ThemeProvider';
-import { getUsersThunk } from '../../redux/usersThunk/usersThunk';
-import { addTaskThunk, getTasksThunk, removeTaskThunk, updateTaskThunk } from '../../redux/tasksThunk/tasksThunk';
+import { getUsersThunk } from '../../redux/users/thunks/usersThunk';
+import { addTaskThunk, getTasksThunk, removeTaskThunk, updateTaskThunk } from '../../redux/tasks/thunks/tasksThunk';
 import { Loading } from '../loading/Loading';
 import { CustomAlert } from '../../components/Alert/Alert';
 

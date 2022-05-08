@@ -1,7 +1,14 @@
-import { createUserAuth, deleteUserAuth, getAllUsers, updateUser } from '../../scripts/api-service';
-import { addUserAction, getUsersAction, removeUserAction, updateUserAction } from '../usersReducers/usersReducer';
-import { disableUsersLoaderAction, enableUsersLoaderAction } from '../usersReducers/usersLoaderReducer';
-import { disableUsersErrorAction, setUsersErrorAction } from '../usersReducers/usersErrorReducer';
+import { createUserAuth, deleteUserAuth, getAllUsers, updateUser } from '../../../scripts/api-service';
+import {
+  addUserAction,
+  getUsersAction,
+  removeUserAction,
+  updateUserAction,
+  disableUsersLoaderAction,
+  enableUsersLoaderAction,
+  disableUsersErrorAction,
+  setUsersErrorAction,
+} from '../actions/userActions';
 
 export const getUsersThunk = () => {
   return async (dispatch) => {

@@ -1,4 +1,4 @@
-import { DISABLE_TASKS_LOADER, ENABLE_TASKS_LOADER } from './type-constants';
+import { DISABLE_TASKS_LOADER, ENABLE_TASKS_LOADER } from '../type-constants';
 
 const initialState = false;
 
@@ -15,6 +15,3 @@ export const tasksLoaderReducer = (state = initialState, action = {}) => {
     }
   }
 };
-
-export const enableTasksLoaderAction = () => ({ type: ENABLE_TASKS_LOADER });
-export const disableTasksLoaderAction = () => ({ type: DISABLE_TASKS_LOADER });
