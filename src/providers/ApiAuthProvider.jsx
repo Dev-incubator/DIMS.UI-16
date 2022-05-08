@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { getCurrentUserId, getToken, removeCurrentUserid, removeToken } from '../pages/api/storage';
 import { logIn } from '../pages/api/api';
-import { Loading } from '../pages/loading/Loading';
 
 export const ApiAuthContext = createContext({
   token: null,
@@ -13,24 +12,23 @@ export const ApiAuthContext = createContext({
 });
 
 const ApiAuthProvider = ({ children, history }) => {
-  useEffect(() => {
-    startAuth();
-  }, []);
-
   const [state, setState] = useState({
     context: {
       token: null,
       userId: null,
-      logIn: logInHandler(),
-      logOut: logOutHandler(),
+      logIn: logInHandler,
+      logOut: logOutHandler,
     },
-    isAuth: false,
   });
+
+  useEffect(() => {
+    startAuth();
+  }, []);
 
   async function logInHandler(email, password) {
     try {
       const { token, id } = await logIn(email, password);
-      setState((prevState) => ({ ...prevState, context: { ...prevState.context, token, userId: id }, isAuth: true }));
+      setState((prevState) => ({ ...prevState, context: { ...prevState.context, token, userId: id } }));
       history.push('/api');
 
       return null;
@@ -49,16 +47,11 @@ const ApiAuthProvider = ({ children, history }) => {
     const token = getToken();
     const userId = getCurrentUserId();
     if (token && userId) {
-      setState((prevState) => ({ ...prevState, context: { ...prevState.context, token, userId }, isAuth: true }));
+      setState((prevState) => ({ ...prevState, context: { ...prevState.context, token, userId } }));
     }
   }
 
-  const { context, isAuth } = state;
-  if (!isAuth) {
-    return <Loading />;
-  }
-
-  return <ApiAuthContext.Provider value={context}>{children}</ApiAuthContext.Provider>;
+  return <ApiAuthContext.Provider value={state.context}>{children}</ApiAuthContext.Provider>;
 };
 
 ApiAuthProvider.propTypes = {

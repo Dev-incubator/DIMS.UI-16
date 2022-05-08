@@ -7,17 +7,20 @@ import reportWebVitals from './reportWebVitals';
 import AuthProvider from './providers/AuthProvider';
 import { ThemeProvider } from './providers/ThemeProvider';
 import store from './redux/store';
+import ApiAuthProvider from './providers/ApiAuthProvider';
 
 const container = document.getElementById('root');
 const root = createRoot(container);
 root.render(
   <Router>
     <ThemeProvider>
-      <AuthProvider>
-        <Provider store={store}>
-          <App />
-        </Provider>
-      </AuthProvider>
+      <ApiAuthProvider>
+        <AuthProvider>
+          <Provider store={store}>
+            <App />
+          </Provider>
+        </AuthProvider>
+      </ApiAuthProvider>
     </ThemeProvider>
   </Router>,
 );

@@ -8,7 +8,6 @@ import {
   getUser,
   getUsers,
   getUserTask,
-  logIn,
   removeUser,
   updateTask,
 } from './api';
@@ -18,20 +17,14 @@ import { BUTTON_COLORS } from '../../constants/libraries';
 import { withModal } from '../../HOCs/withModal';
 import AddUserModal from './AddUserModal';
 import UniversalModal from './UniversalModal';
-import LoginModal from './LoginModal';
 import { ErrorToast } from '../../components/Toasts/ErrorToast';
-import { MODAL_TYPES, FIELDS, defaultErrorValue, BUTTON_TITLES, STORAGE_KEYS } from './constants';
+import { MODAL_TYPES, FIELDS, defaultErrorValue, BUTTON_TITLES } from './constants';
 import { ThemeContext } from '../../providers/ThemeProvider';
 import TaskModal from './TaskModal';
-import { getCurrentUserId, getToken } from './storage';
+import { getCurrentUserId } from './storage';
 import { toInitialFormObject } from './helpers/helpers';
 
-const Swagger = ({ mode, closeModal, openModal, history, actionId }) => {
-  useEffect(() => {
-    if (!getToken() || !getCurrentUserId()) {
-      openModal(MODAL_TYPES.login);
-    }
-  }, [openModal]);
+const Swagger = ({ mode, closeModal, openModal, actionId }) => {
   useEffect(() => {
     setError('');
     if (mode) {
@@ -156,27 +149,6 @@ const Swagger = ({ mode, closeModal, openModal, history, actionId }) => {
     setData();
   };
 
-  const logInHandler = async (email, password) => {
-    const token = await logIn(email, password);
-    if (token) {
-      setData(token);
-      closeModal();
-    } else {
-      setError(defaultErrorValue);
-    }
-  };
-
-  const leavePage = () => {
-    history.push('/about');
-  };
-
-  const logOutHandler = () => {
-    clearData();
-    localStorage.removeItem(STORAGE_KEYS.token);
-    localStorage.removeItem(STORAGE_KEYS.userId);
-    openModal(MODAL_TYPES.login);
-  };
-
   return (
     <div className={`${styles.content} ${styles[theme]}`}>
       <ErrorToast onClose={closeToast} active={!!toast} message={toast} delay={3000} />
@@ -211,9 +183,6 @@ const Swagger = ({ mode, closeModal, openModal, history, actionId }) => {
         <Button onClick={clearData} color={BUTTON_COLORS.blue}>
           {BUTTON_TITLES.clear}
         </Button>
-        <Button onClick={logOutHandler} color={BUTTON_COLORS.red}>
-          {BUTTON_TITLES.logOut}
-        </Button>
       </div>
       <div className={`${styles.result} ${styles[theme]}`}>{JSON.stringify(data)}</div>
       {mode === MODAL_TYPES.getUserTask && (
@@ -224,7 +193,6 @@ const Swagger = ({ mode, closeModal, openModal, history, actionId }) => {
           onSubmit={getUserTaskHandler}
         />
       )}
-      {mode === MODAL_TYPES.login && <LoginModal logIn={logInHandler} onClose={leavePage} error={error} />}
       {mode === MODAL_TYPES.getTask && (
         <UniversalModal
           title={BUTTON_TITLES.getTask}

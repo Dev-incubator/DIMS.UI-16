@@ -4,7 +4,6 @@ export const BUTTON_TITLES = {
   getTask: 'Get task',
   getUserTask: 'Get user task',
   clear: 'Clear',
-  logOut: 'Log out',
   removeUser: 'Remove user',
   addTask: 'Add task',
   getUser: 'Get user',
@@ -17,7 +16,6 @@ export const defaultErrorValue = 'Something went wrong or something is incorrect
 
 export const MODAL_TYPES = {
   addTask: 'add task',
-  login: 'login',
   getUserTask: 'get user task',
   getTask: 'get task',
   addUser: 'add user',
@@ -35,8 +33,6 @@ export const FIELDS = {
   taskId: 'taskId',
   userId: 'userId',
   email: 'email',
-  password: 'password',
-  login: 'login',
 };
 
 export const STORAGE_KEYS = {
