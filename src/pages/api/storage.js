@@ -7,3 +7,11 @@ export const getToken = () => {
 export const getCurrentUserId = () => {
   return localStorage.getItem(STORAGE_KEYS.userId);
 };
+
+export const removeToken = () => {
+  localStorage.removeItem(STORAGE_KEYS.token);
+};
+
+export const removeCurrentUserid = () => {
+  localStorage.removeItem(STORAGE_KEYS.userId);
+};

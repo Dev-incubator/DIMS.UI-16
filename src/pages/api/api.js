@@ -120,7 +120,7 @@ export const logIn = async (email, password) => {
       localStorage.setItem(STORAGE_KEYS.userId, id);
     }
 
-    return token;
+    return { token, id };
   } catch (error) {
     console.error(error);
 
