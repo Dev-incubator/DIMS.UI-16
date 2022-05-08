@@ -18,6 +18,7 @@ class LogIn extends PureComponent {
         email: '',
         password: '',
       },
+      isFirebaseAuth: true,
     };
   }
 
@@ -61,8 +62,16 @@ class LogIn extends PureComponent {
     this.setState((prevState) => ({ ...prevState, [name]: value }));
   };
 
+  setFirebaseAuth = () => {
+    this.setState((prevState) => ({ ...prevState, isFirebaseAuth: true }));
+  };
+
+  setSwaggerAuth = () => {
+    this.setState((prevState) => ({ ...prevState, isFirebaseAuth: false }));
+  };
+
   render() {
-    const { email, password, formErrors } = this.state;
+    const { email, password, formErrors, isFirebaseAuth } = this.state;
 
     return (
       <ThemeContext.Consumer>
@@ -95,9 +104,29 @@ class LogIn extends PureComponent {
                 />
                 <Form.Control.Feedback type='invalid'>{formErrors.password}</Form.Control.Feedback>
               </Form.Group>
-              <Button variant='primary' type='submit'>
-                Submit
-              </Button>
+              <div className={styles.submit}>
+                <Button variant='primary' type='submit'>
+                  Submit
+                </Button>
+                <div className={styles.radioGroup} key='inline-radio'>
+                  <Form.Check
+                    inline
+                    label='Firebase'
+                    type='radio'
+                    id='radio-1'
+                    onClick={this.setFirebaseAuth}
+                    checked={isFirebaseAuth}
+                  />
+                  <Form.Check
+                    inline
+                    label='Swagger'
+                    type='radio'
+                    id='radio-2`'
+                    onClick={this.setSwaggerAuth}
+                    checked={!isFirebaseAuth}
+                  />
+                </div>
+              </div>
             </Form>
           </div>
         )}
