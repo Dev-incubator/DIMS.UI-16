@@ -2,7 +2,7 @@
     min-height: 100vh;
     width: 100vw;
     background-color: rgba(0, 0, 0, 0.5);
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     display: flex;
@@ -26,6 +26,7 @@
 
 
 .modalContent {
+    margin:1rem 0;
     border: 1px solid;
     border-radius: 0.3rem;
     padding: 1.5rem;
