@@ -23,7 +23,7 @@ export const getChangePasswordErrors = (user, state) => {
     errors.newPassword = 'Password should contains 8-24 symbols';
   }
   if (newPassword === user.password) {
-    errors.newPassword = 'New password is equal to past';
+    errors.newPassword = 'New password is equal to current';
   }
 
   if (!isObjectFieldsEmpty(errors)) {

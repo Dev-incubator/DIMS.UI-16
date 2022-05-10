@@ -1,0 +1,34 @@
+.content {
+    width: 54rem;
+    margin: 2rem auto;
+}
+
+.content.light{
+    color: var(--black);
+}
+
+.content.dark{
+    color: var(--gray);
+}
+
+.result.dark{
+    border-color: var(--gray);
+}
+
+.result.light{
+    border-color: var(--borderLight);
+}
+
+.buttonGroup {
+    display: flex;
+    column-gap: 0.5rem;
+    justify-content: center;
+}
+
+.result {
+    word-wrap: break-word;
+    margin-top: 1.5rem;
+    border: 1px solid;
+    border-radius: 0.3rem;
+    padding: 1rem;
+}

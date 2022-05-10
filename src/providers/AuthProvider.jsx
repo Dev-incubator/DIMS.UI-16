@@ -43,7 +43,7 @@ class AuthProvider extends PureComponent {
     const error = await login(email, password);
     if (!error) {
       await this.auth();
-      history.push('/about');
+      history.push('/tasks');
     }
 
     return error;

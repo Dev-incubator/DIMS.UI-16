@@ -13,7 +13,7 @@ export function Checkbox({ id, value, text, onChange, autoComplete }) {
 }
 
 Checkbox.propTypes = {
-  id: PropTypes.string.isRequired,
+  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   value: PropTypes.bool.isRequired,
   text: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,

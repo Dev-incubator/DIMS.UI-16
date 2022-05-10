@@ -1,4 +1,4 @@
-import { ADD_TASK, GET_TASKS, REMOVE_TASK, UPDATE_TASK } from './type-constants';
+import { ADD_TASK, GET_TASKS, REMOVE_TASK, UPDATE_TASK } from '../type-constants';
 
 const initialState = [];
 
@@ -23,8 +23,3 @@ export const tasksReducer = (state = initialState, action = {}) => {
     }
   }
 };
-
-export const getTasksAction = (tasks) => ({ type: GET_TASKS, payload: { tasks } });
-export const updateTaskAction = (id, task) => ({ type: UPDATE_TASK, payload: { id, task } });
-export const addTaskAction = (id, task) => ({ type: ADD_TASK, payload: { task: { ...task, id } } });
-export const removeTaskAction = (id) => ({ type: REMOVE_TASK, payload: { id } });

@@ -48,7 +48,7 @@ TaskModalUsersList.propTypes = {
   changeUserValue: PropTypes.func.isRequired,
   usersTask: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.string,
+      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
       name: PropTypes.string,
       value: PropTypes.bool,
     }),

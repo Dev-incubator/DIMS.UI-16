@@ -1,4 +1,4 @@
-import { ADD_USER, GET_USERS, REMOVE_USER, UPDATE_USER } from './type-constants';
+import { ADD_USER, GET_USERS, REMOVE_USER, UPDATE_USER } from '../type-constants';
 
 const initialState = [];
 
@@ -21,8 +21,3 @@ export const usersReducer = (state = initialState, action = {}) => {
     }
   }
 };
-
-export const getUsersAction = (users) => ({ type: GET_USERS, payload: { users } });
-export const removeUserAction = (id) => ({ type: REMOVE_USER, payload: { id } });
-export const addUserAction = (user, id) => ({ type: ADD_USER, payload: { user, id } });
-export const updateUserAction = (user, id) => ({ type: UPDATE_USER, payload: { user, id } });

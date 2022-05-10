@@ -1,7 +1,14 @@
-import { addTask, deleteTask, deleteTrack, getAllTasks, updateTask } from '../../scripts/api-service';
-import { addTaskAction, getTasksAction, removeTaskAction, updateTaskAction } from '../tasksReducers/tasksReducer';
-import { enableTasksLoaderAction, disableTasksLoaderAction } from '../tasksReducers/tasksLoaderReducer';
-import { disableTasksErrorAction, setTasksErrorAction } from '../tasksReducers/tasksErrorReducer';
+import { addTask, deleteTask, deleteTrack, getAllTasks, updateTask } from '../../../scripts/api-service';
+import {
+  addTaskAction,
+  getTasksAction,
+  removeTaskAction,
+  updateTaskAction,
+  disableTasksLoaderAction,
+  enableTasksLoaderAction,
+  disableTasksErrorAction,
+  setTasksErrorAction,
+} from '../actions/taskActions';
 
 export const getTasksThunk = () => {
   return async (dispatch) => {

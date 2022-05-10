@@ -1,13 +1,16 @@
 import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Container, Nav, Navbar } from 'react-bootstrap';
+import { useContext } from 'react';
 import styles from './Header.module.css';
 import { getUserName } from '../../scripts/helpers';
 import { withAuthContext } from '../../HOCs/withAuthContext';
 import { HEADER_VALUES, USER_ROLES } from '../../constants/libraries';
 import { ThemeContext } from '../../providers/ThemeProvider';
+import { ApiAuthContext } from '../../providers/ApiAuthProvider';
 
 function Header({ context }) {
+  const apiAuthContext = useContext(ApiAuthContext);
   const { logOut, user } = context;
   const userName = getUserName(user);
 
@@ -36,7 +39,7 @@ function Header({ context }) {
                       </>
                     ) : (
                       <>
-                        <NavLink to={`/tasks/${user.id}`} activeClassName={styles.active}>
+                        <NavLink to={`/user-tasks/${user.id}`} activeClassName={styles.active}>
                           {HEADER_VALUES.tasks}
                         </NavLink>
                         <NavLink to={`/settings/${user.id}`} activeClassName={styles.active}>
@@ -49,12 +52,21 @@ function Header({ context }) {
                 <NavLink to='/about' activeClassName={styles.active}>
                   About
                 </NavLink>
+                {apiAuthContext.token && (
+                  <NavLink to='/api' activeClassName={styles.active}>
+                    Swagger
+                  </NavLink>
+                )}
               </Nav>
               <Nav>
-                {user ? (
+                {user || apiAuthContext.token ? (
                   <div className={styles.auth}>
                     <Navbar.Text>{userName}</Navbar.Text>
-                    <NavLink to='/login' onClick={logOut} activeClassName={styles.active}>
+                    <NavLink
+                      to='/login'
+                      onClick={apiAuthContext.token ? apiAuthContext.logOut : logOut}
+                      activeClassName={styles.active}
+                    >
                       Log out
                     </NavLink>
                   </div>

@@ -19,7 +19,7 @@ export const ALERT_MODES = {
 };
 
 export const FIELD_NAMES = {
-  pastPassword: 'Past password',
+  currentPassword: 'Your password',
   newPassword: 'New password',
 };
 

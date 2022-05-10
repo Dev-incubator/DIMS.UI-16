@@ -4,7 +4,7 @@ import styles from './Toast.module.css';
 
 export function ErrorToast({ active, onClose, message, delay }) {
   return (
-    <Toast className={styles.error} onClose={onClose} show={active} delay={delay} autohide>
+    <Toast className={styles.error} bg='warning' onClose={onClose} show={active} delay={delay} autohide>
       <Toast.Body>{message}</Toast.Body>
     </Toast>
   );

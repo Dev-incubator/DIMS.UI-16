@@ -96,9 +96,9 @@ export class Settings extends PureComponent {
               <div>
                 <Input
                   value={password}
-                  title={FIELD_NAMES.pastPassword}
+                  title={FIELD_NAMES.currentPassword}
                   onChange={this.onChangeInputValue}
-                  placeholder={FIELD_NAMES.pastPassword}
+                  placeholder={FIELD_NAMES.currentPassword}
                   error={errors.password}
                   type={INPUT_TYPES.password}
                   fieldName={INPUT_NAMES.password}

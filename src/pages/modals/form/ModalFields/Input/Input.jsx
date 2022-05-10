@@ -6,7 +6,7 @@ import { INPUT_TYPES } from '../../../../../constants/libraries';
 import { Error } from '../../../../../components/Error/Error';
 import { ThemeContext } from '../../../../../providers/ThemeProvider';
 
-export function Input({ onChange, value, placeholder, readOnly, fieldName, error, type, title }) {
+export function Input({ onChange, value, placeholder, readOnly, fieldName, error, type, title, autoComplete }) {
   const onChangeHandler = ({ target: { name, value: inputValue } }) => {
     onChange(name, inputValue);
   };
@@ -24,6 +24,7 @@ export function Input({ onChange, value, placeholder, readOnly, fieldName, error
               className={`${styles.input} ${styles[theme]}`}
               placeholder={placeholder}
               value={value}
+              autoComplete={autoComplete}
               onChange={onChangeHandler}
             />
             {error && <Error message={error} />}
@@ -43,6 +44,7 @@ Input.propTypes = {
   fieldName: PropTypes.string,
   readOnly: PropTypes.bool,
   type: PropTypes.string,
+  autoComplete: PropTypes.oneOf(['on', 'off']),
 };
 
 Input.defaultProps = {
@@ -51,5 +53,6 @@ Input.defaultProps = {
   readOnly: false,
   placeholder: '',
   onChange: noop,
+  autoComplete: 'on',
   type: INPUT_TYPES.text,
 };

@@ -1,4 +1,4 @@
-import { PureComponent } from 'react';
+import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -11,98 +11,104 @@ import DeleteModal from '../modals/deleteModal/DeleteModal';
 import TaskModal from '../modals/taskModals/taskModal/TaskModal';
 import { withModal } from '../../HOCs/withModal';
 import { ThemeContext } from '../../providers/ThemeProvider';
-import { getUsersThunk } from '../../redux/usersThunk/usersThunk';
-import { addTaskThunk, getTasksThunk, removeTaskThunk, updateTaskThunk } from '../../redux/tasksThunk/tasksThunk';
+import { getUsersThunk } from '../../redux/users/thunks/usersThunk';
+import { addTaskThunk, getTasksThunk, removeTaskThunk, updateTaskThunk } from '../../redux/tasks/thunks/tasksThunk';
 import { Loading } from '../loading/Loading';
 import { CustomAlert } from '../../components/Alert/Alert';
 
 const tableTitles = ['#', 'Task name', 'Description', 'Start date', 'Deadline', 'Action'];
 
-class Tasks extends PureComponent {
-  async componentDidMount() {
-    const { getTasks, getUsers } = this.props;
+function Tasks({
+  mode,
+  actionId,
+  openModal,
+  closeModal,
+  tasks,
+  users,
+  isFetching,
+  error,
+  addTask,
+  removeTask,
+  updateTask,
+  getTasks,
+  getUsers,
+}) {
+  useEffect(() => {
     getTasks();
     getUsers();
-  }
+  }, [getTasks, getUsers]);
 
-  updateTask = async (data) => {
-    const { closeModal, actionId, updateTask } = this.props;
+  const updateTaskHandler = (data) => {
     updateTask(actionId, data);
     closeModal();
   };
 
-  addTask = async (task) => {
-    const { closeModal, addTask } = this.props;
-    await addTask(task);
+  const addTaskHandler = (task) => {
+    addTask(task);
     closeModal();
   };
 
-  removeTask = async () => {
-    const { closeModal, actionId, removeTask } = this.props;
-    await removeTask(actionId);
+  const removeTaskHandler = () => {
+    removeTask(actionId);
     closeModal();
   };
+  const actionTask = tasks.find((task) => task.id === actionId);
 
-  render() {
-    const { mode, actionId, openModal, closeModal, tasks, users, isFetching, error } = this.props;
-    const actionTask = tasks.find((task) => task.id === actionId);
+  return (
+    <ThemeContext.Consumer>
+      {({ theme }) => (
+        <div>
+          {isFetching && <Loading />}
+          <CustomAlert isActive={!!error} variant={ALERT_MODES.fail} text={error} />
+          <PageHeader text={PAGE_TITLES.tasks} onClick={openModal} />
+          <table className={`${styles.tasks} ${styles[theme]}`}>
+            <TableHeader titles={tableTitles} />
+            <tbody>
+              {tasks.map((task, index) => {
+                const openEditModal = () => {
+                  openModal(MODAL_MODES.edit, task.id);
+                };
+                const openReadModal = () => {
+                  openModal(MODAL_MODES.read, task.id);
+                };
+                const openDeleteModal = () => {
+                  openModal(MODAL_MODES.delete, task.id);
+                };
 
-    return (
-      <ThemeContext.Consumer>
-        {({ theme }) => (
-          <div>
-            {isFetching && <Loading />}
-            <CustomAlert isActive={!!error} variant={ALERT_MODES.fail} text={error} />
-            <PageHeader text={PAGE_TITLES.tasks} onClick={openModal} />
-            <table className={`${styles.tasks} ${styles[theme]}`}>
-              <TableHeader titles={tableTitles} />
-              <tbody>
-                {tasks.map((task, index) => {
-                  const openEditModal = () => {
-                    openModal(MODAL_MODES.edit, task.id);
-                  };
-                  const openReadModal = () => {
-                    openModal(MODAL_MODES.read, task.id);
-                  };
-                  const openDeleteModal = () => {
-                    openModal(MODAL_MODES.delete, task.id);
-                  };
-
-                  return (
-                    <TaskRow
-                      key={task.id}
-                      id={task.id}
-                      title={task.title}
-                      description={task.description}
-                      deadline={task.deadline}
-                      startDate={task.startDate}
-                      number={index + 1}
-                      openEditModal={openEditModal}
-                      openDeleteModal={openDeleteModal}
-                      openReadModal={openReadModal}
-                    />
-                  );
-                })}
-              </tbody>
-            </table>
-            {mode && mode !== MODAL_MODES.delete ? (
-              <TaskModal
-                users={users}
-                addTask={this.addTask}
-                task={actionTask}
-                readOnly={mode === MODAL_MODES.read}
-                updateTask={this.updateTask}
-                onClose={closeModal}
-              />
-            ) : null}
-            {mode === MODAL_MODES.delete && (
-              <DeleteModal onRemove={this.removeTask} onClose={closeModal} target={DELETE_VALUES.task} />
-            )}
-          </div>
-        )}
-      </ThemeContext.Consumer>
-    );
-  }
+                return (
+                  <TaskRow
+                    key={task.id}
+                    id={task.id}
+                    title={task.title}
+                    description={task.description}
+                    deadline={task.deadline}
+                    startDate={task.startDate}
+                    number={index + 1}
+                    openEditModal={openEditModal}
+                    openDeleteModal={openDeleteModal}
+                    openReadModal={openReadModal}
+                  />
+                );
+              })}
+            </tbody>
+          </table>
+          {mode && mode !== MODAL_MODES.delete ? (
+            <TaskModal
+              users={users}
+              addTask={addTaskHandler}
+              task={actionTask}
+              readOnly={mode === MODAL_MODES.read}
+              updateTask={updateTaskHandler}
+              onClose={closeModal}
+            />
+          ) : null}
+          {mode === MODAL_MODES.delete && (
+            <DeleteModal onRemove={removeTaskHandler} onClose={closeModal} target={DELETE_VALUES.task} />
+          )}
+        </div>
+      )}
+    </ThemeContext.Consumer>
+  );
 }
 
 function mapStateToProps(state) {

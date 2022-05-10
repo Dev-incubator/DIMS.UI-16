@@ -1,4 +1,4 @@
-import { PureComponent } from 'react';
+import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -21,107 +21,112 @@ import {
 import { withModal } from '../../HOCs/withModal';
 import { ThemeContext } from '../../providers/ThemeProvider';
 import { AuthContext } from '../../providers/AuthProvider';
-import { createUserThunk, getUsersThunk, removeUserThunk, updateUserThunk } from '../../redux/usersThunk/usersThunk';
+import { createUserThunk, getUsersThunk, removeUserThunk, updateUserThunk } from '../../redux/users/thunks/usersThunk';
 import { Loading } from '../loading/Loading';
 import { CustomAlert } from '../../components/Alert/Alert';
 
 const memberTableTitles = ['#', 'Full name', 'Direction', 'Education', 'Start', 'Age', 'Action'];
 
-class Members extends PureComponent {
-  async componentDidMount() {
-    const { getUsers } = this.props;
+function Members({
+  mode,
+  actionId,
+  openModal,
+  closeModal,
+  users,
+  error,
+  isFetching,
+  removeUser,
+  updateUser,
+  createUser,
+  getUsers,
+}) {
+  useEffect(() => {
     getUsers();
-  }
+  }, [getUsers]);
 
-  createUser = async (user) => {
-    const { createUser, closeModal } = this.props;
+  const createUserHandler = (user) => {
     createUser(user);
     closeModal();
   };
 
-  updateUser = async (user) => {
-    const { closeModal, actionId, updateUser } = this.props;
+  const updateUserHandler = (user) => {
     updateUser(actionId, user);
     closeModal();
   };
 
-  removeUser = async () => {
-    const { closeModal, actionId, removeUser } = this.props;
+  const removeUserHandler = () => {
     removeUser(actionId);
     closeModal();
   };
 
-  render() {
-    const { mode, actionId, openModal, closeModal, users, error, isFetching } = this.props;
-    const actionUser = users.find((item) => item.id === actionId);
+  const actionUser = users.find((item) => item.id === actionId);
 
-    return (
-      <ThemeContext.Consumer>
-        {({ theme }) => (
-          <AuthContext.Consumer>
-            {({ user: { role } }) => (
-              <div>
-                {isFetching && <Loading />}
-                <CustomAlert isActive={!!error} variant={ALERT_MODES.fail} text={error} />
-                {role === USER_ROLES.mentor ? (
-                  <div className={`${styles.header} ${styles[theme]}`}>
-                    <div className={pageStyles.pageTitle}>{HEADER_VALUES.members}</div>
-                  </div>
-                ) : (
-                  <PageHeader text={PAGE_TITLES.members} onClick={openModal} />
-                )}
-                <table className={`${styles.members} ${styles[theme]}`}>
-                  <TableHeader titles={memberTableTitles} />
-                  <tbody>
-                    {users.map((user, index) => {
-                      const openDeleteModal = () => {
-                        openModal(MODAL_MODES.delete, user.id);
-                      };
-                      const openEditModal = () => {
-                        openModal(MODAL_MODES.edit, user.id);
-                      };
-                      const openReadModal = () => {
-                        openModal(MODAL_MODES.read, user.id);
-                      };
+  return (
+    <ThemeContext.Consumer>
+      {({ theme }) => (
+        <AuthContext.Consumer>
+          {({ user: { role } }) => (
+            <div>
+              {isFetching && <Loading />}
+              <CustomAlert isActive={!!error} variant={ALERT_MODES.fail} text={error} />
+              {role === USER_ROLES.mentor ? (
+                <div className={`${styles.header} ${styles[theme]}`}>
+                  <div className={pageStyles.pageTitle}>{HEADER_VALUES.members}</div>
+                </div>
+              ) : (
+                <PageHeader text={PAGE_TITLES.members} onClick={openModal} />
+              )}
+              <table className={`${styles.members} ${styles[theme]}`}>
+                <TableHeader titles={memberTableTitles} />
+                <tbody>
+                  {users.map((user, index) => {
+                    const openDeleteModal = () => {
+                      openModal(MODAL_MODES.delete, user.id);
+                    };
+                    const openEditModal = () => {
+                      openModal(MODAL_MODES.edit, user.id);
+                    };
+                    const openReadModal = () => {
+                      openModal(MODAL_MODES.read, user.id);
+                    };
 
-                      return (
-                        <MemberInfoRow
-                          key={user.id}
-                          id={user.id}
-                          direction={user.direction}
-                          name={user.name}
-                          surname={user.surname}
-                          number={index + 1}
-                          age={getAge(user.birthDate)}
-                          education={user.education}
-                          startDate={user.startDate}
-                          openEditModal={openEditModal}
-                          openReadModal={openReadModal}
-                          openDeleteModal={openDeleteModal}
-                        />
-                      );
-                    })}
-                  </tbody>
-                </table>
-                {mode === MODAL_MODES.delete && (
-                  <DeleteModal target={DELETE_VALUES.member} onRemove={this.removeUser} onClose={closeModal} />
-                )}
-                {!!mode && mode !== MODAL_MODES.delete ? (
-                  <UserModal
-                    updateUser={this.updateUser}
-                    createUser={this.createUser}
-                    user={actionUser}
-                    onClose={closeModal}
-                    readOnly={mode === MODAL_MODES.read}
-                  />
-                ) : null}
-              </div>
-            )}
-          </AuthContext.Consumer>
-        )}
-      </ThemeContext.Consumer>
-    );
-  }
+                    return (
+                      <MemberInfoRow
+                        key={user.id}
+                        id={user.id}
+                        direction={user.direction}
+                        name={user.name}
+                        surname={user.surname}
+                        number={index + 1}
+                        age={getAge(user.birthDate)}
+                        education={user.education}
+                        startDate={user.startDate}
+                        openEditModal={openEditModal}
+                        openReadModal={openReadModal}
+                        openDeleteModal={openDeleteModal}
+                      />
+                    );
+                  })}
+                </tbody>
+              </table>
+              {mode === MODAL_MODES.delete && (
+                <DeleteModal target={DELETE_VALUES.member} onRemove={removeUserHandler} onClose={closeModal} />
+              )}
+              {!!mode && mode !== MODAL_MODES.delete ? (
+                <UserModal
+                  updateUser={updateUserHandler}
+                  createUser={createUserHandler}
+                  user={actionUser}
+                  onClose={closeModal}
+                  readOnly={mode === MODAL_MODES.read}
+                />
+              ) : null}
+            </div>
+          )}
+        </AuthContext.Consumer>
+      )}
+    </ThemeContext.Consumer>
+  );
 }
 
 function mapStateToProps(state) {

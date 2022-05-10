@@ -1,4 +1,4 @@
-import { DISABLE_TASKS_ERROR, SET_TASKS_ERROR } from './type-constants';
+import { DISABLE_TASKS_ERROR, SET_TASKS_ERROR } from '../type-constants';
 
 const initialState = '';
 
@@ -15,6 +15,3 @@ export const tasksErrorReducer = (state = initialState, action = {}) => {
     }
   }
 };
-
-export const setTasksErrorAction = (message) => ({ type: SET_TASKS_ERROR, payload: { message } });
-export const disableTasksErrorAction = () => ({ type: DISABLE_TASKS_ERROR });
