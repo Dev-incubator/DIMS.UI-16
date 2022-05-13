@@ -1,3 +1,5 @@
+https://startling-haupia-229318.netlify.app/
+
 [![Netlify Status](https://api.netlify.com/api/v1/badges/7744832f-1820-4384-95f5-8cb2d4baf2c2/deploy-status)](https://app.netlify.com/sites/dims-cra/deploys)
 [![codecov](https://codecov.io/gh/Dev-incubator/DIMS-cra/branch/main/graph/badge.svg?token=OGFOYAC3VK)](https://codecov.io/gh/Dev-incubator/DIMS-cra)
 [![Build Status](https://travis-ci.com/Dev-incubator/DIMS-cra.svg?branch=main)](https://travis-ci.com/Dev-incubator/DIMS-cra)
