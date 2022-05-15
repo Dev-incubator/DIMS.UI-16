@@ -18,7 +18,7 @@ const TaskModal = ({ active, submitTask, error, onClose, taskId, title }) => {
     (async () => {
       const allUsers = await getUsers();
       if (taskId) {
-        const task = (await getTasks(taskId)).find((item) => item.taskId === taskId);
+        const task = (await getTasks()).find((item) => item.id === taskId);
         if (task) {
           setInputValues(getUpdateTaskState(task, allUsers));
         }
@@ -95,7 +95,7 @@ const TaskModal = ({ active, submitTask, error, onClose, taskId, title }) => {
 
 TaskModal.propTypes = {
   title: PropTypes.string.isRequired,
-  taskId: PropTypes.number,
+  taskId: PropTypes.string,
   active: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   error: PropTypes.string.isRequired,
