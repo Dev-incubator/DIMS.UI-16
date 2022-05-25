@@ -1,4 +1,4 @@
-import { collection, doc, getDoc, getDocs, deleteDoc, updateDoc, addDoc, setDoc } from 'firebase/firestore/lite';
+import { collection, doc, getDoc, getDocs, deleteDoc, updateDoc, addDoc, setDoc } from 'firebase/firestore';
 import {
   createUserWithEmailAndPassword,
   deleteUser,

@@ -233,7 +233,7 @@ const Swagger = ({ mode, closeModal, openModal, actionId }) => {
       {mode === MODAL_TYPES.updateTask && (
         <TaskModal
           title={BUTTON_TITLES.updateTask}
-          taskId={Number(actionId)}
+          taskId={actionId}
           onClose={closeModal}
           error={error}
           submitTask={updateTaskHandler}
