@@ -15,6 +15,7 @@ instance.interceptors.request.use(async (req) => {
     const token = getToken();
     req.headers.Authorization = `Bearer ${token}`;
   }
+  console.log(req.headers.Authorization);
 
   return req;
 });
