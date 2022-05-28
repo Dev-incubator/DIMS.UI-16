@@ -9,6 +9,7 @@
     "create-react-app"
   ],
   "scripts": {
+    "demo": "mdx-deck presentation.mdx",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -117,6 +118,7 @@
     "web-vitals": "2.1.4"
   },
   "devDependencies": {
+    "mdx-deck": "^1.10.2",
     "codecov": "3.8.3",
     "commitizen": "4.2.4",
     "cz-conventional-changelog": "3.3.0",
