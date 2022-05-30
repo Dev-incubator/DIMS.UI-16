@@ -16,3 +16,17 @@
     font-size: 0.95rem;
 }
 
+@media screen and (max-width: 768px){
+    .formField{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        row-gap: 0.2rem;
+    }
+}
+
+@media screen and (max-width: 512px){
+    .formField{
+        width: 16rem;
+    }
+}

@@ -1,7 +1,7 @@
 .settings {
     margin: 2rem auto;
     box-sizing: border-box;
-    width: 51rem;
+    width: 38rem;
     border: 2px solid;
     border-radius: 0.3rem;
     padding: 2rem;
@@ -40,4 +40,16 @@
 .themeButtons {
     display: flex;
     column-gap: 0.3rem;
+}
+
+@media screen and (max-width: 768px){
+    .settings{
+        width: 30rem;
+    }
+}
+
+@media screen and (max-width: 768px){
+    .settings{
+        width: 20rem;
+    }
 }
