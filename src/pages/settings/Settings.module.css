@@ -42,14 +42,8 @@
     column-gap: 0.3rem;
 }
 
-@media screen and (max-width: 768px){
-    .settings{
-        width: 30rem;
-    }
-}
-
-@media screen and (max-width: 768px){
-    .settings{
+@media screen and (max-width: 768px) {
+    .settings {
         width: 20rem;
     }
 }
