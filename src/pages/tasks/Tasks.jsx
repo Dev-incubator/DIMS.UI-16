@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -33,6 +33,12 @@ function Tasks({
   getTasks,
   getUsers,
 }) {
+  const screen = window.matchMedia('(max-width:512px)');
+  const [isAdaptive, setIsAdaptive] = useState(screen.matches);
+  screen.addEventListener('change', () => {
+    setIsAdaptive(screen.matches);
+  });
+
   useEffect(() => {
     getTasks();
     getUsers();
@@ -61,37 +67,40 @@ function Tasks({
           {isFetching && <Loading />}
           <CustomAlert isActive={!!error} variant={ALERT_MODES.fail} text={error} />
           <PageHeader text={PAGE_TITLES.tasks} onClick={openModal} />
-          <table className={`${styles.tasks} ${styles[theme]}`}>
-            <TableHeader titles={tableTitles} />
-            <tbody>
-              {tasks.map((task, index) => {
-                const openEditModal = () => {
-                  openModal(MODAL_MODES.edit, task.id);
-                };
-                const openReadModal = () => {
-                  openModal(MODAL_MODES.read, task.id);
-                };
-                const openDeleteModal = () => {
-                  openModal(MODAL_MODES.delete, task.id);
-                };
+          <div className={styles.content}>
+            <table className={`${styles.tasks} ${styles[theme]}`}>
+              <TableHeader titles={tableTitles} />
+              <tbody>
+                {tasks.map((task, index) => {
+                  const openEditModal = () => {
+                    openModal(MODAL_MODES.edit, task.id);
+                  };
+                  const openReadModal = () => {
+                    openModal(MODAL_MODES.read, task.id);
+                  };
+                  const openDeleteModal = () => {
+                    openModal(MODAL_MODES.delete, task.id);
+                  };
 
-                return (
-                  <TaskRow
-                    key={task.id}
-                    id={task.id}
-                    title={task.title}
-                    description={task.description}
-                    deadline={task.deadline}
-                    startDate={task.startDate}
-                    number={index + 1}
-                    openEditModal={openEditModal}
-                    openDeleteModal={openDeleteModal}
-                    openReadModal={openReadModal}
-                  />
-                );
-              })}
-            </tbody>
-          </table>
+                  return (
+                    <TaskRow
+                      key={task.id}
+                      id={task.id}
+                      title={task.title}
+                      description={task.description}
+                      deadline={task.deadline}
+                      startDate={task.startDate}
+                      isAdaptive={isAdaptive}
+                      number={index + 1}
+                      openEditModal={openEditModal}
+                      openDeleteModal={openDeleteModal}
+                      openReadModal={openReadModal}
+                    />
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
           {mode && mode !== MODAL_MODES.delete ? (
             <TaskModal
               users={users}

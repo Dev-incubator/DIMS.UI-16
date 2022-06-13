@@ -4,6 +4,15 @@
     column-gap: 0.4rem;
 }
 
+.content{
+    display: flex;
+    justify-content: center;
+}
+
+.tasks{
+    margin: 0 0.5rem;
+}
+
 .tasks.dark {
     color: var(--gray);
 }
@@ -75,4 +84,22 @@
     width: 28.7rem;
     height: 30rem;
     padding: 1.7rem 1.4rem;
+}
+
+@media screen and (max-width: 991px) {
+    .tasks td:nth-child(3){
+        display: none;
+    }
+    .tasks th:nth-child(3){
+        display: none;
+    }
+}
+
+@media screen and (max-width: 676px){
+    .tasks td:nth-child(4){
+        display: none;
+    }
+    .tasks th:nth-child(4){
+        display: none;
+    }
 }

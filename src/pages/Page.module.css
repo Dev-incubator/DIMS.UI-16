@@ -37,3 +37,16 @@
 .header.light {
     color: var(--black);
 }
+
+
+@media screen and (max-width: 991px){
+    .header{
+        width: 38rem;
+    }
+}
+
+@media screen and (max-width: 768px){
+    .header{
+        width: 29rem;
+    }
+}

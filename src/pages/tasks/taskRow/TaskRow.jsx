@@ -13,6 +13,7 @@ export function TaskRow({
   openEditModal,
   openReadModal,
   openDeleteModal,
+  isAdaptive,
 }) {
   return (
     <ThemeContext.Consumer>
@@ -29,12 +30,18 @@ export function TaskRow({
           <td>{deadline}</td>
           <td>
             <div className={styles.buttonGroup}>
-              <Button color={BUTTON_COLORS.orange} onClick={openEditModal}>
-                {BUTTON_VALUES.edit}
-              </Button>
-              <Button color={BUTTON_COLORS.red} onClick={openDeleteModal}>
-                {BUTTON_VALUES.delete}
-              </Button>
+              {isAdaptive ? (
+                <></>
+              ) : (
+                <>
+                  <Button color={BUTTON_COLORS.orange} onClick={openEditModal}>
+                    {BUTTON_VALUES.edit}
+                  </Button>
+                  <Button color={BUTTON_COLORS.red} onClick={openDeleteModal}>
+                    {BUTTON_VALUES.delete}
+                  </Button>
+                </>
+              )}
             </div>
           </td>
         </tr>
@@ -52,4 +59,5 @@ TaskRow.propTypes = {
   openEditModal: PropTypes.func.isRequired,
   openReadModal: PropTypes.func.isRequired,
   openDeleteModal: PropTypes.func.isRequired,
+  isAdaptive: PropTypes.bool.isRequired,
 };
