@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -15,6 +15,7 @@ import { getUsersThunk } from '../../redux/users/thunks/usersThunk';
 import { addTaskThunk, getTasksThunk, removeTaskThunk, updateTaskThunk } from '../../redux/tasks/thunks/tasksThunk';
 import { Loading } from '../loading/Loading';
 import { CustomAlert } from '../../components/Alert/Alert';
+import { withAdaptive } from '../../HOCs/withAdaptive';
 
 const tableTitles = ['#', 'Task name', 'Description', 'Start date', 'Deadline', 'Action'];
 
@@ -31,14 +32,9 @@ function Tasks({
   removeTask,
   updateTask,
   getTasks,
+  isAdaptive,
   getUsers,
 }) {
-  const screen = window.matchMedia('(max-width:512px)');
-  const [isAdaptive, setIsAdaptive] = useState(screen.matches);
-  screen.addEventListener('change', () => {
-    setIsAdaptive(screen.matches);
-  });
-
   useEffect(() => {
     getTasks();
     getUsers();
@@ -143,6 +139,7 @@ function mapDispatchToProps(dispatch) {
 }
 
 Tasks.propTypes = {
+  isAdaptive: PropTypes.bool.isRequired,
   getUsers: PropTypes.func.isRequired,
   getTasks: PropTypes.func.isRequired,
   updateTask: PropTypes.func.isRequired,
@@ -176,4 +173,4 @@ Tasks.propTypes = {
   openModal: PropTypes.func.isRequired,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withModal(Tasks));
+export default connect(mapStateToProps, mapDispatchToProps)(withModal(withAdaptive(Tasks)));

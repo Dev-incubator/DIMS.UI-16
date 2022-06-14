@@ -2,6 +2,15 @@
     margin: 0 0.6rem -0.3rem 0;
 }
 
+.content {
+    display: flex;
+    justify-content: center;
+}
+
+.members {
+    margin: 0 0.8rem;
+}
+
 .members.light {
     color: var(--black);
 }
@@ -19,7 +28,14 @@
 }
 
 .members th:nth-child(2) {
-    min-width: 12.5rem;
+    width: 12.5rem;
+}
+
+.members td:nth-child(2) button {
+    max-width: 12rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .members th:nth-child(3) {
@@ -54,4 +70,45 @@
 
 .header.light {
     color: var(--black);
+}
+
+@media screen and (max-width: 991px) {
+    .members th:nth-child(4), .members td:nth-child(4) {
+        display: none;
+    }
+
+    .members th:nth-child(2) {
+        width: 9rem;
+    }
+
+    .members td:nth-child(2) button {
+        max-width: 9rem;
+    }
+
+    .members th:nth-child(6) {
+        min-width: 3.3rem;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .members th:nth-child(5), .members td:nth-child(5) {
+        display: none;
+    }
+
+    .members th:nth-child(6), .members td:nth-child(6) {
+        display: none;
+    }
+
+    .members th:nth-child(2) {
+        width: 10rem;
+    }
+}
+
+@media screen and (max-width: 512px){
+    .members th:nth-child(7) {
+        width: 6rem;
+    }
+    .members th:nth-child(3), .members td:nth-child(3) {
+        display: none;
+    }
 }

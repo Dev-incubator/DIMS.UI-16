@@ -50,3 +50,12 @@
         width: 29rem;
     }
 }
+
+@media screen and (max-width: 512px){
+    .header{
+        margin: 1.5rem 0.4rem;
+        width: auto;
+        display: flex;
+        justify-content: space-evenly;
+    }
+}

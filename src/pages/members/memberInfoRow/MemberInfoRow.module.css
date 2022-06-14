@@ -1,10 +1,21 @@
-.buttonGroup {
+.buttonGroup{
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    align-content: center;
-    gap: 0.3rem;
+    row-gap: 0.3rem;
+}
+
+.buttonsRow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    column-gap: 0.3rem;
+}
+
+.iconButton {
+    background-color: inherit;
+    border: none;
 }
 
 

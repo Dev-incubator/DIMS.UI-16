@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { Trash, Pencil } from 'react-bootstrap-icons';
 import styles from '../Tasks.module.css';
 import Button from '../../../components/Buttons/Button/Button';
 import { ThemeContext } from '../../../providers/ThemeProvider';
@@ -31,7 +32,14 @@ export function TaskRow({
           <td>
             <div className={styles.buttonGroup}>
               {isAdaptive ? (
-                <></>
+                <>
+                  <button type='button' className={styles.iconButton} onClick={openEditModal}>
+                    <Pencil color={theme === 'dark' && 'var(--secondary)'} />
+                  </button>
+                  <button type='button' className={styles.iconButton} onClick={openDeleteModal}>
+                    <Trash color={theme === 'dark' && 'var(--secondary)'} />
+                  </button>
+                </>
               ) : (
                 <>
                   <Button color={BUTTON_COLORS.orange} onClick={openEditModal}>
