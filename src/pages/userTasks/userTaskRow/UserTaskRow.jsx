@@ -1,5 +1,7 @@
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
+import { Dropdown, ButtonGroup, Popover, OverlayTrigger } from 'react-bootstrap';
+import { InfoCircle } from 'react-bootstrap-icons';
 import Button from '../../../components/Buttons/Button/Button';
 import { BUTTON_COLORS, BUTTON_VALUES, TASK_STATUS, USER_ROLES } from '../../../constants/libraries';
 import styles from '../UserTasks.module.css';
@@ -20,7 +22,17 @@ export const statusThemeColors = {
   },
 };
 
-export function UserTaskRow({ userId, number, title, startDate, status, deadline, taskId, updateTaskStatus }) {
+export function UserTaskRow({
+  userId,
+  number,
+  title,
+  startDate,
+  status,
+  deadline,
+  taskId,
+  updateTaskStatus,
+  isAdaptive,
+}) {
   const buttonColor = status === TASK_STATUS.active ? BUTTON_COLORS.green : BUTTON_COLORS.blue;
   const buttonValue = status === TASK_STATUS.active ? BUTTON_VALUES.success : BUTTON_VALUES.active;
   const disabledFailButton = status === TASK_STATUS.fail;
@@ -31,6 +43,16 @@ export function UserTaskRow({ userId, number, title, startDate, status, deadline
 
   const statusColor = getStatusColor(status);
 
+  const popover = (
+    <Popover id='popover-basic'>
+      <Popover.Header as='h3'>Additional info</Popover.Header>
+      <Popover.Body>
+        <div>Start date: {startDate}</div>
+        <div>Deadline date: {deadline}</div>
+      </Popover.Body>
+    </Popover>
+  );
+
   return (
     <ThemeContext.Consumer>
       {({ theme }) => (
@@ -39,6 +61,11 @@ export function UserTaskRow({ userId, number, title, startDate, status, deadline
             <tr>
               <td>{number}</td>
               <td>
+                {isAdaptive && (
+                  <OverlayTrigger trigger={['click', 'hover']} placement='right' overlay={popover}>
+                    <InfoCircle className={styles.icon} />
+                  </OverlayTrigger>
+                )}
                 {role === USER_ROLES.user ? (
                   <NavLink to={`/track/${userId}/task/${taskId}`} className={`${styles.link} ${styles[theme]}`}>
                     {title}
@@ -50,23 +77,50 @@ export function UserTaskRow({ userId, number, title, startDate, status, deadline
               <td>{startDate}</td>
               <td>{deadline}</td>
               <td>
-                <div style={{ color: statusThemeColors[theme][statusColor] }}>{status}</div>
+                {isAdaptive ? (
+                  <div className={styles.circle} style={{ backgroundColor: statusThemeColors[theme][statusColor] }} />
+                ) : (
+                  <div style={{ color: statusThemeColors[theme][statusColor] }}>{status}</div>
+                )}
               </td>
               {role !== USER_ROLES.user && (
                 <td>
-                  <div className={styles.buttonGroup}>
-                    <Button color={buttonColor} onClick={updateTaskStatusHandler} name={buttonValue}>
-                      {buttonValue}
-                    </Button>
-                    <Button
-                      color={BUTTON_COLORS.red}
-                      readOnly={disabledFailButton}
-                      name={BUTTON_VALUES.fail}
-                      onClick={updateTaskStatusHandler}
-                    >
-                      {BUTTON_VALUES.fail}
-                    </Button>
-                  </div>
+                  {isAdaptive ? (
+                    <Dropdown as={ButtonGroup} className={styles.dropdown}>
+                      <Dropdown.Toggle split variant='link' id='dropdown-split-basic' />
+                      <Dropdown.Menu className={styles.menu}>
+                        <Dropdown.Item>
+                          <Button color={buttonColor} onClick={updateTaskStatusHandler} name={buttonValue}>
+                            {buttonValue}
+                          </Button>
+                        </Dropdown.Item>
+                        <Dropdown.Item>
+                          <Button
+                            color={BUTTON_COLORS.red}
+                            readOnly={disabledFailButton}
+                            name={BUTTON_VALUES.fail}
+                            onClick={updateTaskStatusHandler}
+                          >
+                            {BUTTON_VALUES.fail}
+                          </Button>
+                        </Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  ) : (
+                    <div className={styles.buttonGroup}>
+                      <Button color={buttonColor} onClick={updateTaskStatusHandler} name={buttonValue}>
+                        {buttonValue}
+                      </Button>
+                      <Button
+                        color={BUTTON_COLORS.red}
+                        readOnly={disabledFailButton}
+                        name={BUTTON_VALUES.fail}
+                        onClick={updateTaskStatusHandler}
+                      >
+                        {BUTTON_VALUES.fail}
+                      </Button>
+                    </div>
+                  )}
                 </td>
               )}
             </tr>
@@ -78,6 +132,7 @@ export function UserTaskRow({ userId, number, title, startDate, status, deadline
 }
 
 UserTaskRow.propTypes = {
+  isAdaptive: PropTypes.bool.isRequired,
   taskId: PropTypes.string.isRequired,
   number: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,

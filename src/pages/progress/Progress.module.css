@@ -1,3 +1,13 @@
+.content {
+    display: flex;
+    justify-content: center;
+}
+
+.progress {
+    margin: 0 0.5rem;
+}
+
+
 .progress.dark {
     color: var(--gray);
 }
@@ -18,6 +28,13 @@
     width: 19rem;
 }
 
+.progress td:nth-child(2), .progress td:nth-child(3) {
+    max-width: 19rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .progress th:nth-child(3) {
     width: 21.9rem;
 }
@@ -35,4 +52,30 @@
 .progress td:nth-child(3) {
     padding-left: 0.8rem;
     text-align: left;
+}
+
+@media screen and (max-width: 991px) {
+    .progress td:nth-child(2), .progress td:nth-child(3) {
+        max-width: 15rem;
+    }
+
+    .progress th:nth-child(2), .progress th:nth-child(3) {
+        width: 15.5rem;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .progress th:nth-child(3), .progress td:nth-child(3) {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 512px) {
+    .progress td:nth-child(2) {
+        max-width: 10rem;
+    }
+
+    .progress th:nth-child(2) {
+        width: 10.5rem;
+    }
 }

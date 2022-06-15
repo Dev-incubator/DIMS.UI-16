@@ -39,21 +39,23 @@ export class Progress extends PureComponent {
         {({ theme }) => (
           <div>
             <PageHeader text={pageTitle} isBackButton />
-            <table className={`${styles.progress} ${styles[theme]}`}>
-              <TableHeader titles={tableTitles} />
-              <tbody>
-                {progress.map((task, index) => (
-                  <ProgressRow
-                    key={task.id}
-                    title={task.title}
-                    date={task.startDate}
-                    description={task.description}
-                    number={index + 1}
-                    taskId={task.id}
-                  />
-                ))}
-              </tbody>
-            </table>
+            <div className={styles.content}>
+              <table className={`${styles.progress} ${styles[theme]}`}>
+                <TableHeader titles={tableTitles} />
+                <tbody>
+                  {progress.map((task, index) => (
+                    <ProgressRow
+                      key={task.id}
+                      title={task.title}
+                      date={task.startDate}
+                      description={task.description}
+                      number={index + 1}
+                      taskId={task.id}
+                    />
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </ThemeContext.Consumer>

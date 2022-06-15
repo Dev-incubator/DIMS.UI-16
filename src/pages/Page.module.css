@@ -1,9 +1,10 @@
 .pageTitle {
+    margin: 0 1rem;
     font-family: Roboto, sans-serif;
     font-style: normal;
     font-weight: 400;
     font-size: 2rem;
-    line-height: 1rem;
+    line-height: 1.5rem;
     display: flex;
     align-items: center;
 }
@@ -28,6 +29,7 @@
     width: 50.6rem;
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 .header.dark {

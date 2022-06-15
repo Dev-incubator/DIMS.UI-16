@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { Trash, Pencil } from 'react-bootstrap-icons';
+import { useContext } from 'react';
 import styles from '../Tasks.module.css';
 import Button from '../../../components/Buttons/Button/Button';
 import { ThemeContext } from '../../../providers/ThemeProvider';
@@ -16,45 +17,47 @@ export function TaskRow({
   openDeleteModal,
   isAdaptive,
 }) {
+  const themeContext = useContext(ThemeContext);
+  const iconColors = {
+    dark: 'var(--secondary)',
+    light: 'var(--borderDark)',
+  };
+
   return (
-    <ThemeContext.Consumer>
-      {({ theme }) => (
-        <tr>
-          <td>{number}</td>
-          <td>
-            <button type='button' className={`${styles.taskTitle} ${styles[theme]}`} onClick={openReadModal}>
-              {title}
-            </button>
-          </td>
-          <td>{description}</td>
-          <td>{startDate}</td>
-          <td>{deadline}</td>
-          <td>
-            <div className={styles.buttonGroup}>
-              {isAdaptive ? (
-                <>
-                  <button type='button' className={styles.iconButton} onClick={openEditModal}>
-                    <Pencil color={theme === 'dark' && 'var(--secondary)'} />
-                  </button>
-                  <button type='button' className={styles.iconButton} onClick={openDeleteModal}>
-                    <Trash color={theme === 'dark' && 'var(--secondary)'} />
-                  </button>
-                </>
-              ) : (
-                <>
-                  <Button color={BUTTON_COLORS.orange} onClick={openEditModal}>
-                    {BUTTON_VALUES.edit}
-                  </Button>
-                  <Button color={BUTTON_COLORS.red} onClick={openDeleteModal}>
-                    {BUTTON_VALUES.delete}
-                  </Button>
-                </>
-              )}
-            </div>
-          </td>
-        </tr>
-      )}
-    </ThemeContext.Consumer>
+    <tr>
+      <td>{number}</td>
+      <td>
+        <button type='button' className={`${styles.taskTitle} ${styles[themeContext.theme]}`} onClick={openReadModal}>
+          {title}
+        </button>
+      </td>
+      <td>{description}</td>
+      <td>{startDate}</td>
+      <td>{deadline}</td>
+      <td>
+        <div className={styles.buttonGroup}>
+          {isAdaptive ? (
+            <>
+              <button type='button' className={styles.iconButton} onClick={openEditModal}>
+                <Pencil color={iconColors[themeContext.theme]} />
+              </button>
+              <button type='button' className={styles.iconButton} onClick={openDeleteModal}>
+                <Trash color={iconColors[themeContext.theme]} />
+              </button>
+            </>
+          ) : (
+            <>
+              <Button color={BUTTON_COLORS.orange} onClick={openEditModal}>
+                {BUTTON_VALUES.edit}
+              </Button>
+              <Button color={BUTTON_COLORS.red} onClick={openDeleteModal}>
+                {BUTTON_VALUES.delete}
+              </Button>
+            </>
+          )}
+        </div>
+      </td>
+    </tr>
   );
 }
 
