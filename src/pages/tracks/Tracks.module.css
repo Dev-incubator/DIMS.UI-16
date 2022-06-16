@@ -1,3 +1,12 @@
+.content {
+    display: flex;
+    justify-content: center;
+}
+
+.tracks {
+    margin: 0 1.5rem;
+}
+
 .tracks.dark {
     color: var(--gray);
 }
@@ -18,8 +27,22 @@
     width: 14.5rem;
 }
 
+.tracks td:nth-child(2) {
+    max-width: 14rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .tracks th:nth-child(3) {
     width: 15.7rem;
+}
+
+.tracks td:nth-child(3) {
+    max-width: 15.2rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .tracks th:nth-child(4) {
@@ -39,3 +62,35 @@
     padding-left: 0.8rem;
     text-align: left;
 }
+
+@media screen and (max-width: 991px) {
+    .tracks th:nth-child(3), .tracks td:nth-child(3) {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .tracks th:nth-child(2) {
+        width: 10.5rem;
+    }
+
+    .tracks td:nth-child(2) {
+        max-width: 10rem;
+    }
+
+    .tracks th:nth-child(4), .tracks td:nth-child(4) {
+        display: none;
+    }
+
+    .tracks th:nth-child(3), .tracks td:nth-child(3) {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 512px) {
+    .tracks {
+        margin: 0 0.5rem;
+    }
+}
+
+

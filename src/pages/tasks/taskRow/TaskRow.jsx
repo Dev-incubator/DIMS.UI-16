@@ -6,6 +6,11 @@ import Button from '../../../components/Buttons/Button/Button';
 import { ThemeContext } from '../../../providers/ThemeProvider';
 import { BUTTON_COLORS, BUTTON_VALUES } from '../../../constants/libraries';
 
+export const iconColors = {
+  dark: 'var(--secondary)',
+  light: 'var(--borderDark)',
+};
+
 export function TaskRow({
   number,
   title,
@@ -18,10 +23,6 @@ export function TaskRow({
   isAdaptive,
 }) {
   const themeContext = useContext(ThemeContext);
-  const iconColors = {
-    dark: 'var(--secondary)',
-    light: 'var(--borderDark)',
-  };
 
   return (
     <tr>
