@@ -1,11 +1,12 @@
 import PropTypes from 'prop-types';
 import { INPUT_NAMES, INPUT_TYPES, MODAL_VALUES } from '../../../../constants/libraries';
 import noop from '../../../../shared/noop';
+import styles from '../taskModal/TaskModal.module.css';
 import { Input } from '../../form/ModalFields/Input/Input';
 
 export function TaskModalFields({ errors, title, description, startDate, deadline, onChangeInputValue, readOnly }) {
   return (
-    <div>
+    <div className={styles.fields}>
       <Input
         placeholder={MODAL_VALUES.name}
         fieldName={INPUT_NAMES.title}
