@@ -16,10 +16,12 @@
     --darkGreen: #519872;
     --white: white;
     --black: black;
+    --xsFontSize: 16px;
 }
 
-html {
-    font-size: 20px;
+
+html{
+    font-size: calc(var(--xsFontSize) + 4px);
 }
 
 a {
@@ -62,19 +64,19 @@ code {
 
 @media screen and (max-width: 1048px) {
     html {
-        font-size: 18px;
+        font-size: calc(var(--xsFontSize) + 2px);
     }
 }
 
 @media screen and (max-width: 768px) {
     html {
-        font-size: 17px;
+        font-size: calc(var(--xsFontSize) + 1px);
     }
 }
 
-@media screen and (max-width: 512px){
-    html{
-        font-size: 16px;
+@media screen and (max-width: 512px) {
+    html {
+        font-size: var(--xsFontSize);
     }
 }
 
