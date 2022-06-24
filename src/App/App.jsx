@@ -1,4 +1,4 @@
-import { PureComponent } from 'react';
+import { useLayoutEffect } from 'react';
 import { Switch } from 'react-router-dom';
 import { appTitle } from '../config';
 import './App.css';
@@ -9,32 +9,30 @@ import { GeneratedRoutes } from './GeneratedRoutes';
 import { ThemeContext } from '../providers/ThemeProvider';
 import Header from './header/Header';
 
-class App extends PureComponent {
-  componentDidMount() {
+const App = () => {
+  useLayoutEffect(() => {
     document.title = appTitle;
-  }
+  }, []);
 
-  render() {
-    return (
-      <ThemeContext.Consumer>
-        {({ theme }) => (
-          <div className={`${styles.App} ${styles[theme]}`}>
-            <Header />
-            <main>
-              <ErrorBoundary>
-                <Switch>
-                  <GeneratedRoutes />
-                </Switch>
-              </ErrorBoundary>
-            </main>
-            <footer>
-              <span className={styles.copyright}>{COPYRIGHT}</span>
-            </footer>
-          </div>
-        )}
-      </ThemeContext.Consumer>
-    );
-  }
-}
+  return (
+    <ThemeContext.Consumer>
+      {({ theme }) => (
+        <div className={`${styles.App} ${styles[theme]}`}>
+          <Header />
+          <main>
+            <ErrorBoundary>
+              <Switch>
+                <GeneratedRoutes />
+              </Switch>
+            </ErrorBoundary>
+          </main>
+          <footer>
+            <span className={styles.copyright}>{COPYRIGHT}</span>
+          </footer>
+        </div>
+      )}
+    </ThemeContext.Consumer>
+  );
+};
 
 export default App;
