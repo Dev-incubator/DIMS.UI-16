@@ -4,9 +4,11 @@
     display: flex;
     break-inside: avoid;
     justify-content: space-between;
+    column-gap: 0.15rem;
 }
 
 .title {
+    margin-top: 0.3rem;
     max-width: 8rem;
     white-space: nowrap;
     overflow: hidden;
@@ -16,3 +18,24 @@
     font-size: 0.95rem;
 }
 
+@media screen and (max-width: 1200px) {
+    .formField {
+        width: 21rem;
+    }
+}
+
+@media screen and (max-width: 991px) {
+    .formField {
+        width: 11.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        row-gap: 0.2rem;
+    }
+}
+
+@media screen and (max-width: 512px) {
+    .formField {
+        width: 16rem;
+    }
+}

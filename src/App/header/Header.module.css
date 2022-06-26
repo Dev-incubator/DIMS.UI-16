@@ -1,6 +1,4 @@
 .header {
-    width: 100vw;
-    height: 3rem;
     display: flex;
     column-gap: 2rem;
     z-index: 1;
@@ -38,6 +36,7 @@ a.active {
     display: flex;
     align-items: center;
     column-gap: 0.8rem;
+    justify-content: center;
 }
 
 .userName {
@@ -47,10 +46,13 @@ a.active {
 
 .links {
     display: flex;
+    flex-direction: row;
     align-items: center;
+    justify-content: center;
     column-gap: 1.5rem;
 }
 
 .logIn {
-    margin-left: -4rem;
+    display: flex;
+    justify-content: center;
 }

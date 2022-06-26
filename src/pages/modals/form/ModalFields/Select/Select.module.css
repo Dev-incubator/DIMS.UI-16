@@ -1,4 +1,4 @@
-.select{
+.select {
     box-sizing: border-box;
     width: 17.5rem;
     height: 2rem;
@@ -14,12 +14,13 @@
     align-items: center;
 }
 
-.select.dark{
+.select.dark {
     border-color: var(--gray);
     color: var(--gray);
     background-color: var(--darkGray);
 }
-.select.light{
+
+.select.light {
     border-color: var(--borderLight);
     color: var(--black);
     background-color: var(--gray);
@@ -27,4 +28,10 @@
 
 .placeholder {
     opacity: 0.6;
+}
+
+@media screen and (max-width: 1200px) {
+    .select {
+        width: 14rem;
+    }
 }

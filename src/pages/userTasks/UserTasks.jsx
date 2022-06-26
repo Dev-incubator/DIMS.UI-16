@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { PageHeader } from '../helpers/PageHeader';
 import { TableHeader } from '../helpers/TableHeader';
 import styles from './UserTasks.module.css';
-import { UserTaskRow } from './userTaskRow/UserTaskRow';
+import { statusThemeColors, UserTaskRow } from './userTaskRow/UserTaskRow';
 import { getTaskById, getUserById, getUserTasksById, updateTask } from '../../scripts/api-service';
 import { USER_ROLES } from '../../constants/libraries';
 import pageStyles from '../Page.module.css';
@@ -13,11 +13,12 @@ import { Loading } from '../loading/Loading';
 import { AuthContext } from '../../providers/AuthProvider';
 import { setTasksAction, updateTaskStatusAction } from './userTaskReducer/userTaskActions';
 import { userTaskReducer } from './userTaskReducer/userTaskReducer';
+import { withAdaptive } from '../../HOCs/withAdaptive';
 
 const adminTableTitles = ['#', 'Task name', 'Start date', 'Deadline', 'Status', 'Update status'];
 const userTableTitles = adminTableTitles.slice(0, adminTableTitles.length - 1);
 
-function UserTasks({ match }) {
+function UserTasks({ match, isAdaptive }) {
   const [userName, setUserName] = useState('');
   const [tasks, dispatch] = useReducer(userTaskReducer, []);
 
@@ -56,24 +57,43 @@ function UserTasks({ match }) {
               ) : (
                 <PageHeader text={`${userName}'s current tasks`} isBackButton />
               )}
-              <table className={`${styles.userTasks} ${styles[theme]}`}>
-                <TableHeader titles={role === USER_ROLES.user ? userTableTitles : adminTableTitles} />
-                <tbody>
-                  {tasks.map((task, index) => (
-                    <UserTaskRow
-                      key={task.id}
-                      updateTaskStatus={updateTaskStatus}
-                      userId={task.userId}
-                      taskId={task.id}
-                      title={task.title}
-                      deadline={task.deadline}
-                      startDate={task.startDate}
-                      number={index + 1}
-                      status={task.status}
-                    />
-                  ))}
-                </tbody>
-              </table>
+              <div className={styles.content}>
+                <table className={`${styles.userTasks} ${styles[theme]}`}>
+                  <TableHeader titles={role === USER_ROLES.user ? userTableTitles : adminTableTitles} />
+                  <tbody>
+                    {tasks.map((task, index) => (
+                      <UserTaskRow
+                        key={task.id}
+                        updateTaskStatus={updateTaskStatus}
+                        userId={task.userId}
+                        taskId={task.id}
+                        isAdaptive={isAdaptive}
+                        title={task.title}
+                        deadline={task.deadline}
+                        startDate={task.startDate}
+                        number={index + 1}
+                        status={task.status}
+                      />
+                    ))}
+                  </tbody>
+                </table>
+                {isAdaptive && (
+                  <div className={styles.info}>
+                    <div className={styles.statusInfo}>
+                      <div className={styles.circle} style={{ backgroundColor: statusThemeColors[theme].success }} />
+                      <div>- task completed</div>
+                    </div>
+                    <div className={styles.statusInfo}>
+                      <div className={styles.circle} style={{ backgroundColor: statusThemeColors[theme].primary }} />
+                      <div>- task is active</div>
+                    </div>
+                    <div className={styles.statusInfo}>
+                      <div className={styles.circle} style={{ backgroundColor: statusThemeColors[theme].error }} />
+                      <div>- task is failed</div>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           )}
         </AuthContext.Consumer>
@@ -83,7 +103,8 @@ function UserTasks({ match }) {
 }
 
 UserTasks.propTypes = {
+  isAdaptive: PropTypes.bool.isRequired,
   match: PropTypes.shape({ params: PropTypes.shape({ id: PropTypes.string.isRequired }) }).isRequired,
 };
 
-export default withRouter(UserTasks);
+export default withRouter(withAdaptive(UserTasks));

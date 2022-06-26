@@ -24,6 +24,7 @@ import { AuthContext } from '../../providers/AuthProvider';
 import { createUserThunk, getUsersThunk, removeUserThunk, updateUserThunk } from '../../redux/users/thunks/usersThunk';
 import { Loading } from '../loading/Loading';
 import { CustomAlert } from '../../components/Alert/Alert';
+import { withAdaptive } from '../../HOCs/withAdaptive';
 
 const memberTableTitles = ['#', 'Full name', 'Direction', 'Education', 'Start', 'Age', 'Action'];
 
@@ -38,6 +39,7 @@ function Members({
   removeUser,
   updateUser,
   createUser,
+  isAdaptive,
   getUsers,
 }) {
   useEffect(() => {
@@ -76,39 +78,42 @@ function Members({
               ) : (
                 <PageHeader text={PAGE_TITLES.members} onClick={openModal} />
               )}
-              <table className={`${styles.members} ${styles[theme]}`}>
-                <TableHeader titles={memberTableTitles} />
-                <tbody>
-                  {users.map((user, index) => {
-                    const openDeleteModal = () => {
-                      openModal(MODAL_MODES.delete, user.id);
-                    };
-                    const openEditModal = () => {
-                      openModal(MODAL_MODES.edit, user.id);
-                    };
-                    const openReadModal = () => {
-                      openModal(MODAL_MODES.read, user.id);
-                    };
+              <div className={styles.content}>
+                <table className={`${styles.members} ${styles[theme]}`}>
+                  <TableHeader titles={memberTableTitles} />
+                  <tbody>
+                    {users.map((user, index) => {
+                      const openDeleteModal = () => {
+                        openModal(MODAL_MODES.delete, user.id);
+                      };
+                      const openEditModal = () => {
+                        openModal(MODAL_MODES.edit, user.id);
+                      };
+                      const openReadModal = () => {
+                        openModal(MODAL_MODES.read, user.id);
+                      };
 
-                    return (
-                      <MemberInfoRow
-                        key={user.id}
-                        id={user.id}
-                        direction={user.direction}
-                        name={user.name}
-                        surname={user.surname}
-                        number={index + 1}
-                        age={getAge(user.birthDate)}
-                        education={user.education}
-                        startDate={user.startDate}
-                        openEditModal={openEditModal}
-                        openReadModal={openReadModal}
-                        openDeleteModal={openDeleteModal}
-                      />
-                    );
-                  })}
-                </tbody>
-              </table>
+                      return (
+                        <MemberInfoRow
+                          key={user.id}
+                          id={user.id}
+                          direction={user.direction}
+                          name={user.name}
+                          isAdaptive={isAdaptive}
+                          surname={user.surname}
+                          number={index + 1}
+                          age={getAge(user.birthDate)}
+                          education={user.education}
+                          startDate={user.startDate}
+                          openEditModal={openEditModal}
+                          openReadModal={openReadModal}
+                          openDeleteModal={openDeleteModal}
+                        />
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
               {mode === MODAL_MODES.delete && (
                 <DeleteModal target={DELETE_VALUES.member} onRemove={removeUserHandler} onClose={closeModal} />
               )}
@@ -145,6 +150,7 @@ function mapDispatchToProps(dispatch) {
 }
 
 Members.propTypes = {
+  isAdaptive: PropTypes.bool.isRequired,
   users: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string,
@@ -168,4 +174,4 @@ Members.propTypes = {
   openModal: PropTypes.func.isRequired,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withModal(Members));
+export default connect(mapStateToProps, mapDispatchToProps)(withModal(withAdaptive(Members)));

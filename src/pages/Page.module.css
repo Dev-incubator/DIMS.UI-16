@@ -1,9 +1,10 @@
 .pageTitle {
+    margin: 0 1rem;
     font-family: Roboto, sans-serif;
     font-style: normal;
     font-weight: 400;
     font-size: 2rem;
-    line-height: 1rem;
+    line-height: 1.5rem;
     display: flex;
     align-items: center;
 }
@@ -28,6 +29,7 @@
     width: 50.6rem;
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 .header.dark {
@@ -36,4 +38,26 @@
 
 .header.light {
     color: var(--black);
+}
+
+
+@media screen and (max-width: 991px){
+    .header{
+        width: 38rem;
+    }
+}
+
+@media screen and (max-width: 768px){
+    .header{
+        width: 29rem;
+    }
+}
+
+@media screen and (max-width: 512px){
+    .header{
+        margin: 1.5rem 0.4rem;
+        width: auto;
+        display: flex;
+        justify-content: space-evenly;
+    }
 }

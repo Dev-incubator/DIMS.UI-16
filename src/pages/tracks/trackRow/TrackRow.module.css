@@ -4,3 +4,16 @@
     align-items: center;
     column-gap: 0.3rem;
 }
+
+.iconButton {
+    background-color: inherit;
+    border: none;
+}
+
+.icon {
+    margin: 0 0.3rem 0.22rem 0;
+}
+
+.popover{
+    max-width: 14.2rem;
+}

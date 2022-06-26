@@ -7,19 +7,21 @@
     --green: #28A745;
     --bgLight: white;
     --borderLight: #CCCCCC;
-    --bgDark:#393E46;
+    --bgDark: #393E46;
     --borderDark: #313131;
-    --darkBlue:#3282B8;
-    --darkRed:#CA3E47;
+    --darkBlue: #3282B8;
+    --darkRed: #CA3E47;
     --darkGray: #494949;
-    --darkOrange:#C87941;
-    --darkGreen:#519872;
-    --white:white;
-    --black:black;
+    --darkOrange: #C87941;
+    --darkGreen: #519872;
+    --white: white;
+    --black: black;
+    --xsFontSize: 16px;
 }
 
-html {
-    font-size: 20px;
+
+html{
+    font-size: calc(var(--xsFontSize) + 4px);
 }
 
 a {
@@ -58,3 +60,23 @@ main {
 code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
+
+
+@media screen and (max-width: 1048px) {
+    html {
+        font-size: calc(var(--xsFontSize) + 2px);
+    }
+}
+
+@media screen and (max-width: 768px) {
+    html {
+        font-size: calc(var(--xsFontSize) + 1px);
+    }
+}
+
+@media screen and (max-width: 512px) {
+    html {
+        font-size: var(--xsFontSize);
+    }
+}
+

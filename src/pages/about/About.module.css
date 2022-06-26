@@ -16,7 +16,7 @@
 }
 
 .title {
-    margin: 1rem 0;
+    margin: 1rem 0.3rem;
     font-weight: bold;
     text-decoration: underline;
 }
@@ -24,8 +24,9 @@
 .info {
     margin: 0 1rem;
 }
-.item{
-    max-width: 48rem;
+
+.item {
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -34,6 +35,35 @@
 .item img {
     border: 1px dashed;
     margin: 1rem auto;
-    max-width: inherit;
     max-height: 16rem;
+    max-width: 48rem;
+}
+
+@media screen and (max-width: 991px) {
+    .content {
+        width: 40rem;
+    }
+
+    .item img {
+        max-width: 38rem;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .content {
+        width: 30rem;
+    }
+
+    .item img {
+        max-width: 28rem;
+    }
+}
+
+@media screen and (max-width: 512px){
+    .content{
+        width: 19rem;
+    }
+    .item img{
+        max-width: 17.6rem;
+    }
 }

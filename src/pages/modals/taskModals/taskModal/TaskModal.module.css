@@ -10,12 +10,16 @@
 
 .form {
     margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .usersList {
     margin-top: 1rem;
     display: flex;
     justify-content: space-between;
+    column-gap: 0.3rem;
 }
 
 .fieldName {
@@ -46,4 +50,10 @@
 .errorMessage{
     margin-top: 0.2rem;
     font-size: 0.75rem;
+}
+
+@media screen and (max-width: 512px){
+    .layer{
+        width: 13.5rem;
+    }
 }

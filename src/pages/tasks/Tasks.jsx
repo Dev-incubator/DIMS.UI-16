@@ -15,6 +15,7 @@ import { getUsersThunk } from '../../redux/users/thunks/usersThunk';
 import { addTaskThunk, getTasksThunk, removeTaskThunk, updateTaskThunk } from '../../redux/tasks/thunks/tasksThunk';
 import { Loading } from '../loading/Loading';
 import { CustomAlert } from '../../components/Alert/Alert';
+import { withAdaptive } from '../../HOCs/withAdaptive';
 
 const tableTitles = ['#', 'Task name', 'Description', 'Start date', 'Deadline', 'Action'];
 
@@ -31,6 +32,7 @@ function Tasks({
   removeTask,
   updateTask,
   getTasks,
+  isAdaptive,
   getUsers,
 }) {
   useEffect(() => {
@@ -61,37 +63,40 @@ function Tasks({
           {isFetching && <Loading />}
           <CustomAlert isActive={!!error} variant={ALERT_MODES.fail} text={error} />
           <PageHeader text={PAGE_TITLES.tasks} onClick={openModal} />
-          <table className={`${styles.tasks} ${styles[theme]}`}>
-            <TableHeader titles={tableTitles} />
-            <tbody>
-              {tasks.map((task, index) => {
-                const openEditModal = () => {
-                  openModal(MODAL_MODES.edit, task.id);
-                };
-                const openReadModal = () => {
-                  openModal(MODAL_MODES.read, task.id);
-                };
-                const openDeleteModal = () => {
-                  openModal(MODAL_MODES.delete, task.id);
-                };
+          <div className={styles.content}>
+            <table className={`${styles.tasks} ${styles[theme]}`}>
+              <TableHeader titles={tableTitles} />
+              <tbody>
+                {tasks.map((task, index) => {
+                  const openEditModal = () => {
+                    openModal(MODAL_MODES.edit, task.id);
+                  };
+                  const openReadModal = () => {
+                    openModal(MODAL_MODES.read, task.id);
+                  };
+                  const openDeleteModal = () => {
+                    openModal(MODAL_MODES.delete, task.id);
+                  };
 
-                return (
-                  <TaskRow
-                    key={task.id}
-                    id={task.id}
-                    title={task.title}
-                    description={task.description}
-                    deadline={task.deadline}
-                    startDate={task.startDate}
-                    number={index + 1}
-                    openEditModal={openEditModal}
-                    openDeleteModal={openDeleteModal}
-                    openReadModal={openReadModal}
-                  />
-                );
-              })}
-            </tbody>
-          </table>
+                  return (
+                    <TaskRow
+                      key={task.id}
+                      id={task.id}
+                      title={task.title}
+                      description={task.description}
+                      deadline={task.deadline}
+                      startDate={task.startDate}
+                      isAdaptive={isAdaptive}
+                      number={index + 1}
+                      openEditModal={openEditModal}
+                      openDeleteModal={openDeleteModal}
+                      openReadModal={openReadModal}
+                    />
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
           {mode && mode !== MODAL_MODES.delete ? (
             <TaskModal
               users={users}
@@ -134,6 +139,7 @@ function mapDispatchToProps(dispatch) {
 }
 
 Tasks.propTypes = {
+  isAdaptive: PropTypes.bool.isRequired,
   getUsers: PropTypes.func.isRequired,
   getTasks: PropTypes.func.isRequired,
   updateTask: PropTypes.func.isRequired,
@@ -167,4 +173,4 @@ Tasks.propTypes = {
   openModal: PropTypes.func.isRequired,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withModal(Tasks));
+export default connect(mapStateToProps, mapDispatchToProps)(withModal(withAdaptive(Tasks)));

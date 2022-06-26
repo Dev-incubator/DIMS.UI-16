@@ -5,6 +5,39 @@
     column-gap: 0.3rem;
 }
 
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.menu {
+    max-width: 6rem;
+    min-width: 2rem;
+    border: 1px solid;
+}
+
+.dropdown {
+    height: 2rem;
+}
+
+.dropdown a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.title {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    column-gap: 0.2rem;
+}
+
+.userTasks {
+    margin: 0 0.5rem;
+}
+
 .userTasks.dark {
     color: var(--gray);
 }
@@ -23,6 +56,17 @@
 
 .userTasks th:nth-child(2) {
     width: 17rem;
+}
+
+.userTasks td:nth-child(2) {
+    max-width: 16rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.icon {
+    margin: 0 0.3rem 0.22rem 0;
 }
 
 .userTasks th:nth-child(3) {
@@ -82,4 +126,58 @@
 
 .link.light {
     color: var(--blue);
+}
+
+.circle {
+    margin: auto;
+    width: 0.8rem;
+    height: 0.8rem;
+    border-radius: 0.4rem;
+}
+
+.info {
+    margin: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.statusInfo {
+    display: flex;
+    align-items: center;
+    column-gap: 0.4rem;
+}
+
+@media screen and (max-width: 991px) {
+    .userTasks th:nth-child(2) {
+        width: 10.5rem;
+    }
+
+    .userTasks td:nth-child(2) {
+        max-width: 10rem;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .userTasks th:nth-child(3), .userTasks td:nth-child(3) {
+        display: none;
+    }
+
+    .userTasks th:nth-child(1), .userTasks td:nth-child(1) {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 512px) {
+    .userTasks th:nth-child(5) {
+        width: 3.4rem;
+    }
+
+    .userTasks th:nth-child(6) {
+        width: 5rem;
+    }
+
+    .userTasks th:nth-child(4), .userTasks td:nth-child(4) {
+        display: none;
+    }
 }

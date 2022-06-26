@@ -33,3 +33,9 @@
 .date::placeholder {
     opacity: 1;
 }
+
+@media screen and (max-width: 1200px) {
+    .input {
+        width: 14rem;
+    }
+}

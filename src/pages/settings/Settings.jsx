@@ -52,7 +52,7 @@ export class Settings extends PureComponent {
         await updateUser(user.id, { password: newPassword, confirmPassword: newPassword });
         this.setState((prevState) => ({ ...prevState, ...initChangePasswordState, alertMode: ALERT_MODES.success }));
       } catch (error) {
-        console.log(error);
+        console.error(error);
         this.setState((prevState) => ({ ...prevState, ...initChangePasswordState, alertMode: ALERT_MODES.fail }));
       }
       setTimeout(() => {

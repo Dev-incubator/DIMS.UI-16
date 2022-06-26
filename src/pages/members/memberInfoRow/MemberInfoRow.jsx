@@ -1,5 +1,7 @@
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
+import { ListTask, Pencil, Trash, Wallet } from 'react-bootstrap-icons';
+import { useContext } from 'react';
 import styles from './MemberInfoRow.module.css';
 import Button from '../../../components/Buttons/Button/Button';
 import { BUTTON_COLORS, BUTTON_VALUES, USER_ROLES } from '../../../constants/libraries';
@@ -16,55 +18,95 @@ export function MemberInfoRow({
   education,
   startDate,
   age,
+  isAdaptive,
   openDeleteModal,
   openEditModal,
   openReadModal,
 }) {
+  const themeContext = useContext(ThemeContext);
+  const iconColors = {
+    dark: 'var(--secondary)',
+    light: 'var(--borderDark)',
+  };
+
   return (
-    <ThemeContext.Consumer>
-      {({ theme }) => (
-        <AuthContext.Consumer>
-          {({ user: { role } }) => (
-            <tr>
-              <td>{number}</td>
-              <td>
-                <button type='button' className={`${styles.userName} ${styles[theme]}`} onClick={openReadModal}>
-                  {getFullName(name, surname)}
-                </button>
-              </td>
-              <td>{direction}</td>
-              <td>{education}</td>
-              <td>{startDate}</td>
-              <td>{age}</td>
-              <td>
-                <div className={styles.buttonGroup}>
-                  <NavLink to={`/user-tasks/${id}`}>
-                    <Button color={BUTTON_COLORS.green}>{BUTTON_VALUES.tasks}</Button>
-                  </NavLink>
-                  <NavLink to={`/progress/${id}`}>
-                    <Button color={BUTTON_COLORS.blue}>{BUTTON_VALUES.progress}</Button>
-                  </NavLink>
-                  {role === USER_ROLES.admin && (
-                    <div className={styles.buttonGroup}>
+    <AuthContext.Consumer>
+      {({ user: { role } }) => (
+        <tr>
+          <td>{number}</td>
+          <td>
+            <button
+              type='button'
+              className={`${styles.userName} ${styles[themeContext.theme]}`}
+              onClick={openReadModal}
+            >
+              {getFullName(name, surname)}
+            </button>
+          </td>
+          <td>{direction}</td>
+          <td>{education}</td>
+          <td>{startDate}</td>
+          <td>{age}</td>
+          <td>
+            <div className={styles.buttonGroup}>
+              <div className={styles.buttonsRow}>
+                {isAdaptive ? (
+                  <>
+                    <NavLink to={`/user-tasks/${id}`}>
+                      <button type='button' className={styles.iconButton} onClick={openEditModal}>
+                        <ListTask color={iconColors[themeContext.theme]} />
+                      </button>
+                    </NavLink>
+                    <NavLink to={`/progress/${id}`}>
+                      <button type='button' className={styles.iconButton} onClick={openDeleteModal}>
+                        <Wallet color={iconColors[themeContext.theme]} />
+                      </button>
+                    </NavLink>
+                  </>
+                ) : (
+                  <>
+                    <NavLink to={`/user-tasks/${id}`}>
+                      <Button color={BUTTON_COLORS.green}>{BUTTON_VALUES.tasks}</Button>
+                    </NavLink>
+                    <NavLink to={`/progress/${id}`}>
+                      <Button color={BUTTON_COLORS.blue}>{BUTTON_VALUES.progress}</Button>
+                    </NavLink>
+                  </>
+                )}
+              </div>
+              {role === USER_ROLES.admin && (
+                <div className={styles.buttonsRow}>
+                  {isAdaptive ? (
+                    <>
+                      <button type='button' className={styles.iconButton} onClick={openEditModal}>
+                        <Pencil color={iconColors[themeContext.theme]} />
+                      </button>
+                      <button type='button' className={styles.iconButton} onClick={openDeleteModal}>
+                        <Trash color={iconColors[themeContext.theme]} />
+                      </button>
+                    </>
+                  ) : (
+                    <>
                       <Button color={BUTTON_COLORS.orange} onClick={openEditModal}>
                         {BUTTON_VALUES.edit}
                       </Button>
                       <Button color={BUTTON_COLORS.red} onClick={openDeleteModal}>
                         {BUTTON_VALUES.delete}
                       </Button>
-                    </div>
+                    </>
                   )}
                 </div>
-              </td>
-            </tr>
-          )}
-        </AuthContext.Consumer>
+              )}
+            </div>
+          </td>
+        </tr>
       )}
-    </ThemeContext.Consumer>
+    </AuthContext.Consumer>
   );
 }
 
 MemberInfoRow.propTypes = {
+  isAdaptive: PropTypes.bool.isRequired,
   number: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
   surname: PropTypes.string.isRequired,

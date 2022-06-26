@@ -15,13 +15,27 @@ import { Loading } from '../loading/Loading';
 import { addTrackAction, removeTrackAction, setTracksAction, updateTrackAction } from './tracksReducer/trackActions';
 import { CustomAlert } from '../../components/Alert/Alert';
 import { tracksReducer } from './tracksReducer/tracksReducer';
+import { withAdaptive } from '../../HOCs/withAdaptive';
 
 const tableTitles = ['#', 'Task', 'Note', 'Date', 'Action'];
 
-function Tracks({ match, mode, actionId, openModal, closeModal }) {
+function Tracks({ match, mode, actionId, openModal, closeModal, isAdaptive }) {
+  const screen = window.matchMedia('(max-width:991px)');
+  const [isXS, setIsXS] = useState(screen.matches);
   const [error, setError] = useState('');
   const [taskName, setTaskName] = useState('');
   const [tracks, dispatch] = useReducer(tracksReducer, []);
+
+  useEffect(() => {
+    const onScreenChanged = () => {
+      setIsXS(screen.matches);
+    };
+    screen.addEventListener('change', onScreenChanged);
+
+    return () => {
+      screen.removeEventListener('change', onScreenChanged);
+    };
+  }, [screen]);
 
   useEffect(() => {
     const { userId, taskId } = match.params;
@@ -77,33 +91,37 @@ function Tracks({ match, mode, actionId, openModal, closeModal }) {
         <div>
           <CustomAlert isActive={!!error} variant={ALERT_MODES.fail} text={error} />
           <PageHeader text={PAGE_TITLES.tracks} onClick={openModal} />
-          <table className={`${styles.tracks} ${styles[theme]}`}>
-            <TableHeader titles={tableTitles} />
-            <tbody>
-              {tracks.map((track, index) => {
-                const openEditModal = () => {
-                  openModal(MODAL_MODES.edit, track.id);
-                };
-                const openDeleteModal = () => {
-                  openModal(MODAL_MODES.delete, track.id);
-                };
+          <div className={styles.content}>
+            <table className={`${styles.tracks} ${styles[theme]}`}>
+              <TableHeader titles={tableTitles} />
+              <tbody>
+                {tracks.map((track, index) => {
+                  const openEditModal = () => {
+                    openModal(MODAL_MODES.edit, track.id);
+                  };
+                  const openDeleteModal = () => {
+                    openModal(MODAL_MODES.delete, track.id);
+                  };
 
-                return (
-                  <TrackRow
-                    key={track.id}
-                    title={taskName}
-                    note={track.note}
-                    date={track.date}
-                    number={index + 1}
-                    taskId={track.taskId}
-                    userId={track.userId}
-                    openEditModal={openEditModal}
-                    openDeleteModal={openDeleteModal}
-                  />
-                );
-              })}
-            </tbody>
-          </table>
+                  return (
+                    <TrackRow
+                      key={track.id}
+                      title={taskName}
+                      isAdaptive={isAdaptive}
+                      isXS={isXS}
+                      note={track.note}
+                      date={track.date}
+                      number={index + 1}
+                      taskId={track.taskId}
+                      userId={track.userId}
+                      openEditModal={openEditModal}
+                      openDeleteModal={openDeleteModal}
+                    />
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
           {mode && mode !== MODAL_MODES.delete ? (
             <TrackModal
               addTrack={addTrackHandler}
@@ -128,6 +146,7 @@ function Tracks({ match, mode, actionId, openModal, closeModal }) {
 }
 
 Tracks.propTypes = {
+  isAdaptive: PropTypes.bool.isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({
       userId: PropTypes.string.isRequired,
@@ -140,4 +159,4 @@ Tracks.propTypes = {
   openModal: PropTypes.func.isRequired,
 };
 
-export default withModal(Tracks);
+export default withModal(withAdaptive(Tracks));
